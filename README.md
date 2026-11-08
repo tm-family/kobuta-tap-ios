@@ -19,7 +19,8 @@
 | `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の仮の値 |
 | `Fonts.swift` | フォント（M PLUS Rounded 1c）の登録と、太さごとのフォント名 |
 
-- 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、英語は `Localizable.xcstrings` に足します。アプリ名は `InfoPlist.xcstrings` です
+- 対応する言語は日本語と英語です。開発言語（既定の言語）は英語なので、それ以外の言語の端末では英語で表示します
+- 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、`Localizable.xcstrings` に英語と日本語の両方の値を入れます。文字列カタログの基準の言語は英語なので、キーが日本語でも日本語の値は自動では入りません（日本語の値が 1 つも無いと、日本語の端末でも英語で表示されます）。アプリ名は `InfoPlist.xcstrings` です
 - 文字は `Font.kRounded`（SwiftUI）と `AppFont.uiFont`（SpriteKit）を使い、M PLUS Rounded 1c にそろえます。フォントのライセンス（SIL Open Font License 1.1）の `OFL.txt` も同梱しています
 - 画像は `KobutaAssets.xcassets` の SVG で、名前は「種類_状態」（例: `piglet_tapped`）です。キャラクターは 200×220 の枠で描いています
 - 調整用の数値はコードに直接書かず、`Tuning` と `ItemKind` の出現の重みにまとめます
