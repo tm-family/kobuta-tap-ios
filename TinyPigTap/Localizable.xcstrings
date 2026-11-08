@@ -1,0 +1,768 @@
+{
+  "sourceLanguage": "ja",
+  "strings": {
+    "チャレンジ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenge"
+          }
+        }
+      }
+    },
+    "のんびり": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relax"
+          }
+        }
+      }
+    },
+    "60秒・りんご3つ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "60 sec · 3 apples"
+          }
+        }
+      }
+    },
+    "時間制限なし": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No time limit"
+          }
+        }
+      }
+    },
+    "ぷひっ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oink!"
+          }
+        }
+      }
+    },
+    "ガオー！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grrr!"
+          }
+        }
+      }
+    },
+    "バレた！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Busted!"
+          }
+        }
+      }
+    },
+    "ギクッ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uh-oh!"
+          }
+        }
+      }
+    },
+    "セーフ！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Safe!"
+          }
+        }
+      }
+    },
+    "ぽてっ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plop!"
+          }
+        }
+      }
+    },
+    "いてて…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouch..."
+          }
+        }
+      }
+    },
+    "ごとっ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thud!"
+          }
+        }
+      }
+    },
+    "ころころ〜": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roll, roll..."
+          }
+        }
+      }
+    },
+    "コンボ！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combo!"
+          }
+        }
+      }
+    },
+    "見破り！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotted!"
+          }
+        }
+      }
+    },
+    "レンガで守る！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brick shield!"
+          }
+        }
+      }
+    },
+    "りんご +1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple +1"
+          }
+        }
+      }
+    },
+    "金のこぶたは10点！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golden piglets are worth 10!"
+          }
+        }
+      }
+    },
+    "着ぐるみのおおかみに注意！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch out for the wolf in disguise!"
+          }
+        }
+      }
+    },
+    "レンガで守ろう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shield up with a brick"
+          }
+        }
+      }
+    },
+    "りんごでひと休み": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take a breather with an apple"
+          }
+        }
+      }
+    },
+    "たまにしか出ないごほうび": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A rare treat that doesn't show up often"
+          }
+        }
+      }
+    },
+    "こぶたにそっくり。つり目としっぽをよく見て": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looks just like a piglet. Check the sly eyes and the tail."
+          }
+        }
+      }
+    },
+    "タップすると5秒間、おおかみを押しても平気": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap it, and wolves can't hurt you for 5 seconds"
+          }
+        }
+      }
+    },
+    "チャレンジではりんごが1つ増える": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Challenge, you get one more apple"
+          }
+        }
+      }
+    },
+    "こぶた": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Piglet"
+          }
+        }
+      }
+    },
+    "金のこぶた": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golden piglet"
+          }
+        }
+      }
+    },
+    "おおかみ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wolf"
+          }
+        }
+      }
+    },
+    "着ぐるみのおおかみ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wolf in disguise"
+          }
+        }
+      }
+    },
+    "レンガ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brick"
+          }
+        }
+      }
+    },
+    "りんご": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple"
+          }
+        }
+      }
+    },
+    "logo_part1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiny Pig "
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こぶた"
+          }
+        }
+      }
+    },
+    "logo_part2": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タップ"
+          }
+        }
+      }
+    },
+    "こぶたタップ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiny Pig Tap"
+          }
+        }
+      }
+    },
+    "タップしてスタート": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to Start"
+          }
+        }
+      }
+    },
+    "遊び方": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to Play"
+          }
+        }
+      }
+    },
+    "‹ 戻る": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‹ Back"
+          }
+        }
+      }
+    },
+    "モードを選ぶ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a Mode"
+          }
+        }
+      }
+    },
+    "おおかみに注意！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch out for wolves!"
+          }
+        }
+      }
+    },
+    "ゆっくり集めよう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collect at your own pace"
+          }
+        }
+      }
+    },
+    "自己ベスト %lld点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best %lld pts"
+          }
+        }
+      }
+    },
+    "キャラクター": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Characters"
+          }
+        }
+      }
+    },
+    "ルール": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rules"
+          }
+        }
+      }
+    },
+    "タップして集めよう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to collect"
+          }
+        }
+      }
+    },
+    "たまに出るごほうび": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A rare treat"
+          }
+        }
+      }
+    },
+    "タップしちゃダメ！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't tap!"
+          }
+        }
+      }
+    },
+    "よく見て見破ろう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look closely and see through it"
+          }
+        }
+      }
+    },
+    "りんごが1つ増える": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gives you one more apple"
+          }
+        }
+      }
+    },
+    "ミス": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miss"
+          }
+        }
+      }
+    },
+    "60秒でたくさん集めよう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collect as many as you can in 60 sec"
+          }
+        }
+      }
+    },
+    "りんごがなくなったら終了": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game over when you run out of apples"
+          }
+        }
+      }
+    },
+    "こぶたを見逃す・おおかみをタップ → りんご −1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miss a piglet or tap a wolf → apple −1"
+          }
+        }
+      }
+    },
+    "おおかみをタップ → −1点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a wolf → −1 pt"
+          }
+        }
+      }
+    },
+    "りんご → +3点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple → +3 pts"
+          }
+        }
+      }
+    },
+    "ボーナス": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus"
+          }
+        }
+      }
+    },
+    "見破り ＋2：着ぐるみのおおかみを、タップせず見送る": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotted +2: let a wolf in disguise pass without tapping it"
+          }
+        }
+      }
+    },
+    "コンボ ＋1：こぶたを5匹続けてタップ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combo +1: tap 5 piglets in a row"
+          }
+        }
+      }
+    },
+    "%lld点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pts"
+          }
+        }
+      }
+    },
+    "おしまい": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "あと %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld sec"
+          }
+        }
+      }
+    },
+    "あと%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        }
+      }
+    },
+    "わかった！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it!"
+          }
+        }
+      }
+    },
+    "りんごがなくなった！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of apples!"
+          }
+        }
+      }
+    },
+    "りんごを1つもらって、続きから遊べます": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get one apple and keep playing"
+          }
+        }
+      }
+    },
+    "続ける": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        }
+      }
+    },
+    "広告を見て続ける": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch an Ad to Continue"
+          }
+        }
+      }
+    },
+    "やめる": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop"
+          }
+        }
+      }
+    },
+    "おしまい！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time's up!"
+          }
+        }
+      }
+    },
+    "おつかれさま！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All done!"
+          }
+        }
+      }
+    },
+    "自己ベスト更新！": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New best!"
+          }
+        }
+      }
+    },
+    "見破り": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotted"
+          }
+        }
+      }
+    },
+    "コンボ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combo"
+          }
+        }
+      }
+    },
+    "もう一度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Again"
+          }
+        }
+      }
+    },
+    "モード選択へ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modes"
+          }
+        }
+      }
+    },
+    "%@ × %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ × %lld"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
