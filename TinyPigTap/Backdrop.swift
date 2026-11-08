@@ -1,0 +1,125 @@
+import SwiftUI
+
+extension Color {
+    init(hex: UInt32) {
+        self.init(red: Double((hex >> 16) & 0xFF) / 255,
+                  green: Double((hex >> 8) & 0xFF) / 255,
+                  blue: Double(hex & 0xFF) / 255)
+    }
+    static let ink = Color(hex: 0x3D2B33)
+    static let kPink = Color(hex: 0xD9577A)
+    static let kGreen = Color(hex: 0x5FAE52)
+    static let kBrick = Color(hex: 0xD7724A)
+}
+
+extension Font {
+    /// アプリの文字（M PLUS Rounded 1c）。heavy/black → ExtraBold、bold/semibold → Bold、それ以外 → Medium
+    static func kRounded(_ size: CGFloat, _ weight: Font.Weight = .heavy) -> Font {
+        .custom(AppFont.name(for: weight), fixedSize: size)
+    }
+}
+
+/// メニュー画面の背景（昼の空と草原）
+struct Backdrop: View {
+    var body: some View {
+        GeometryReader { geo in
+            let unit = geo.size.height / 624
+            ZStack(alignment: .bottom) {
+                LinearGradient(colors: [Color(hex: 0x7CC6F2), Color(hex: 0xDDF2FC)], startPoint: .top, endPoint: .bottom)
+                Image("sky_cloud")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100 * unit)
+                    .position(x: geo.size.width / 2 - 90 * unit, y: 180 * unit)
+                Image("sky_cloud")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 84 * unit)
+                    .position(x: geo.size.width / 2 + 90 * unit, y: 300 * unit)
+                Image("ground_day")
+                    .resizable()
+                    .frame(width: max(640 * unit, geo.size.width), height: 204 * unit)
+            }
+            .frame(width: geo.size.width, height: geo.size.height)
+        }
+        .ignoresSafeArea()
+    }
+}
+
+/// 白いフチつきの文字
+struct OutlinedText: View {
+    let text: String
+    let size: CGFloat
+    let color: Color
+    var outline: CGFloat = 5
+
+    var body: some View {
+        let base = Text(text).font(.kRounded(size))
+        ZStack {
+            ForEach(0..<8, id: \.self) { index in
+                let angle = Double(index) / 8 * 2 * .pi
+                base.foregroundStyle(.white).offset(x: cos(angle) * outline, y: sin(angle) * outline)
+            }
+            base.foregroundStyle(color)
+        }
+    }
+}
+
+/// タイトルロゴ（案01-A：先頭の文字に葉っぱの傘）。
+/// デザイン資料の logo_ja.svg / logo_en.svg をそのまま使い、アセットカタログが端末の言語で切り替える。
+struct LogoView: View {
+    /// 文字の大きさ（pt）
+    var size: CGFloat = 46
+
+    /// SVG の高さ（viewBox）と、SVG の中の文字の大きさ。文字が size になるように縮める
+    private static let svgHeight: CGFloat = 150
+    private static let svgFontSize: CGFloat = 60
+
+    var body: some View {
+        Image("logo")
+            .resizable()
+            .scaledToFit()
+            .frame(maxHeight: Self.svgHeight * size / Self.svgFontSize)
+            .accessibilityLabel(Text("こぶたタップ"))
+    }
+}
+
+/// 白い丸いボタン
+struct PillButton: View {
+    let title: String
+    var fill: Color = .white
+    var textColor: Color = .ink
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.kRounded(18, .bold))
+                .foregroundStyle(textColor)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(fill, in: Capsule())
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// 傘の上を支点に、ゆらゆら揺れるキャラクター
+struct SwayingCharacter: View {
+    let image: String
+    var width: CGFloat = 170
+    @State private var swing = false
+
+    var body: some View {
+        Image(image)
+            .resizable()
+            .scaledToFit()
+            .frame(width: width)
+            .rotationEffect(.degrees(swing ? 6 : -6), anchor: UnitPoint(x: 0.62, y: 0.18))
+            .offset(x: swing ? 8 : -8)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { swing = true }
+            }
+    }
+}

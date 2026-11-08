@@ -1,9 +1,30 @@
 # TinyPigTap
 
-iOS Application Template (SwiftUI)
+こぶたタップ（Tiny Pig Tap）は、画面の上から葉っぱの傘で降りてくるこぶたをタップして集める、iPhone・iPad 向けのカジュアルゲームです。
+チャレンジ（60 秒・りんご 3 つ）とのんびり（時間制限なし）の 2 つのモードがあります。画面は SwiftUI、ゲーム部分は SpriteKit で作り、`SpriteView` で埋め込んでいます。
 
-iOS アプリのリポジトリを新規作成するときの GitHub テンプレートリポジトリです。
-SwiftUI のプロジェクト一式と、ビルド・テスト・Archive・TestFlight 配信までの GitHub Actions ワークフローを含みます。
+リポジトリは template-app-ios から作成しました。「テンプレートの使い方」以降は、テンプレート由来の手順（署名・CI・App Store の掲載情報）の説明です。
+
+## ゲームのソース
+
+| ファイル | 役割 |
+| --- | --- |
+| `GameScene.swift` | 出現、揺れ、タップ判定、点数、着地の演出、りんごと終了 |
+| `GameState.swift` | スコア、りんご、コンボ、レンガ、内訳、自己ベスト（SpriteKit と SwiftUI で共有する `@Observable`） |
+| `GameMode.swift` | モード、時間帯、調整用の数値（`Tuning`） |
+| `ItemKind.swift` | キャラクターの種類、画像名、大きさ、出現の重み |
+| `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景 |
+| `GameView.swift` | プレイ画面の上部の表示、初登場のお知らせ、続ける画面、結果 |
+| `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
+| `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の仮の値 |
+| `Fonts.swift` | フォント（M PLUS Rounded 1c）の登録と、太さごとのフォント名 |
+
+- 対応する言語は日本語と英語です。開発言語（既定の言語）は英語なので、それ以外の言語の端末では英語で表示します
+- 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、`Localizable.xcstrings` に英語と日本語の両方の値を入れます。文字列カタログの基準の言語は英語なので、キーが日本語でも日本語の値は自動では入りません（日本語の値が 1 つも無いと、日本語の端末でも英語で表示されます）。アプリ名は `InfoPlist.xcstrings` です
+- 文字は `Font.kRounded`（SwiftUI）と `AppFont.uiFont`（SpriteKit）を使い、M PLUS Rounded 1c にそろえます。フォントのライセンス（SIL Open Font License 1.1）の `OFL.txt` も同梱しています
+- 画像は `KobutaAssets.xcassets` の SVG で、名前は「種類_状態」（例: `piglet_tapped`）です。キャラクターは 200×220 の枠で描いています
+- 調整用の数値はコードに直接書かず、`Tuning` と `ItemKind` の出現の重みにまとめます
+- 遊ぶ範囲は iPhone の比率（288:624）に固定し、iPad では中央に置いて左右を背景で埋めます
 
 ## Environment
 
