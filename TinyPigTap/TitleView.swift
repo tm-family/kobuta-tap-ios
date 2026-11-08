@@ -74,5 +74,6 @@ struct ModeSelectView: View {
             .background(.white, in: .rect(cornerRadius: 24))
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("mode_\(mode.rawValue)")
     }
 }
