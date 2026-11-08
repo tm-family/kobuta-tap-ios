@@ -43,6 +43,8 @@ struct GameView: View {
                 overlay.frame(width: geo.size.width, height: geo.size.height)
             }
         }
+        // プレイ中は時刻や電池の表示がキャラクターと重ならないよう、ステータスバーを隠す（メニューでは出す）
+        .statusBarHidden()
     }
 
     @ViewBuilder private var overlay: some View {
