@@ -211,7 +211,7 @@
 				};
 			};
 			buildConfigurationList = 4FC9E1E42BF1049B00F630AB /* Build configuration list for PBXProject "TinyPigTap" */;
-			developmentRegion = ja;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -450,7 +450,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinyPigTap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "こぶたタップ";
+				INFOPLIST_KEY_CFBundleDisplayName = "Tiny Pig Tap";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -479,7 +479,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TinyPigTap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "こぶたタップ";
+				INFOPLIST_KEY_CFBundleDisplayName = "Tiny Pig Tap";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
