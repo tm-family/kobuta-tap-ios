@@ -18,7 +18,8 @@ final class TinyPigTapUITests: XCTestCase {
     @MainActor
     private func launch(language: String) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", language == "ja" ? "ja_JP" : "en_US"]
+        let locale = ["ja": "ja_JP", "en": "en_US", "de": "de_DE"][language] ?? "en_US"
+        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
         for kind in ["golden", "disguise", "brick", "apple"] {
             app.launchArguments += ["-intro_\(kind)", "YES"]
         }
@@ -71,6 +72,18 @@ final class TinyPigTapUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Choose a Mode"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["mode_challenge"].label.contains("Challenge"))
         XCTAssertTrue(app.buttons["mode_relaxed"].label.contains("Relax"))
+    }
+
+    /// 日本語・英語以外の端末（ドイツ語）では、既定の言語の英語で表示する
+    @MainActor
+    func testOtherLanguagesFallBackToEnglish() throws {
+        let app = launch(language: "de")
+
+        let start = app.buttons["Tap to Start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["How to Play"].exists)
+        start.tap()
+        XCTAssertTrue(app.staticTexts["Choose a Mode"].waitForExistence(timeout: 5))
     }
 
     /// のんびりのプレイ画面で「おしまい」を押し、結果画面が出るのを確かめる
