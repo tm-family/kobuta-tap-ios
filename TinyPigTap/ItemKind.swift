@@ -58,40 +58,42 @@ enum ItemKind: String, CaseIterable, Hashable {
     /// 出現の重み（着ぐるみのおおかみの値は仮。仕様書の未決事項）
     func weight(mode: GameMode, phase: Phase) -> Int {
         switch mode {
-        case .challenge:
-            switch (self, phase) {
-            case (.piglet, .day): 71
-            case (.piglet, .evening): 63
-            case (.piglet, .night): 54
-            case (.golden, _): 5
-            case (.wolf, .night): 16
-            case (.wolf, _): 18
-            case (.disguise, .day): 0
-            case (.disguise, .evening): 8
-            case (.disguise, .night): 18
-            case (.brick, .night): 4
-            case (.brick, _): 3
-            case (.apple, _): 3
-            }
-        case .relaxed:
-            switch self {
-            case .piglet: 68
-            case .golden: 5
-            case .wolf: 10
-            case .disguise: 8
-            case .brick: 3
-            case .apple: 6
-            }
+        case .challenge: challengeWeights[phase.rawValue]
+        case .relaxed: relaxedWeight
+        }
+    }
+
+    /// チャレンジの出現の重み（昼・夕焼け・夜の順。仕様書 3.2 の表の行）
+    private var challengeWeights: [Int] {
+        switch self {
+        case .piglet: [71, 63, 54]
+        case .golden: [5, 5, 5]
+        case .wolf: [18, 18, 16]
+        case .disguise: [0, 8, 18]
+        case .brick: [3, 3, 4]
+        case .apple: [3, 3, 3]
+        }
+    }
+
+    /// のんびりの出現の重み
+    private var relaxedWeight: Int {
+        switch self {
+        case .piglet: 68
+        case .golden: 5
+        case .wolf: 10
+        case .disguise: 8
+        case .brick: 3
+        case .apple: 6
         }
     }
 
     static func random(mode: GameMode, phase: Phase) -> ItemKind {
         let table = allCases.map { ($0, $0.weight(mode: mode, phase: phase)) }
         let total = table.reduce(0) { $0 + $1.1 }
-        var r = Int.random(in: 0..<max(total, 1))
-        for (kind, w) in table {
-            if r < w { return kind }
-            r -= w
+        var roll = Int.random(in: 0..<max(total, 1))
+        for (kind, weight) in table {
+            if roll < weight { return kind }
+            roll -= weight
         }
         return .piglet
     }

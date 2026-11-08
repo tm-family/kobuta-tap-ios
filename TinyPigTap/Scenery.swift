@@ -63,7 +63,8 @@ extension UIColor {
     convenience init(hex: UInt32) {
         self.init(red: CGFloat((hex >> 16) & 0xFF) / 255,
                   green: CGFloat((hex >> 8) & 0xFF) / 255,
-                  blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+                  blue: CGFloat(hex & 0xFF) / 255,
+                  alpha: 1)
     }
 }
 
@@ -103,83 +104,105 @@ final class BackgroundNode: SKNode {
         old?.run(.sequence([.wait(forDuration: 2.0), .removeFromParent()]))
     }
 
-    private func makeLayer(_ s: Scenery, size: CGSize) -> SKNode {
+    private func makeLayer(_ scenery: Scenery, size: CGSize) -> SKNode {
         let root = SKNode()
-        let u = size.height / 624          // 絵の1単位あたりのポイント
-        let cx = size.width / 2            // 遊ぶ範囲の中心
+        let canvas = Canvas(root: root, size: size)
 
         // 空
-        let sky = SKSpriteNode(texture: Self.gradientTexture(s.skyColors), size: size)
+        let sky = SKSpriteNode(texture: Self.gradientTexture(scenery.skyColors), size: size)
         sky.anchorPoint = .zero
         sky.zPosition = 0
         root.addChild(sky)
 
-        func sprite(_ name: String, x: CGFloat, y: CGFloat, width: CGFloat, z: CGFloat) -> SKSpriteNode {
-            let node = SKSpriteNode(imageNamed: name)
-            let ratio = node.size.height / max(node.size.width, 1)
-            node.size = CGSize(width: width, height: width * ratio)
-            node.position = CGPoint(x: x, y: y)
-            node.zPosition = z
-            root.addChild(node)
-            return node
-        }
-
-        // 空のもの（y は画面の下からの距離）
-        switch s.phase {
-        case .day:
-            _ = sprite("sky_sun_day", x: cx + 92 * u, y: size.height - 140 * u, width: 80 * u, z: 1)
-            _ = sprite("sky_cloud", x: cx - 90 * u, y: size.height - 180 * u, width: 100 * u, z: 2)
-            _ = sprite("sky_cloud", x: cx + 80 * u, y: size.height - 300 * u, width: 84 * u, z: 2)
-            _ = sprite("sky_cloud", x: cx - 230 * u, y: size.height - 320 * u, width: 90 * u, z: 2)
-            _ = sprite("sky_cloud", x: cx + 240 * u, y: size.height - 210 * u, width: 90 * u, z: 2)
-            if s.season == .summer {
-                _ = sprite("sky_cumulus", x: cx + 80 * u, y: 230 * u, width: 160 * u, z: 2)
-            }
-        case .evening:
-            _ = sprite("sky_sun_evening", x: cx, y: 138 * u, width: 128 * u, z: 1)
-            _ = sprite("sky_cloud_evening", x: cx - 80 * u, y: size.height - 210 * u, width: 100 * u, z: 2)
-            _ = sprite("sky_cloud_evening", x: cx + 200 * u, y: size.height - 290 * u, width: 90 * u, z: 2)
-        case .night:
-            _ = sprite("sky_moon", x: cx + 90 * u, y: size.height - 110 * u, width: 52 * u, z: 1)
-            for _ in 0..<24 {
-                let star = SKShapeNode(circleOfRadius: .random(in: 1.0...2.2) * u)
-                star.fillColor = .white
-                star.strokeColor = .clear
-                star.position = CGPoint(x: .random(in: 0...size.width), y: .random(in: (size.height * 0.4)...size.height))
-                star.zPosition = 1
-                root.addChild(star)
-            }
-        }
-
-        // 地面（横長の帯。画面より狭いときは横に引き伸ばす）
-        let groundWidth = max(640 * u, size.width)
-        let ground = SKSpriteNode(imageNamed: s.phase.groundTexture)
-        ground.anchorPoint = CGPoint(x: 0.5, y: 0)
-        ground.size = CGSize(width: groundWidth, height: 204 * u)
-        ground.position = CGPoint(x: cx, y: 0)
-        ground.zPosition = 10
-        root.addChild(ground)
-
-        // 季節の飾り（夜と夕方は少し暗くする）
-        if let season = s.season {
-            let deco = SKSpriteNode(imageNamed: "deco_\(season.rawValue)")
-            deco.anchorPoint = CGPoint(x: 0.5, y: 0)
-            deco.size = ground.size
-            deco.position = ground.position
-            deco.zPosition = 11
-            deco.color = .black
-            deco.colorBlendFactor = s.phase == .night ? 0.35 : (s.phase == .evening ? 0.12 : 0)
-            root.addChild(deco)
-
-            if let emitter = Self.particles(for: season, size: size, unit: u) {
-                emitter.zPosition = 12
-                root.addChild(emitter)
-            }
+        addSkyObjects(scenery, to: canvas)
+        let ground = addGround(scenery, to: canvas)
+        if let season = scenery.season {
+            addSeasonDecoration(season, phase: scenery.phase, ground: ground, to: canvas)
         }
         return root
     }
 
-    private static func particles(for season: Season, size: CGSize, unit u: CGFloat) -> SKEmitterNode? {
+    /// 重ねて描く先。unit は絵の1単位あたりのポイント、centerX は遊ぶ範囲の中心
+    private struct Canvas {
+        let root: SKNode
+        let size: CGSize
+        var unit: CGFloat { size.height / 624 }
+        var centerX: CGFloat { size.width / 2 }
+
+        @discardableResult
+        func sprite(_ name: String, x: CGFloat, y: CGFloat, width: CGFloat, zPosition: CGFloat) -> SKSpriteNode {
+            let node = SKSpriteNode(imageNamed: name)
+            let ratio = node.size.height / max(node.size.width, 1)
+            node.size = CGSize(width: width, height: width * ratio)
+            node.position = CGPoint(x: x, y: y)
+            node.zPosition = zPosition
+            root.addChild(node)
+            return node
+        }
+    }
+
+    /// 空のもの（y は画面の下からの距離）
+    private func addSkyObjects(_ scenery: Scenery, to canvas: Canvas) {
+        let unit = canvas.unit
+        let centerX = canvas.centerX
+        let height = canvas.size.height
+        switch scenery.phase {
+        case .day:
+            canvas.sprite("sky_sun_day", x: centerX + 92 * unit, y: height - 140 * unit, width: 80 * unit, zPosition: 1)
+            canvas.sprite("sky_cloud", x: centerX - 90 * unit, y: height - 180 * unit, width: 100 * unit, zPosition: 2)
+            canvas.sprite("sky_cloud", x: centerX + 80 * unit, y: height - 300 * unit, width: 84 * unit, zPosition: 2)
+            canvas.sprite("sky_cloud", x: centerX - 230 * unit, y: height - 320 * unit, width: 90 * unit, zPosition: 2)
+            canvas.sprite("sky_cloud", x: centerX + 240 * unit, y: height - 210 * unit, width: 90 * unit, zPosition: 2)
+            if scenery.season == .summer {
+                canvas.sprite("sky_cumulus", x: centerX + 80 * unit, y: 230 * unit, width: 160 * unit, zPosition: 2)
+            }
+        case .evening:
+            canvas.sprite("sky_sun_evening", x: centerX, y: 138 * unit, width: 128 * unit, zPosition: 1)
+            canvas.sprite("sky_cloud_evening", x: centerX - 80 * unit, y: height - 210 * unit, width: 100 * unit, zPosition: 2)
+            canvas.sprite("sky_cloud_evening", x: centerX + 200 * unit, y: height - 290 * unit, width: 90 * unit, zPosition: 2)
+        case .night:
+            canvas.sprite("sky_moon", x: centerX + 90 * unit, y: height - 110 * unit, width: 52 * unit, zPosition: 1)
+            for _ in 0..<24 {
+                let star = SKShapeNode(circleOfRadius: .random(in: 1.0...2.2) * unit)
+                star.fillColor = .white
+                star.strokeColor = .clear
+                star.position = CGPoint(x: .random(in: 0...canvas.size.width), y: .random(in: (height * 0.4)...height))
+                star.zPosition = 1
+                canvas.root.addChild(star)
+            }
+        }
+    }
+
+    /// 地面（横長の帯。画面より狭いときは横に引き伸ばす）
+    private func addGround(_ scenery: Scenery, to canvas: Canvas) -> SKSpriteNode {
+        let unit = canvas.unit
+        let ground = SKSpriteNode(imageNamed: scenery.phase.groundTexture)
+        ground.anchorPoint = CGPoint(x: 0.5, y: 0)
+        ground.size = CGSize(width: max(640 * unit, canvas.size.width), height: 204 * unit)
+        ground.position = CGPoint(x: canvas.centerX, y: 0)
+        ground.zPosition = 10
+        canvas.root.addChild(ground)
+        return ground
+    }
+
+    /// 季節の飾り（夜と夕方は少し暗くする）と舞うもの
+    private func addSeasonDecoration(_ season: Season, phase: Phase, ground: SKSpriteNode, to canvas: Canvas) {
+        let deco = SKSpriteNode(imageNamed: "deco_\(season.rawValue)")
+        deco.anchorPoint = CGPoint(x: 0.5, y: 0)
+        deco.size = ground.size
+        deco.position = ground.position
+        deco.zPosition = 11
+        deco.color = .black
+        deco.colorBlendFactor = phase == .night ? 0.35 : (phase == .evening ? 0.12 : 0)
+        canvas.root.addChild(deco)
+
+        if let emitter = Self.particles(for: season, size: canvas.size, unit: canvas.unit) {
+            emitter.zPosition = 12
+            canvas.root.addChild(emitter)
+        }
+    }
+
+    private static func particles(for season: Season, size: CGSize, unit: CGFloat) -> SKEmitterNode? {
         let name: String
         switch season {
         case .spring: name = "particle_petal"
@@ -187,24 +210,24 @@ final class BackgroundNode: SKNode {
         case .winter: name = "particle_snow"
         case .summer: return nil
         }
-        let e = SKEmitterNode()
-        e.particleTexture = SKTexture(imageNamed: name)
-        e.particleBirthRate = season == .winter ? 4 : 1.2
-        e.particleLifetime = 14
-        e.position = CGPoint(x: size.width / 2, y: size.height + 10)
-        e.particlePositionRange = CGVector(dx: size.width, dy: 0)
-        e.emissionAngle = -.pi / 2
-        e.emissionAngleRange = 0.4
-        e.particleSpeed = 40 * u
-        e.particleSpeedRange = 20 * u
-        e.xAcceleration = 4
-        e.particleRotationRange = .pi * 2
-        e.particleRotationSpeed = season == .winter ? 0 : 1.2
-        e.particleScale = u * 0.9
-        e.particleScaleRange = u * 0.4
-        e.particleAlpha = 0.9
-        e.advanceSimulationTime(10)
-        return e
+        let emitter = SKEmitterNode()
+        emitter.particleTexture = SKTexture(imageNamed: name)
+        emitter.particleBirthRate = season == .winter ? 4 : 1.2
+        emitter.particleLifetime = 14
+        emitter.position = CGPoint(x: size.width / 2, y: size.height + 10)
+        emitter.particlePositionRange = CGVector(dx: size.width, dy: 0)
+        emitter.emissionAngle = -.pi / 2
+        emitter.emissionAngleRange = 0.4
+        emitter.particleSpeed = 40 * unit
+        emitter.particleSpeedRange = 20 * unit
+        emitter.xAcceleration = 4
+        emitter.particleRotationRange = .pi * 2
+        emitter.particleRotationSpeed = season == .winter ? 0 : 1.2
+        emitter.particleScale = unit * 0.9
+        emitter.particleScaleRange = unit * 0.4
+        emitter.particleAlpha = 0.9
+        emitter.advanceSimulationTime(10)
+        return emitter
     }
 
     /// 縦のグラデーションを小さなテクスチャにして引き伸ばす

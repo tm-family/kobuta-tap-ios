@@ -11,14 +11,14 @@ enum GameMode: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .challenge: String(localized: "チャレンジ")
-        case .relaxed:   String(localized: "のんびり")
+        case .relaxed: String(localized: "のんびり")
         }
     }
 
     var subtitle: String {
         switch self {
         case .challenge: String(localized: "60秒・りんご3つ")
-        case .relaxed:   String(localized: "時間制限なし")
+        case .relaxed: String(localized: "時間制限なし")
         }
     }
 
@@ -30,11 +30,11 @@ enum GameMode: String, CaseIterable, Identifiable {
 enum Phase: Int, Comparable {
     case day, evening, night
 
-    static func < (a: Phase, b: Phase) -> Bool { a.rawValue < b.rawValue }
+    static func < (lhs: Phase, rhs: Phase) -> Bool { lhs.rawValue < rhs.rawValue }
 
-    static func forElapsed(_ t: TimeInterval) -> Phase {
-        if t < Tuning.eveningStarts { return .day }
-        if t < Tuning.nightStarts { return .evening }
+    static func forElapsed(_ elapsed: TimeInterval) -> Phase {
+        if elapsed < Tuning.eveningStarts { return .day }
+        if elapsed < Tuning.nightStarts { return .evening }
         return .night
     }
 }

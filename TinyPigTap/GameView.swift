@@ -1,5 +1,5 @@
-import SwiftUI
 import SpriteKit
+import SwiftUI
 
 struct GameView: View {
     let mode: GameMode
@@ -35,8 +35,8 @@ struct GameView: View {
                 VStack { hud; Spacer() }
                     .frame(width: playWidth)
 
-                if let t = state.timeRemaining, t > 0, t <= 10, state.status == .playing {
-                    OutlinedText(text: String(localized: "あと \(Int(t.rounded(.up)))"), size: 40, color: Color(hex: 0xE85A4F))
+                if let remaining = state.timeRemaining, remaining > 0, remaining <= 10, state.status == .playing {
+                    OutlinedText(text: String(localized: "あと \(Int(remaining.rounded(.up)))"), size: 40, color: Color(hex: 0xE85A4F))
                         .allowsHitTesting(false)
                 }
 
@@ -69,25 +69,32 @@ struct GameView: View {
                 Spacer()
                 if let apples = state.apples {
                     HStack(spacing: 2) {
-                        ForEach(0..<max(Tuning.startingApples, apples), id: \.self) { i in
-                            Image("icon_apple").resizable().scaledToFit().frame(width: 26, height: 26)
-                                .opacity(i < apples ? 1 : 0.25)
+                        ForEach(0..<max(Tuning.startingApples, apples), id: \.self) { index in
+                            Image("icon_apple")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 26, height: 26)
+                                .opacity(index < apples ? 1 : 0.25)
                         }
                     }
                 } else if state.status == .playing {
                     Button { scene.endGame() } label: {
-                        Text("おしまい").font(.kRounded(13, .bold)).foregroundStyle(Color.ink)
-                            .padding(.horizontal, 12).padding(.vertical, 5)
+                        Text("おしまい")
+                            .font(.kRounded(13, .bold))
+                            .foregroundStyle(Color.ink)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 5)
                             .background(Color(hex: 0xEFEDE7), in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 16).frame(height: 44)
+            .padding(.horizontal, 16)
+            .frame(height: 44)
             .background(.white.opacity(0.92), in: Capsule())
 
-            if let t = state.timeRemaining {
-                TimeBar(fraction: t / Tuning.challengeDuration, phase: state.phase)
+            if let remaining = state.timeRemaining {
+                TimeBar(fraction: remaining / Tuning.challengeDuration, phase: state.phase)
             }
 
             if state.shieldRemaining > 0 {
@@ -108,11 +115,11 @@ struct TimeBar: View {
 
     var body: some View {
         GeometryReader { geo in
-            let w = max(16, geo.size.width * fraction)
+            let width = max(16, geo.size.width * fraction)
             ZStack(alignment: .leading) {
                 Capsule().fill(.white.opacity(phase == .night ? 0.35 : 0.7))
-                Capsule().fill(barColor).frame(width: w)
-                knob.offset(x: w - 11)
+                Capsule().fill(barColor).frame(width: width)
+                knob.offset(x: width - 11)
             }
         }
         .frame(height: 16)
@@ -145,16 +152,19 @@ struct ShieldBadge: View {
         HStack(spacing: 8) {
             ZStack {
                 Circle().stroke(Color(hex: 0xF3D3C4), lineWidth: 3.5)
-                Circle().trim(from: 0, to: remaining / Tuning.shieldDuration)
+                Circle()
+                    .trim(from: 0, to: remaining / Tuning.shieldDuration)
                     .stroke(Color.kBrick, style: StrokeStyle(lineWidth: 3.5, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 Image("icon_brick").resizable().scaledToFit().frame(width: 16)
             }
             .frame(width: 26, height: 26)
             Text(String(localized: "あと\(Int(remaining.rounded(.up)))"))
-                .font(.kRounded(15)).foregroundStyle(Color(hex: 0xA9502F))
+                .font(.kRounded(15))
+                .foregroundStyle(Color(hex: 0xA9502F))
         }
-        .padding(.horizontal, 10).padding(.vertical, 4)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
         .background(.white.opacity(0.95), in: Capsule())
     }
 }
@@ -174,13 +184,20 @@ struct IntroCard: View {
                 }
                 .padding(.bottom, 20)
                 VStack(spacing: 12) {
-                    Text(L10n.introTitle(kind)).font(.kRounded(18)).foregroundStyle(Color.kPink)
+                    Text(L10n.introTitle(kind))
+                        .font(.kRounded(18))
+                        .foregroundStyle(Color.kPink)
                         .multilineTextAlignment(.center)
-                    Text(L10n.introBody(kind)).font(.kRounded(13, .medium)).foregroundStyle(Color.ink)
+                    Text(L10n.introBody(kind))
+                        .font(.kRounded(13, .medium))
+                        .foregroundStyle(Color.ink)
                         .multilineTextAlignment(.center)
                     Button(action: onOK) {
-                        Text("わかった！").font(.kRounded(15, .bold)).foregroundStyle(.white)
-                            .padding(.horizontal, 28).padding(.vertical, 9)
+                        Text("わかった！")
+                            .font(.kRounded(15, .bold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 9)
                             .background(Color.kGreen, in: Capsule())
                     }
                     .buttonStyle(.plain)
@@ -206,11 +223,17 @@ struct ContinueCard: View {
             VStack(spacing: 14) {
                 Image("icon_apple").resizable().scaledToFit().frame(width: 56).opacity(0.35)
                 Text("りんごがなくなった！").font(.kRounded(18)).foregroundStyle(Color.ink)
-                Text("りんごを1つもらって、続きから遊べます").font(.kRounded(13, .medium)).foregroundStyle(.secondary)
+                Text("りんごを1つもらって、続きから遊べます")
+                    .font(.kRounded(13, .medium))
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                 if Monetization.adsRemoved || Monetization.isRewardedAdReady {
-                    PillButton(title: Monetization.adsRemoved ? String(localized: "続ける") : String(localized: "広告を見て続ける"),
-                               fill: .kGreen, textColor: .white, action: onContinue)
+                    PillButton(
+                        title: Monetization.adsRemoved ? String(localized: "続ける") : String(localized: "広告を見て続ける"),
+                        fill: .kGreen,
+                        textColor: .white,
+                        action: onContinue
+                    )
                 }
                 PillButton(title: String(localized: "やめる"), fill: Color(hex: 0xEFEDE7), action: onStop)
             }
@@ -233,10 +256,12 @@ struct ResultView: View {
             Color.black.opacity(0.3).ignoresSafeArea()
             VStack(spacing: 12) {
                 Text(state.mode == .challenge ? String(localized: "おしまい！") : String(localized: "おつかれさま！"))
-                    .font(.kRounded(26)).foregroundStyle(Color.ink)
+                    .font(.kRounded(26))
+                    .foregroundStyle(Color.ink)
                 Text(String(localized: "\(state.score)点")).font(.kRounded(42)).foregroundStyle(Color.kPink)
                 Text(state.isNewBest ? String(localized: "自己ベスト更新！") : String(localized: "自己ベスト \(state.bestScore)点"))
-                    .font(.kRounded(14, .bold)).foregroundStyle(state.isNewBest ? Color(hex: 0xE8833A) : .secondary)
+                    .font(.kRounded(14, .bold))
+                    .foregroundStyle(state.isNewBest ? Color(hex: 0xE8833A) : .secondary)
 
                 VStack(alignment: .leading, spacing: 6) {
                     row("piglet_normal", L10n.name(.piglet), state.tappedCount[.piglet, default: 0], points: 1)

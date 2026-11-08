@@ -28,16 +28,19 @@ struct HowToView: View {
                     .background(.white, in: .rect(cornerRadius: 24))
                 }
             }
-            .padding(.horizontal, 16).padding(.top, 12)
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
             .frame(maxWidth: 420)
         }
     }
 
     private func tabButton(_ title: String, index: Int) -> some View {
         Button { tab = index } label: {
-            Text(title).font(.kRounded(14, .bold))
+            Text(title)
+                .font(.kRounded(14, .bold))
                 .foregroundStyle(tab == index ? .white : .secondary)
-                .frame(maxWidth: .infinity).padding(.vertical, 9)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 9)
                 .background(tab == index ? Color.kGreen : .white, in: Capsule())
         }
         .buttonStyle(.plain)
@@ -45,15 +48,32 @@ struct HowToView: View {
 
     // MARK: キャラクター
 
+    /// 点数のバッジの色
+    private struct Chip {
+        let text: String
+        let fill: Color
+        let textColor: Color
+
+        static func plus(_ text: String, golden: Bool = false) -> Chip {
+            golden
+                ? Chip(text: text, fill: Color(hex: 0xF9E29A), textColor: Color(hex: 0x8A5E12))
+                : Chip(text: text, fill: Color(hex: 0xF9C3CF), textColor: Color(hex: 0xB8566F))
+        }
+
+        static var miss: Chip {
+            Chip(text: String(localized: "ミス"), fill: Color(hex: 0xD9DEE8), textColor: Color(hex: 0x3D4A66))
+        }
+    }
+
     private var characters: some View {
         VStack(spacing: 0) {
-            row("piglet_normal", L10n.name(.piglet), String(localized: "タップして集めよう"), chip: "+1", chipColor: Color(hex: 0xF9C3CF), chipText: Color(hex: 0xB8566F))
+            row("piglet_normal", L10n.name(.piglet), String(localized: "タップして集めよう"), chip: .plus("+1"))
             Divider()
-            row("golden_normal", L10n.name(.golden), String(localized: "たまに出るごほうび"), chip: "+10", chipColor: Color(hex: 0xF9E29A), chipText: Color(hex: 0x8A5E12))
+            row("golden_normal", L10n.name(.golden), String(localized: "たまに出るごほうび"), chip: .plus("+10", golden: true))
             Divider()
-            row("wolf_normal", L10n.name(.wolf), String(localized: "タップしちゃダメ！"), chip: String(localized: "ミス"), chipColor: Color(hex: 0xD9DEE8), chipText: Color(hex: 0x3D4A66))
+            row("wolf_normal", L10n.name(.wolf), String(localized: "タップしちゃダメ！"), chip: .miss)
             Divider()
-            row("disguise_normal", L10n.name(.disguise), String(localized: "よく見て見破ろう"), chip: String(localized: "ミス"), chipColor: Color(hex: 0xD9DEE8), chipText: Color(hex: 0x3D4A66))
+            row("disguise_normal", L10n.name(.disguise), String(localized: "よく見て見破ろう"), chip: .miss)
             Divider()
             row("item_brick", L10n.name(.brick), String(localized: "タップすると5秒間、おおかみを押しても平気"), chip: nil)
             Divider()
@@ -61,7 +81,7 @@ struct HowToView: View {
         }
     }
 
-    private func row(_ image: String, _ name: String, _ desc: String, chip: String?, chipColor: Color = .clear, chipText: Color = .clear) -> some View {
+    private func row(_ image: String, _ name: String, _ desc: String, chip: Chip?) -> some View {
         HStack(spacing: 12) {
             Image(image).resizable().scaledToFit().frame(width: 52, height: 56)
             VStack(alignment: .leading, spacing: 3) {
@@ -70,9 +90,12 @@ struct HowToView: View {
             }
             Spacer()
             if let chip {
-                Text(chip).font(.kRounded(13)).foregroundStyle(chipText)
-                    .padding(.horizontal, 10).padding(.vertical, 4)
-                    .background(chipColor, in: Capsule())
+                Text(chip.text)
+                    .font(.kRounded(13))
+                    .foregroundStyle(chip.textColor)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(chip.fill, in: Capsule())
             }
         }
         .padding(.vertical, 8)
@@ -103,8 +126,11 @@ struct HowToView: View {
 
     private func section(_ title: String, color: Color, text: Color, lines: [String]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.kRounded(13)).foregroundStyle(text)
-                .padding(.horizontal, 12).padding(.vertical, 4)
+            Text(title)
+                .font(.kRounded(13))
+                .foregroundStyle(text)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 4)
                 .background(color, in: Capsule())
             ForEach(lines, id: \.self) { line in
                 Text(line).font(.kRounded(13, .medium)).foregroundStyle(Color.ink)

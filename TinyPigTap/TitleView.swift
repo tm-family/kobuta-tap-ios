@@ -14,8 +14,11 @@ struct TitleView: View {
                 Spacer()
                 PillButton(title: String(localized: "タップしてスタート"), action: onStart)
                 Button(action: onHowTo) {
-                    Text("遊び方").font(.kRounded(16, .bold)).foregroundStyle(Color.ink)
-                        .padding(.horizontal, 20).padding(.vertical, 8)
+                    Text("遊び方")
+                        .font(.kRounded(16, .bold))
+                        .foregroundStyle(Color.ink)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
                         .background(.white.opacity(0.75), in: Capsule())
                 }
                 .buttonStyle(.plain)
@@ -45,7 +48,8 @@ struct ModeSelectView: View {
                 card(.relaxed, color: Color(hex: 0x4F9A43), note: String(localized: "ゆっくり集めよう"), image: "piglet_normal")
                 Spacer()
             }
-            .padding(.horizontal, 24).padding(.top, 12)
+            .padding(.horizontal, 24)
+            .padding(.top, 12)
             .frame(maxWidth: 420)
         }
     }

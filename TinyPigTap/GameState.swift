@@ -32,7 +32,7 @@ final class GameState {
         timeRemaining = mode.timeLimit
     }
 
-    func addScore(_ n: Int) { score = max(0, score + n) }
+    func addScore(_ points: Int) { score = max(0, score + points) }
 
     // MARK: 端末に保存するもの
 

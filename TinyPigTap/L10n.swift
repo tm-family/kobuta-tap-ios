@@ -16,8 +16,8 @@ enum L10n {
     static var shieldOn: String { String(localized: "レンガで守る！") }
     static var appleUp: String { String(localized: "りんご +1") }
 
-    static func points(_ n: Int) -> String {
-        n >= 0 ? "+\(n)" : "−\(-n)"
+    static func points(_ value: Int) -> String {
+        value >= 0 ? "+\(value)" : "−\(-value)"
     }
 
     static func introTitle(_ kind: ItemKind) -> String {

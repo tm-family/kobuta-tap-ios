@@ -10,8 +10,8 @@ final class ItemNode: SKSpriteNode {
     init(kind: ItemKind, textureName: String, width: CGFloat) {
         self.kind = kind
         let texture = SKTexture(imageNamed: textureName)
-        super.init(texture: texture, color: .clear,
-                   size: CGSize(width: width * kind.sizeFactor, height: width * kind.sizeFactor * kind.aspect))
+        let size = CGSize(width: width * kind.sizeFactor, height: width * kind.sizeFactor * kind.aspect)
+        super.init(texture: texture, color: .clear, size: size)
         // 動物は傘の上を支点に揺らす（README参照）
         anchorPoint = kind.isAnimal ? CGPoint(x: 0.62, y: 0.82) : CGPoint(x: 0.5, y: 0.5)
         zPosition = 10
@@ -61,8 +61,8 @@ final class GameScene: SKScene {
     // MARK: - 遊ぶ範囲（iPhoneの比率に固定し、iPadでは中央に置く）
 
     var playRect: CGRect {
-        let w = min(size.width, size.height * Tuning.playAspect)
-        return CGRect(x: (size.width - w) / 2, y: 0, width: w, height: size.height)
+        let width = min(size.width, size.height * Tuning.playAspect)
+        return CGRect(x: (size.width - width) / 2, y: 0, width: width, height: size.height)
     }
     private var groundY: CGFloat { size.height * Tuning.groundRatio }
     private var baseWidth: CGFloat { playRect.width * Tuning.itemWidthRatio }
@@ -73,14 +73,14 @@ final class GameScene: SKScene {
 
     private var fallDuration: TimeInterval {
         guard mode == .challenge else { return Tuning.relaxedFallDuration }
-        let r = Tuning.challengeFallDuration
-        return r.upperBound - (r.upperBound - r.lowerBound) * progress
+        let range = Tuning.challengeFallDuration
+        return range.upperBound - (range.upperBound - range.lowerBound) * progress
     }
 
     private var spawnInterval: TimeInterval {
         guard mode == .challenge else { return Tuning.relaxedSpawnInterval }
-        let r = Tuning.challengeSpawnInterval
-        return r.upperBound - (r.upperBound - r.lowerBound) * progress
+        let range = Tuning.challengeSpawnInterval
+        return range.upperBound - (range.upperBound - range.lowerBound) * progress
     }
 
     // MARK: - ループ
@@ -94,20 +94,20 @@ final class GameScene: SKScene {
         spawnTimer += delta
 
         if mode == .challenge {
-            let p = Phase.forElapsed(elapsed)
-            if p != state.phase {
-                state.phase = p
-                background.transition(to: .challenge(p), size: size)
+            let phase = Phase.forElapsed(elapsed)
+            if phase != state.phase {
+                state.phase = phase
+                background.transition(to: .challenge(phase), size: size)
             }
         } else {
             // のんびりは端末の時計と日付に合わせる（30秒ごとに確認）
             clockCheckTimer += delta
             if clockCheckTimer >= 30 {
                 clockCheckTimer = 0
-                let s = Scenery.now()
-                if s != background.scenery {
-                    state.phase = s.phase
-                    background.transition(to: s, size: size)
+                let scenery = Scenery.now()
+                if scenery != background.scenery {
+                    state.phase = scenery.phase
+                    background.transition(to: scenery, size: size)
                 }
             }
         }
@@ -116,8 +116,8 @@ final class GameScene: SKScene {
             state.shieldRemaining = max(0, state.shieldRemaining - delta)
         }
 
-        if let t = state.timeRemaining {
-            let remaining = max(0, t - delta)
+        if let timeRemaining = state.timeRemaining {
+            let remaining = max(0, timeRemaining - delta)
             state.timeRemaining = remaining
             if remaining == 0 { endGame(); return }
         }
@@ -166,9 +166,9 @@ final class GameScene: SKScene {
         let relaxed = mode == .relaxed
         let dx: CGFloat = relaxed ? 24 : 14
         let angle: CGFloat = relaxed ? 0.2 : 0.12
-        let t: TimeInterval = relaxed ? 1.2 : 0.7
-        let right = SKAction.group([.moveBy(x: dx, y: 0, duration: t), .rotate(toAngle: -angle, duration: t)])
-        let left = SKAction.group([.moveBy(x: -dx, y: 0, duration: t), .rotate(toAngle: angle, duration: t)])
+        let duration: TimeInterval = relaxed ? 1.2 : 0.7
+        let right = SKAction.group([.moveBy(x: dx, y: 0, duration: duration), .rotate(toAngle: -angle, duration: duration)])
+        let left = SKAction.group([.moveBy(x: -dx, y: 0, duration: duration), .rotate(toAngle: angle, duration: duration)])
         right.timingMode = .easeInEaseOut
         left.timingMode = .easeInEaseOut
         node.run(.repeatForever(.sequence([right, left])), withKey: "sway")
@@ -195,18 +195,18 @@ final class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard state.status == .playing else { return }
         for touch in touches {
-            let p = touch.location(in: self)
+            let point = touch.location(in: self)
             let hits = children
                 .compactMap { $0 as? ItemNode }
-                .filter { !$0.isResolved && $0.frame.insetBy(dx: -10, dy: -10).contains(p) }
-            if let node = hits.min(by: { distance($0, p) < distance($1, p) }) {
+                .filter { !$0.isResolved && $0.frame.insetBy(dx: -10, dy: -10).contains(point) }
+            if let node = hits.min(by: { distance($0, point) < distance($1, point) }) {
                 handleTap(node)
             }
         }
     }
 
-    private func distance(_ node: ItemNode, _ p: CGPoint) -> CGFloat {
-        hypot(node.frame.midX - p.x, node.frame.midY - p.y)
+    private func distance(_ node: ItemNode, _ point: CGPoint) -> CGFloat {
+        hypot(node.frame.midX - point.x, node.frame.midY - point.y)
     }
 
     private func handleTap(_ node: ItemNode) {
@@ -216,75 +216,94 @@ final class GameScene: SKScene {
         let at = CGPoint(x: node.frame.midX, y: node.frame.maxY)
 
         switch node.kind {
-        case .piglet, .golden:
-            tapHaptic.impactOccurred()
-            let points = node.kind == .golden ? 10 : 1
-            state.addScore(points)
-            state.tappedCount[node.kind, default: 0] += 1
-            state.combo += 1
-            node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
-            popup(L10n.points(points), at: at, color: .systemPink)
-            popup(L10n.oink, at: CGPoint(x: at.x, y: at.y + 26), size: 16)
-            if state.combo % Tuning.comboStep == 0 {
-                state.addScore(Tuning.comboBonus)
-                state.comboCount += 1
-                popup("\(L10n.combo) \(L10n.points(Tuning.comboBonus))",
-                      at: CGPoint(x: size.width / 2, y: size.height * 0.6), size: 26, color: .systemOrange)
-            }
-            vanishAfterReaction(node)
-
-        case .wolf, .disguise:
-            if state.shieldRemaining > 0 {
-                tapHaptic.impactOccurred()
-                popup(L10n.safe, at: at, color: .brown)
-                node.run(.sequence([.fadeOut(withDuration: 0.25), .removeFromParent()]))
-                return
-            }
-            missHaptic.notificationOccurred(.error)
-            state.combo = 0
-            state.missCount += 1
-            node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
-            popup(node.kind == .wolf ? L10n.grr : L10n.busted, at: at, color: .systemRed)
-            if mode == .challenge {
-                loseApple()
-            } else {
-                state.addScore(-Tuning.relaxedWolfPenalty)
-                popup(L10n.points(-Tuning.relaxedWolfPenalty), at: CGPoint(x: at.x, y: at.y + 26), size: 16, color: .systemRed)
-            }
-            vanishAfterReaction(node)
-
-        case .brick:
-            tapHaptic.impactOccurred()
-            state.shieldRemaining = Tuning.shieldDuration
-            popup(L10n.shieldOn, at: at, color: .brown)
-            node.run(.sequence([.scale(to: 1.2, duration: 0.1), .fadeOut(withDuration: 0.2), .removeFromParent()]))
-
-        case .apple:
-            tapHaptic.impactOccurred()
-            if let apples = state.apples {
-                state.apples = min(apples + 1, Tuning.maxApples)
-                popup(L10n.appleUp, at: at, color: .systemRed)
-            } else {
-                state.addScore(Tuning.relaxedApplePoints)
-                state.appleCount += 1
-                popup(L10n.points(Tuning.relaxedApplePoints), at: at, color: .systemRed)
-            }
-            node.run(.sequence([.scale(to: 1.2, duration: 0.1), .fadeOut(withDuration: 0.2), .removeFromParent()]))
+        case .piglet, .golden: tapPiglet(node, at: at)
+        case .wolf, .disguise: tapWolf(node, at: at)
+        case .brick: tapBrick(node, at: at)
+        case .apple: tapApple(node, at: at)
         }
+    }
+}
+
+// MARK: - タップしたときの反応
+
+private extension GameScene {
+    func tapPiglet(_ node: ItemNode, at: CGPoint) {
+        tapHaptic.impactOccurred()
+        let points = node.kind == .golden ? 10 : 1
+        state.addScore(points)
+        state.tappedCount[node.kind, default: 0] += 1
+        state.combo += 1
+        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
+        popup(L10n.points(points), at: at, color: .systemPink)
+        popup(L10n.oink, at: CGPoint(x: at.x, y: at.y + 26), size: 16)
+        if state.combo.isMultiple(of: Tuning.comboStep) {
+            state.addScore(Tuning.comboBonus)
+            state.comboCount += 1
+            popup(
+                "\(L10n.combo) \(L10n.points(Tuning.comboBonus))",
+                at: CGPoint(x: size.width / 2, y: size.height * 0.6),
+                size: 26,
+                color: .systemOrange
+            )
+        }
+        vanishAfterReaction(node)
+    }
+
+    func tapWolf(_ node: ItemNode, at: CGPoint) {
+        if state.shieldRemaining > 0 {
+            tapHaptic.impactOccurred()
+            popup(L10n.safe, at: at, color: .brown)
+            node.run(.sequence([.fadeOut(withDuration: 0.25), .removeFromParent()]))
+            return
+        }
+        missHaptic.notificationOccurred(.error)
+        state.combo = 0
+        state.missCount += 1
+        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
+        popup(node.kind == .wolf ? L10n.grr : L10n.busted, at: at, color: .systemRed)
+        if mode == .challenge {
+            loseApple()
+        } else {
+            state.addScore(-Tuning.relaxedWolfPenalty)
+            popup(L10n.points(-Tuning.relaxedWolfPenalty), at: CGPoint(x: at.x, y: at.y + 26), size: 16, color: .systemRed)
+        }
+        vanishAfterReaction(node)
+    }
+
+    func tapBrick(_ node: ItemNode, at: CGPoint) {
+        tapHaptic.impactOccurred()
+        state.shieldRemaining = Tuning.shieldDuration
+        popup(L10n.shieldOn, at: at, color: .brown)
+        node.run(.sequence([.scale(to: 1.2, duration: 0.1), .fadeOut(withDuration: 0.2), .removeFromParent()]))
+    }
+
+    func tapApple(_ node: ItemNode, at: CGPoint) {
+        tapHaptic.impactOccurred()
+        if let apples = state.apples {
+            state.apples = min(apples + 1, Tuning.maxApples)
+            popup(L10n.appleUp, at: at, color: .systemRed)
+        } else {
+            state.addScore(Tuning.relaxedApplePoints)
+            state.appleCount += 1
+            popup(L10n.points(Tuning.relaxedApplePoints), at: at, color: .systemRed)
+        }
+        node.run(.sequence([.scale(to: 1.2, duration: 0.1), .fadeOut(withDuration: 0.2), .removeFromParent()]))
     }
 
     /// 反応の顔を少し見せてから消す
-    private func vanishAfterReaction(_ node: ItemNode) {
+    func vanishAfterReaction(_ node: ItemNode) {
         node.run(.sequence([
             .scale(to: 1.12, duration: 0.08), .scale(to: 1.0, duration: 0.08),
             .wait(forDuration: 0.3),
             .fadeOut(withDuration: 0.2), .removeFromParent()
         ]))
     }
+}
 
-    // MARK: - 着地（着いた瞬間に結果を確定し、以降はタップできない）
+// MARK: - 着地（着いた瞬間に結果を確定し、以降はタップできない）
 
-    private func land(_ node: ItemNode) {
+private extension GameScene {
+    func land(_ node: ItemNode) {
         guard !node.isResolved else { return }
         node.isResolved = true
         node.removeAction(forKey: "sway")
@@ -299,8 +318,11 @@ final class GameScene: SKScene {
         case .disguise:
             state.addScore(Tuning.disguiseBonus)
             state.spottedCount += 1
-            popup("\(L10n.spotted) \(L10n.points(Tuning.disguiseBonus))",
-                  at: CGPoint(x: node.frame.midX, y: groundY + node.size.height * 1.1), color: .systemGreen)
+            popup(
+                "\(L10n.spotted) \(L10n.points(Tuning.disguiseBonus))",
+                at: CGPoint(x: node.frame.midX, y: groundY + node.size.height * 1.1),
+                color: .systemGreen
+            )
             animalLanding(node, reaction: L10n.uhOh)
         case .brick:
             brickLanding(node)
@@ -310,7 +332,7 @@ final class GameScene: SKScene {
     }
 
     /// ぽてっ → 尻もち → 傘を拾って走って逃げる
-    private func animalLanding(_ node: ItemNode, reaction: String) {
+    func animalLanding(_ node: ItemNode, reaction: String) {
         let kind = node.kind
         // 足もと基準に切り替える
         let x = node.frame.midX
@@ -325,8 +347,8 @@ final class GameScene: SKScene {
         umbrella.zRotation = dir * 1.75
         umbrella.zPosition = 9
 
-        let w = node.size.width
-        popup(L10n.plop, at: CGPoint(x: x, y: groundY + w * 1.2), size: 16)
+        let width = node.size.width
+        popup(L10n.plop, at: CGPoint(x: x, y: groundY + width * 1.2), size: 16)
 
         node.run(.sequence([
             .scaleX(to: 1.12, y: 0.86, duration: 0.07),
@@ -336,7 +358,7 @@ final class GameScene: SKScene {
                 MainActor.assumeIsolated {
                     guard let self, let umbrella else { return }
                     self.addChild(umbrella)
-                    self.popup(reaction, at: CGPoint(x: x, y: self.groundY + w * 1.35))
+                    self.popup(reaction, at: CGPoint(x: x, y: self.groundY + width * 1.35))
                 }
             },
             .wait(forDuration: 0.75),
@@ -351,7 +373,7 @@ final class GameScene: SKScene {
     }
 
     /// ごとっ → 草にうもれて消える
-    private func brickLanding(_ node: ItemNode) {
+    func brickLanding(_ node: ItemNode) {
         popup(L10n.thud, at: CGPoint(x: node.position.x, y: node.position.y + node.size.height))
         node.run(.sequence([
             .scaleX(to: 1.1, y: 0.85, duration: 0.06), .scale(to: 1.0, duration: 0.08),
@@ -362,7 +384,7 @@ final class GameScene: SKScene {
     }
 
     /// ぽんとはねて、ころころ画面の外へ
-    private func appleLanding(_ node: ItemNode) {
+    func appleLanding(_ node: ItemNode) {
         let dir: CGFloat = node.position.x < size.width / 2 ? -1 : 1
         let up = SKAction.moveBy(x: 0, y: node.size.height * 0.6, duration: 0.18)
         up.timingMode = .easeOut
@@ -371,14 +393,18 @@ final class GameScene: SKScene {
         popup(L10n.rolling, at: CGPoint(x: node.position.x, y: node.position.y + node.size.height * 1.2))
         node.run(.sequence([
             up, down,
-            .group([.moveBy(x: dir * size.width * 0.7, y: 0, duration: 1.1),
-                    .rotate(byAngle: -dir * .pi * 4, duration: 1.1)]),
+            .group([
+                .moveBy(x: dir * size.width * 0.7, y: 0, duration: 1.1),
+                .rotate(byAngle: -dir * .pi * 4, duration: 1.1)
+            ]),
             .removeFromParent()
         ]))
     }
+}
 
-    // MARK: - りんごと終了
+// MARK: - りんごと終了
 
+extension GameScene {
     private func loseApple() {
         guard let apples = state.apples else { return }
         missHaptic.notificationOccurred(.warning)
@@ -411,17 +437,24 @@ final class GameScene: SKScene {
         state.finalizeBest()
         isPaused = true
     }
+}
 
-    // MARK: - 文字の演出
+// MARK: - 文字の演出
 
-    private func popup(_ text: String, at point: CGPoint, size fontSize: CGFloat = 22, color: UIColor = UIColor(red: 0.24, green: 0.17, blue: 0.2, alpha: 1)) {
+private extension GameScene {
+    static let popupInk = UIColor(red: 0.24, green: 0.17, blue: 0.2, alpha: 1)
+
+    func popup(_ text: String, at point: CGPoint, size fontSize: CGFloat = 22, color: UIColor = GameScene.popupInk) {
         let label = SKLabelNode()
-        label.attributedText = NSAttributedString(string: text, attributes: [
-            .font: AppFont.uiFont(fontSize),
-            .foregroundColor: color,
-            .strokeColor: UIColor.white,
-            .strokeWidth: -5
-        ])
+        label.attributedText = NSAttributedString(
+            string: text,
+            attributes: [
+                .font: AppFont.uiFont(fontSize),
+                .foregroundColor: color,
+                .strokeColor: UIColor.white,
+                .strokeWidth: -5
+            ]
+        )
         label.position = point
         label.zPosition = 50
         addChild(label)
