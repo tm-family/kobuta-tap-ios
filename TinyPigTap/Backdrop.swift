@@ -65,27 +65,22 @@ struct OutlinedText: View {
     }
 }
 
-/// タイトルロゴ（案01-A：先頭の文字に葉っぱの傘）
+/// タイトルロゴ（案01-A：先頭の文字に葉っぱの傘）。
+/// デザイン資料の logo_ja.svg / logo_en.svg をそのまま使い、アセットカタログが端末の言語で切り替える。
 struct LogoView: View {
+    /// 文字の大きさ（pt）
     var size: CGFloat = 46
 
+    /// SVG の高さ（viewBox）と、SVG の中の文字の大きさ。文字が size になるように縮める
+    private static let svgHeight: CGFloat = 150
+    private static let svgFontSize: CGFloat = 60
+
     var body: some View {
-        HStack(spacing: 0) {
-            OutlinedText(text: String(localized: "logo_part1", defaultValue: "こぶた"), size: size, color: Color(hex: 0xF28CA8))
-                .overlay(alignment: .topLeading) {
-                    Image("umbrella_leaf")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: size * 0.95)
-                        .rotationEffect(.degrees(-20))
-                        .offset(x: -size * 0.2, y: -size * 0.85)
-                        .shadow(color: .white, radius: 0, x: 2, y: 2)
-                }
-            OutlinedText(text: String(localized: "logo_part2", defaultValue: "タップ"), size: size, color: Color.kGreen)
-        }
-        .padding(.top, size * 0.8)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("こぶたタップ"))
+        Image("logo")
+            .resizable()
+            .scaledToFit()
+            .frame(maxHeight: Self.svgHeight * size / Self.svgFontSize)
+            .accessibilityLabel(Text("こぶたタップ"))
     }
 }
 

@@ -311,38 +311,6 @@
         }
       }
     },
-    "logo_part1": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiny Pig "
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "こぶた"
-          }
-        }
-      }
-    },
-    "logo_part2": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "タップ"
-          }
-        }
-      }
-    },
     "こぶたタップ": {
       "localizations": {
         "en": {
