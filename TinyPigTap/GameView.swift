@@ -9,6 +9,9 @@ struct GameView: View {
     @State private var state: GameState
     @State private var scene: GameScene
 
+    /// 画面の上端から上部の表示までの最小の距離（iPad のステータスバーの高さ）
+    private static let hudMinimumTopInset: CGFloat = 24
+
     init(mode: GameMode, onRestart: @escaping () -> Void, onExit: @escaping () -> Void) {
         self.mode = mode
         self.onRestart = onRestart
@@ -34,6 +37,9 @@ struct GameView: View {
 
                 VStack { hud; Spacer() }
                     .frame(width: playWidth)
+                    // ステータスバーを隠すと、iPad やホームボタンのある iPhone では上の安全領域が 0 になる。
+                    // 上部の表示が画面の端に付かないよう、ステータスバーがあったときと同じだけは空ける
+                    .padding(.top, max(0, Self.hudMinimumTopInset - geo.safeAreaInsets.top))
 
                 if let remaining = state.timeRemaining, remaining > 0, remaining <= 10, state.status == .playing {
                     OutlinedText(text: String(localized: "あと \(Int(remaining.rounded(.up)))"), size: 40, color: Color(hex: 0xE85A4F))
@@ -43,6 +49,8 @@ struct GameView: View {
                 overlay.frame(width: geo.size.width, height: geo.size.height)
             }
         }
+        // プレイ中は時刻や電池の表示がキャラクターと重ならないよう、ステータスバーを隠す（メニューでは出す）
+        .statusBarHidden()
     }
 
     @ViewBuilder private var overlay: some View {
