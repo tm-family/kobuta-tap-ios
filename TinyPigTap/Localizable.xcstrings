@@ -1,5 +1,5 @@
 {
-  "sourceLanguage": "ja",
+  "sourceLanguage": "en",
   "strings": {
     "チャレンジ": {
       "localizations": {
@@ -7,6 +7,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Challenge"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "チャレンジ"
           }
         }
       }
@@ -18,6 +24,12 @@
             "state": "translated",
             "value": "Relax"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "のんびり"
+          }
         }
       }
     },
@@ -27,6 +39,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "60 sec · 3 apples"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "60秒・りんご3つ"
           }
         }
       }
@@ -38,6 +56,12 @@
             "state": "translated",
             "value": "No time limit"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間制限なし"
+          }
         }
       }
     },
@@ -47,6 +71,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Oink!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ぷひっ"
           }
         }
       }
@@ -58,6 +88,12 @@
             "state": "translated",
             "value": "Grrr!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ガオー！"
+          }
         }
       }
     },
@@ -67,6 +103,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Busted!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バレた！"
           }
         }
       }
@@ -78,6 +120,12 @@
             "state": "translated",
             "value": "Uh-oh!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ギクッ"
+          }
         }
       }
     },
@@ -87,6 +135,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Safe!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セーフ！"
           }
         }
       }
@@ -98,6 +152,12 @@
             "state": "translated",
             "value": "Plop!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ぽてっ"
+          }
         }
       }
     },
@@ -107,6 +167,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouch..."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "いてて…"
           }
         }
       }
@@ -118,6 +184,12 @@
             "state": "translated",
             "value": "Thud!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ごとっ"
+          }
         }
       }
     },
@@ -127,6 +199,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Roll, roll..."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ころころ〜"
           }
         }
       }
@@ -138,6 +216,12 @@
             "state": "translated",
             "value": "Combo!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コンボ！"
+          }
         }
       }
     },
@@ -147,6 +231,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Spotted!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見破り！"
           }
         }
       }
@@ -158,6 +248,12 @@
             "state": "translated",
             "value": "Brick shield!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レンガで守る！"
+          }
         }
       }
     },
@@ -167,6 +263,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apple +1"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんご +1"
           }
         }
       }
@@ -178,6 +280,12 @@
             "state": "translated",
             "value": "Golden piglets are worth 10!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金のこぶたは10点！"
+          }
         }
       }
     },
@@ -187,6 +295,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Watch out for the wolf in disguise!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "着ぐるみのおおかみに注意！"
           }
         }
       }
@@ -198,6 +312,12 @@
             "state": "translated",
             "value": "Shield up with a brick"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レンガで守ろう"
+          }
         }
       }
     },
@@ -207,6 +327,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Take a breather with an apple"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごでひと休み"
           }
         }
       }
@@ -218,6 +344,12 @@
             "state": "translated",
             "value": "A rare treat that doesn't show up often"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "たまにしか出ないごほうび"
+          }
         }
       }
     },
@@ -227,6 +359,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Looks just like a piglet. Check the sly eyes and the tail."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こぶたにそっくり。つり目としっぽをよく見て"
           }
         }
       }
@@ -238,6 +376,12 @@
             "state": "translated",
             "value": "Tap it, and wolves can't hurt you for 5 seconds"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タップすると5秒間、おおかみを押しても平気"
+          }
         }
       }
     },
@@ -247,6 +391,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "In Challenge, you get one more apple"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "チャレンジではりんごが1つ増える"
           }
         }
       }
@@ -258,6 +408,12 @@
             "state": "translated",
             "value": "Piglet"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こぶた"
+          }
         }
       }
     },
@@ -267,6 +423,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Golden piglet"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金のこぶた"
           }
         }
       }
@@ -278,6 +440,12 @@
             "state": "translated",
             "value": "Wolf"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おおかみ"
+          }
         }
       }
     },
@@ -287,6 +455,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wolf in disguise"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "着ぐるみのおおかみ"
           }
         }
       }
@@ -298,6 +472,12 @@
             "state": "translated",
             "value": "Brick"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "レンガ"
+          }
         }
       }
     },
@@ -307,6 +487,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apple"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんご"
           }
         }
       }
@@ -318,6 +504,12 @@
             "state": "translated",
             "value": "Tiny Pig Tap"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こぶたタップ"
+          }
         }
       }
     },
@@ -327,6 +519,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tap to Start"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タップしてスタート"
           }
         }
       }
@@ -338,6 +536,12 @@
             "state": "translated",
             "value": "How to Play"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "遊び方"
+          }
         }
       }
     },
@@ -347,6 +551,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "‹ Back"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‹ 戻る"
           }
         }
       }
@@ -358,6 +568,12 @@
             "state": "translated",
             "value": "Choose a Mode"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モードを選ぶ"
+          }
         }
       }
     },
@@ -367,6 +583,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Watch out for wolves!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おおかみに注意！"
           }
         }
       }
@@ -378,6 +600,12 @@
             "state": "translated",
             "value": "Collect at your own pace"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ゆっくり集めよう"
+          }
         }
       }
     },
@@ -387,6 +615,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Best %lld pts"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自己ベスト %lld点"
           }
         }
       }
@@ -398,6 +632,12 @@
             "state": "translated",
             "value": "Characters"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キャラクター"
+          }
         }
       }
     },
@@ -407,6 +647,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rules"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ルール"
           }
         }
       }
@@ -418,6 +664,12 @@
             "state": "translated",
             "value": "Tap to collect"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タップして集めよう"
+          }
         }
       }
     },
@@ -427,6 +679,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "A rare treat"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "たまに出るごほうび"
           }
         }
       }
@@ -438,6 +696,12 @@
             "state": "translated",
             "value": "Don't tap!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タップしちゃダメ！"
+          }
         }
       }
     },
@@ -447,6 +711,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Look closely and see through it"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "よく見て見破ろう"
           }
         }
       }
@@ -458,6 +728,12 @@
             "state": "translated",
             "value": "Gives you one more apple"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごが1つ増える"
+          }
         }
       }
     },
@@ -467,6 +743,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Miss"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ミス"
           }
         }
       }
@@ -478,6 +760,12 @@
             "state": "translated",
             "value": "Collect as many as you can in 60 sec"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "60秒でたくさん集めよう"
+          }
         }
       }
     },
@@ -487,6 +775,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Game over when you run out of apples"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごがなくなったら終了"
           }
         }
       }
@@ -498,6 +792,12 @@
             "state": "translated",
             "value": "Miss a piglet or tap a wolf → apple −1"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "こぶたを見逃す・おおかみをタップ → りんご −1"
+          }
         }
       }
     },
@@ -507,6 +807,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tap a wolf → −1 pt"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おおかみをタップ → −1点"
           }
         }
       }
@@ -518,6 +824,12 @@
             "state": "translated",
             "value": "Apple → +3 pts"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんご → +3点"
+          }
         }
       }
     },
@@ -527,6 +839,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bonus"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ボーナス"
           }
         }
       }
@@ -538,6 +856,12 @@
             "state": "translated",
             "value": "Spotted +2: let a wolf in disguise pass without tapping it"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見破り ＋2：着ぐるみのおおかみを、タップせず見送る"
+          }
         }
       }
     },
@@ -547,6 +871,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Combo +1: tap 5 piglets in a row"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コンボ ＋1：こぶたを5匹続けてタップ"
           }
         }
       }
@@ -558,6 +888,12 @@
             "state": "translated",
             "value": "%lld pts"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld点"
+          }
         }
       }
     },
@@ -567,6 +903,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Done"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おしまい"
           }
         }
       }
@@ -578,6 +920,12 @@
             "state": "translated",
             "value": "%lld sec"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あと %lld"
+          }
         }
       }
     },
@@ -587,6 +935,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld s"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あと%lld"
           }
         }
       }
@@ -598,6 +952,12 @@
             "state": "translated",
             "value": "Got it!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "わかった！"
+          }
         }
       }
     },
@@ -607,6 +967,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Out of apples!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごがなくなった！"
           }
         }
       }
@@ -618,6 +984,12 @@
             "state": "translated",
             "value": "Get one apple and keep playing"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごを1つもらって、続きから遊べます"
+          }
         }
       }
     },
@@ -627,6 +999,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Continue"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "続ける"
           }
         }
       }
@@ -638,6 +1016,12 @@
             "state": "translated",
             "value": "Watch an Ad to Continue"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "広告を見て続ける"
+          }
         }
       }
     },
@@ -647,6 +1031,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stop"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "やめる"
           }
         }
       }
@@ -658,6 +1048,12 @@
             "state": "translated",
             "value": "Time's up!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おしまい！"
+          }
         }
       }
     },
@@ -667,6 +1063,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "All done!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "おつかれさま！"
           }
         }
       }
@@ -678,6 +1080,12 @@
             "state": "translated",
             "value": "New best!"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自己ベスト更新！"
+          }
         }
       }
     },
@@ -687,6 +1095,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Spotted"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見破り"
           }
         }
       }
@@ -698,6 +1112,12 @@
             "state": "translated",
             "value": "Combo"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コンボ"
+          }
         }
       }
     },
@@ -707,6 +1127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Play Again"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "もう一度"
           }
         }
       }
@@ -718,12 +1144,24 @@
             "state": "translated",
             "value": "Modes"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モード選択へ"
+          }
         }
       }
     },
     "%@ × %lld": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ × %lld"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ × %lld"
