@@ -9,7 +9,7 @@
     "最初のバージョン（1.0.0）には最新情報の欄が無いので、2 つ目のバージョンから足す。",
     "TODO: テンプレートの仮の文言。アプリを作ったら書き換える（Metadata/App Store は既定で dry-run）。"
   ],
-  "name": "TODO: App name",
+  "name": "Kobuta Tap",
   "subtitle": "TODO: Short phrase under name",
   "promotionalText": "TODO: One line about why people will love this app (up to 170 characters).",
   "description": "TODO: App description. What the app does, its key features, and how to get started.\n\n■ Key features\n• Feature 1\n• Feature 2\n• Feature 3",

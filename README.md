@@ -1,6 +1,6 @@
 # TinyPigTap
 
-こぶたタップ（Tiny Pig Tap）は、画面の上から葉っぱの傘で降りてくるこぶたをタップして集める、iPhone・iPad 向けのカジュアルゲームです。
+こぶたタップ（英語名 Kobuta Tap）は、画面の上から葉っぱの傘で降りてくるこぶたをタップして集める、iPhone・iPad 向けのカジュアルゲームです。
 チャレンジ（60 秒・りんご 3 つ）とのんびり（時間制限なし）の 2 つのモードがあります。画面は SwiftUI、ゲーム部分は SpriteKit で作り、`SpriteView` で埋め込んでいます。
 
 リポジトリは template-app-ios から作成しました。「テンプレートの使い方」以降は、テンプレート由来の手順（署名・CI・App Store の掲載情報）の説明です。
@@ -48,13 +48,13 @@
       <tr>
         <td style="border:2px double #000080;text-align:left;">main</td>
         <td style="border:2px double #000080;text-align:center;">
-          <a href="https://github.com/tm-family/tinypigtap-ios/actions/workflows/build.yml?query=branch%3Amain">
-            <img src="https://github.com/tm-family/tinypigtap-ios/actions/workflows/build.yml/badge.svg?branch=main" alt="Build">
+          <a href="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/build.yml?query=branch%3Amain">
+            <img src="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/build.yml/badge.svg?branch=main" alt="Build">
           </a>
         </td>
         <td style="border:2px double #000080;text-align:center;">
-          <a href="https://github.com/tm-family/tinypigtap-ios/actions/workflows/archive.yml?query=branch%3Amain">
-            <img src="https://github.com/tm-family/tinypigtap-ios/actions/workflows/archive.yml/badge.svg?branch=main" alt="Archive">
+          <a href="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/archive.yml?query=branch%3Amain">
+            <img src="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/archive.yml/badge.svg?branch=main" alt="Archive">
           </a>
         </td>
         <td style="border:2px double #000080;text-align:center;">
@@ -63,15 +63,15 @@
       <tr>
         <td style="border:2px double #000080;text-align:left;">develop</td>
         <td style="border:2px double #000080;text-align:center;">
-          <a href="https://github.com/tm-family/tinypigtap-ios/actions/workflows/build.yml?query=branch%3Adevelop">
-            <img src="https://github.com/tm-family/tinypigtap-ios/actions/workflows/build.yml/badge.svg?branch=develop" alt="Build">
+          <a href="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/build.yml?query=branch%3Adevelop">
+            <img src="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/build.yml/badge.svg?branch=develop" alt="Build">
           </a>
         </td>
         <td style="border:2px double #000080;text-align:center;">
         </td>
         <td style="border:2px double #000080;text-align:center;">
-          <a href="https://github.com/tm-family/tinypigtap-ios/actions/workflows/upload.yml?query=branch%3Adevelop">
-            <img src="https://github.com/tm-family/tinypigtap-ios/actions/workflows/upload.yml/badge.svg?branch=develop" alt="Upload">
+          <a href="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/upload.yml?query=branch%3Adevelop">
+            <img src="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/upload.yml/badge.svg?branch=develop" alt="Upload">
           </a>
         </td>
       </tr>
