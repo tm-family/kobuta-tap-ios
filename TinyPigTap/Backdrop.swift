@@ -105,21 +105,26 @@ struct PillButton: View {
     }
 }
 
-/// 傘の上を支点に、ゆらゆら揺れるキャラクター
+/// 傘の上を支点に、ゆらゆら揺れるキャラクター。
+/// 撮影モード（ScreenshotDemo）では揺らさず、揺れの真ん中で止める（揺れ続けると画面が落ち着かず、撮影が止まる）
 struct SwayingCharacter: View {
     let image: String
     var width: CGFloat = 170
-    @State private var swing = false
+    /// 揺れの位置。-1 が左の端、1 が右の端
+    @State private var sway: Double = ScreenshotDemo.isEnabled ? 0 : -1
 
     var body: some View {
         Image(image)
             .resizable()
             .scaledToFit()
             .frame(width: width)
-            .rotationEffect(.degrees(swing ? 6 : -6), anchor: UnitPoint(x: 0.62, y: 0.18))
-            .offset(x: swing ? 8 : -8)
+            .rotationEffect(.degrees(6 * sway), anchor: UnitPoint(x: 0.62, y: 0.18))
+            .offset(x: 8 * sway)
             .onAppear {
-                withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { swing = true }
+                guard !ScreenshotDemo.isEnabled else {
+                    return
+                }
+                withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { sway = 1 }
             }
     }
 }
