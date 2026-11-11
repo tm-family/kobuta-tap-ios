@@ -12,7 +12,7 @@ struct HowToView: View {
                 ZStack {
                     Text("遊び方").font(.kRounded(18)).foregroundStyle(Color.ink)
                     HStack {
-                        Button(action: onBack) { Text("‹ 戻る").font(.kRounded(15, .bold)).foregroundStyle(Color.ink) }
+                        BackButton(action: onBack)
                         Spacer()
                     }
                 }
