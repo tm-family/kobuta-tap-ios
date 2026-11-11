@@ -105,6 +105,26 @@ struct PillButton: View {
     }
 }
 
+/// 画面の左上の「‹ 戻る」ボタン（白いカプセルにうすい影）。押せる大きさは 44pt 四方より小さくしない
+struct BackButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text("‹ 戻る")
+                .font(.kRounded(15, .bold))
+                .foregroundStyle(Color.ink)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
+                .background(.white, in: Capsule())
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 /// 傘の上を支点に、ゆらゆら揺れるキャラクター。
 /// 撮影モード（ScreenshotDemo）では揺らさず、揺れの真ん中で止める（揺れ続けると画面が落ち着かず、撮影が止まる）
 struct SwayingCharacter: View {

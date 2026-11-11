@@ -39,7 +39,7 @@ struct ModeSelectView: View {
             Backdrop()
             VStack(spacing: 18) {
                 HStack {
-                    Button(action: onBack) { Text("‹ 戻る").font(.kRounded(15, .bold)).foregroundStyle(Color.ink) }
+                    BackButton(action: onBack)
                     Spacer()
                 }
                 OutlinedText(text: String(localized: "モードを選ぶ"), size: 26, color: .ink)
