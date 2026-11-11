@@ -75,7 +75,7 @@ struct HowToView: View {
             Divider()
             row("disguise_normal", L10n.name(.disguise), String(localized: "よく見て見破ろう"), chip: .miss)
             Divider()
-            row("item_brick", L10n.name(.brick), String(localized: "タップすると5秒間、おおかみを押しても平気"), chip: nil)
+            row("item_brick", L10n.name(.brick), String(localized: "タップすると5秒間、おおかみをタップしてもミスにならない"), chip: nil)
             Divider()
             row("item_apple", L10n.name(.apple), String(localized: "りんごが1つ増える"), chip: nil)
         }
