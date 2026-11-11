@@ -34,7 +34,7 @@ enum L10n {
         switch kind {
         case .golden: String(localized: "たまにしか出ないごほうび")
         case .disguise: String(localized: "こぶたにそっくり。つり目としっぽをよく見て")
-        case .brick: String(localized: "タップすると5秒間、おおかみを押しても平気")
+        case .brick: String(localized: "タップすると5秒間、おおかみをタップしてもミスにならない")
         case .apple: String(localized: "チャレンジではりんごが1つ増える")
         default: ""
         }

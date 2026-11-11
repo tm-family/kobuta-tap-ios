@@ -369,18 +369,18 @@
         }
       }
     },
-    "タップすると5秒間、おおかみを押しても平気": {
+    "タップすると5秒間、おおかみをタップしてもミスにならない": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap it, and wolves can't hurt you for 5 seconds"
+            "value": "Tap it: for 5 seconds, tapping a wolf is not a miss"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "タップすると5秒間、おおかみを押しても平気"
+            "value": "タップすると5秒間、おおかみをタップしてもミスにならない"
           }
         }
       }
