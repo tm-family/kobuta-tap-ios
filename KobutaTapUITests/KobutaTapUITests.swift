@@ -69,6 +69,8 @@ final class KobutaTapUITests: XCTestCase {
 
         let settings = app.buttons["設定"]
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
+        // ランキング（Game Center）のボタンも右上に並ぶ。押すとサインインの画面が出るので、ここでは押さない
+        XCTAssertTrue(app.buttons["ランキング"].exists)
         settings.tap()
 
         XCTAssertTrue(app.switches["settings_sound"].waitForExistence(timeout: 5))
