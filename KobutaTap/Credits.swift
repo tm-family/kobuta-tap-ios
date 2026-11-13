@@ -41,7 +41,7 @@ enum Credits {
     static let soundEffects: [Credit] = [
         cc0("Pop Sounds", by: "EZduzziteh", at: "https://opengameart.org/content/pop-sounds-0"),
         cc0("Music Jingles", by: "Kenney (www.kenney.nl)", at: "https://kenney.nl/assets/music-jingles"),
-        cc0("UI Audio", by: "Kenney (www.kenney.nl)", at: "https://kenney.nl/assets/ui-audio"),
+        cc0("Children's Xylophone", by: "AntumDeluge", at: "https://opengameart.org/content/childrens-xylophone"),
         cc0("ShiningRinging", by: "NoisyRedFox", at: "https://freesound.org/people/NoisyRedFox/sounds/759840/"),
         cc0("Bonk.wav", by: "facklere", at: "https://freesound.org/people/facklere/sounds/458572/"),
         cc0("FX swanee whistle down.wav", by: "v0idation", at: "https://freesound.org/people/v0idation/sounds/497093/"),
