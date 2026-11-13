@@ -1,13 +1,13 @@
 //
-//  TinyPigTapUITests.swift
-//  TinyPigTapUITests
+//  KobutaTapUITests.swift
+//  KobutaTapUITests
 //
 //  Created by 村石 拓海 on 2024/05/12.
 //
 
 import XCTest
 
-final class TinyPigTapUITests: XCTestCase {
+final class KobutaTapUITests: XCTestCase {
     override func setUpWithError() throws {
         // UI テストでは失敗した時点で即座に止める
         continueAfterFailure = false

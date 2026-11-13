@@ -1,13 +1,13 @@
 //
 //  GameRulesTests.swift
-//  TinyPigTapTests
+//  KobutaTapTests
 //
 //  仕様書の「ゲームルール」「難易度設計」「背景」の決まりが、コードの値と合っているかを確かめる。
 //
 
 import Foundation
+@testable import KobutaTap
 import Testing
-@testable import TinyPigTap
 
 struct PhaseTests {
     /// チャレンジは 20 秒ごとに昼 → 夕焼け → 夜へ切り替わる

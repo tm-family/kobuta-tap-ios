@@ -1,15 +1,15 @@
 //
-//  TinyPigTapTests.swift
-//  TinyPigTapTests
+//  KobutaTapTests.swift
+//  KobutaTapTests
 //
 //  Created by 村石 拓海 on 2024/05/12.
 //
 
 import Foundation
+@testable import KobutaTap
 import Testing
-@testable import TinyPigTap
 
-struct TinyPigTapTests {
+struct KobutaTapTests {
     /// Configs/Project.xcconfig の MARKETING_VERSION が「x.y.z」形式で Info.plist に反映されていることを確認する
     @Test
     func marketingVersionIsSemanticVersion() throws {

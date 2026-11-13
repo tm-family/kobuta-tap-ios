@@ -7,10 +7,10 @@
     "screenshotDemoSource: 撮影モードの Swift ファイル。screenshots.json の scene が ScreenshotDemo.Scene にあるかを突き合わせる。",
     "appIcon: クリエイティブアセットに載せるアプリアイコン。"
   ],
-  "project": "TinyPigTap.xcodeproj",
-  "scheme": "TinyPigTap",
+  "project": "KobutaTap.xcodeproj",
+  "scheme": "KobutaTap",
   "configuration": "Release",
-  "simulatorPrefix": "TinyPigTap",
-  "screenshotDemoSource": "TinyPigTap/Screenshot/ScreenshotDemo.swift",
-  "appIcon": "TinyPigTap/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
+  "simulatorPrefix": "KobutaTap",
+  "screenshotDemoSource": "KobutaTap/Screenshot/ScreenshotDemo.swift",
+  "appIcon": "KobutaTap/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
 }
