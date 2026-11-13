@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4FC9E1E82BF1049B00F630AB"
-               BuildableName = "TinyPigTap.app"
-               BlueprintName = "TinyPigTap"
-               ReferencedContainer = "container:TinyPigTap.xcodeproj">
+               BuildableName = "KobutaTap.app"
+               BlueprintName = "KobutaTap"
+               ReferencedContainer = "container:KobutaTap.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4FC9E1F82BF1049C00F630AB"
-               BuildableName = "TinyPigTapTests.xctest"
-               BlueprintName = "TinyPigTapTests"
-               ReferencedContainer = "container:TinyPigTap.xcodeproj">
+               BuildableName = "KobutaTapTests.xctest"
+               BlueprintName = "KobutaTapTests"
+               ReferencedContainer = "container:KobutaTap.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -46,9 +46,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4FC9E2022BF1049C00F630AB"
-               BuildableName = "TinyPigTapUITests.xctest"
-               BlueprintName = "TinyPigTapUITests"
-               ReferencedContainer = "container:TinyPigTap.xcodeproj">
+               BuildableName = "KobutaTapUITests.xctest"
+               BlueprintName = "KobutaTapUITests"
+               ReferencedContainer = "container:KobutaTap.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -68,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4FC9E1E82BF1049B00F630AB"
-            BuildableName = "TinyPigTap.app"
-            BlueprintName = "TinyPigTap"
-            ReferencedContainer = "container:TinyPigTap.xcodeproj">
+            BuildableName = "KobutaTap.app"
+            BlueprintName = "KobutaTap"
+            ReferencedContainer = "container:KobutaTap.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4FC9E1E82BF1049B00F630AB"
-            BuildableName = "TinyPigTap.app"
-            BlueprintName = "TinyPigTap"
-            ReferencedContainer = "container:TinyPigTap.xcodeproj">
+            BuildableName = "KobutaTap.app"
+            BlueprintName = "KobutaTap"
+            ReferencedContainer = "container:KobutaTap.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

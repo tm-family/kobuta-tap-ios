@@ -1,13 +1,13 @@
 //
-//  TinyPigTapUITestsLaunchTests.swift
-//  TinyPigTapUITests
+//  KobutaTapUITestsLaunchTests.swift
+//  KobutaTapUITests
 //
 //  Created by 村石 拓海 on 2024/05/12.
 //
 
 import XCTest
 
-final class TinyPigTapUITestsLaunchTests: XCTestCase {
+final class KobutaTapUITestsLaunchTests: XCTestCase {
     override static var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

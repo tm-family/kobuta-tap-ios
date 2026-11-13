@@ -1,6 +1,6 @@
 //
-//  TinyPigTap.swift
-//  TinyPigTap
+//  KobutaTap.swift
+//  KobutaTap
 //
 //  Created by 村石 拓海 on 2024/05/12.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct TinyPigTap: App {
+struct KobutaTap: App {
     init() {
         AppFont.register()
     }
