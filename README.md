@@ -269,6 +269,14 @@ App Store のプロダクトページに載せるものは、`AppStore/` の JSO
 - `Creative assets/App Store` を `ref-data` → `dry-run` → `upload` の順に流して反映します。置き場所のグループと画像の仕様は、App Asset Library の参照データから引きます
 - 反映したら、App Store Connect のプレビューで iPhone / iPad の見え方を確かめてから審査に出します
 
+**Game Center のリーダーボード**
+
+- [AppStore/game_center.json](AppStore/game_center.json) に書き、`Game Center/App Store` で反映します（`Tools/upload_game_center.py`）。アプリの Game Center が無ければ有効にし、リーダーボードと言語ごとの名前・単位を作ります。あるものは、違う項目だけ書き換えます
+- `vendorIdentifier` はアプリから点数を送るときの ID です。一度作ると変えられず、消しても同じ ID は使えません。そのため、JSON から消したリーダーボードや言語は App Store Connect から消しません（消すときは画面で行います）
+- 言語ごとの名前を書き換えられるのは、審査に出す前のバージョンだけです。公開済みのリーダーボードの名前を変えるときは、App Store Connect の画面で新しいバージョンを作ります
+- API キーに Game Center を編集できる役割（Admin か App Manager）が無いと 403 で止まります
+- 書き方と言語の漏れは、PR の `Verify/App Store metadata` で検査します。流す順は、dry-run で何をするかを確かめ → `dry_run` を外して実行、です
+
 **審査に出す前に App Store Connect で手入力するもの**
 
 API が無い・アカウントで一度だけ行うなど、ワークフローで反映できないものです。
@@ -278,6 +286,7 @@ API が無い・アカウントで一度だけ行うなど、ワークフロー�
 | アプリの作成（名前・プライマリ言語・バンドル ID・SKU） | API で作れません。「5. App Store Connect にアプリを作成する」の手順で、Upload の Job Summary に出る値で作ります |
 | App Review に関する情報の添付ファイル（実機の画面収録） | API で反映していません。最初の審査では求められることが多いので、上の「審査メモと画面収録」の手順で撮って添付します |
 | App のプライバシー（収集するデータの申告） | API がありません。[KobutaTap/PrivacyInfo.xcprivacy](KobutaTap/PrivacyInfo.xcprivacy) とプライバシーポリシーに合わせて「App のプライバシー」で答え、公開します |
+| Game Center のバージョンへの追加 | 最初にリーダーボードを公開するときは、審査に出すバージョンの「Game Center」の欄で、`Game Center/App Store` で作ったリーダーボードを追加します |
 | ビルドの選択と審査への提出 | リリースの判断なので人が行います。輸出コンプライアンスは [KobutaTap/Info.plist](KobutaTap/Info.plist) の `ITSAppUsesNonExemptEncryption`（`false`）で申告済みなので、聞かれません |
 | デジタルサービス法（EU）の取引業者の情報 | アプリごとではなくアカウントで一度だけ行います（「ビジネス」）。登録済みなら不要です |
 
