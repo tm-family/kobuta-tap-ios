@@ -131,6 +131,30 @@ struct BackButton: View {
     }
 }
 
+/// 白い丸に記号を描いたボタン（タイトルの右上の設定など）。押せる大きさは 44pt 四方
+struct IconButton: View {
+    let systemName: String
+    /// 読み上げと UI テストで使う名前
+    let label: String
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
+            Image(systemName: systemName)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(Color.ink)
+                .frame(width: 44, height: 44)
+                .background(.white, in: Circle())
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(label))
+    }
+}
+
 /// 傘の上を支点に、ゆらゆら揺れるキャラクター。
 /// 撮影モード（ScreenshotDemo）では揺らさず、揺れの真ん中で止める（揺れ続けると画面が落ち着かず、撮影が止まる）
 struct SwayingCharacter: View {

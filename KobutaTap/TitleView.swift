@@ -3,6 +3,7 @@ import SwiftUI
 struct TitleView: View {
     let onStart: () -> Void
     let onHowTo: () -> Void
+    let onSettings: () -> Void
 
     var body: some View {
         ZStack {
@@ -29,6 +30,16 @@ struct TitleView: View {
             }
             .padding(.horizontal, 44)
             .frame(maxWidth: 420)
+
+            VStack {
+                HStack {
+                    Spacer()
+                    IconButton(systemName: "gearshape.fill", label: String(localized: "設定"), action: onSettings)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
         }
     }
 }
