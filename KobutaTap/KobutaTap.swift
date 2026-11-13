@@ -11,6 +11,7 @@ import SwiftUI
 struct KobutaTap: App {
     init() {
         AppFont.register()
+        AppSettings.registerDefaults()
     }
 
     var body: some Scene {
