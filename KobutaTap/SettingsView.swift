@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// 設定（音と振動のオン・オフ）。タイトルの右上のボタンから開く
+/// 設定（音と振動のオン・オフ、ライセンス）。タイトルの右上のボタンから開く
 struct SettingsView: View {
     let onBack: () -> Void
+    let onLicenses: () -> Void
 
     @AppStorage(AppSettings.soundKey) private var soundOn = true
     @AppStorage(AppSettings.hapticsKey) private var hapticsOn = true
@@ -36,6 +37,29 @@ struct SettingsView: View {
                     .accessibilityIdentifier("settings_haptics")
                 }
                 .background(.white, in: .rect(cornerRadius: 24))
+                Button {
+                    SoundPlayer.shared.play(.button)
+                    onLicenses()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "doc.text.fill")
+                            .font(.system(size: 17, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 34, height: 34)
+                            .background(Color(hex: 0x9A8F86), in: .rect(cornerRadius: 10))
+                        Text("ライセンス").font(.kRounded(16, .bold)).foregroundStyle(Color.ink)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(.white, in: .rect(cornerRadius: 24))
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("settings_licenses")
                 Spacer()
             }
             .padding(.horizontal, 16)
@@ -70,5 +94,63 @@ struct SettingsView: View {
         .tint(.kGreen)
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
+    }
+}
+
+/// ライセンス（音の素材のクレジットと、フォントのライセンス）
+struct LicensesView: View {
+    let onBack: () -> Void
+
+    var body: some View {
+        ZStack {
+            Backdrop()
+            VStack(spacing: 14) {
+                ZStack {
+                    Text("ライセンス").font(.kRounded(18)).foregroundStyle(Color.ink)
+                    HStack {
+                        BackButton(action: onBack)
+                        Spacer()
+                    }
+                }
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+                        heading(String(localized: "BGM"))
+                        ForEach(Credits.music) { entry($0) }
+                        heading(String(localized: "効果音"))
+                        ForEach(Credits.soundEffects) { entry($0) }
+                        heading(String(localized: "フォント"))
+                        Text(verbatim: "M PLUS Rounded 1c").font(.kRounded(14, .bold)).foregroundStyle(Color.ink)
+                        Text(verbatim: Credits.fontLicense)
+                            .font(.system(size: 11, design: .monospaced))
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(18)
+                    .background(.white, in: .rect(cornerRadius: 24))
+                }
+                .accessibilityIdentifier("licenses")
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .frame(maxWidth: 420)
+        }
+    }
+
+    private func heading(_ title: String) -> some View {
+        Text(title)
+            .font(.kRounded(15))
+            .foregroundStyle(Color.kGreen)
+            .padding(.top, 4)
+    }
+
+    private func entry(_ credit: Credit) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(verbatim: credit.title).font(.kRounded(14, .bold)).foregroundStyle(Color.ink)
+            Text(verbatim: credit.author).font(.kRounded(12, .medium)).foregroundStyle(.secondary)
+            Text(verbatim: credit.license).font(.kRounded(12, .medium)).foregroundStyle(.secondary)
+            Link(destination: credit.url) {
+                Text(verbatim: credit.url.absoluteString).font(.system(size: 11)).lineLimit(1).truncationMode(.middle)
+            }
+        }
     }
 }

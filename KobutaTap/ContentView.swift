@@ -2,7 +2,7 @@ import SwiftUI
 
 /// 画面の切り替え（タイトル → モード選択 → プレイ → 結果。タイトルから遊び方・設定へ）
 struct ContentView: View {
-    enum Screen: Equatable { case title, modeSelect, howTo, settings, game(GameMode) }
+    enum Screen: Equatable { case title, modeSelect, howTo, settings, licenses, game(GameMode) }
 
     @State private var screen: Screen = .title
     @State private var round = 0
@@ -19,7 +19,9 @@ struct ContentView: View {
             case .howTo:
                 HowToView(onBack: { screen = .title })
             case .settings:
-                SettingsView(onBack: { screen = .title })
+                SettingsView(onBack: { screen = .title }, onLicenses: { screen = .licenses })
+            case .licenses:
+                LicensesView(onBack: { screen = .settings })
             case .game(let mode):
                 GameView(mode: mode,
                          onRestart: { round += 1 },
