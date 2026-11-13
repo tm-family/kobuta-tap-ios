@@ -1,4 +1,4 @@
-# TinyPigTap
+# KobutaTap
 
 こぶたタップ（英語名 Kobuta Tap）は、画面の上から葉っぱの傘で降りてくるこぶたをタップして集める、iPhone・iPad 向けのカジュアルゲームです。
 チャレンジ（60 秒・りんご 3 つ）とのんびり（時間制限なし）の 2 つのモードがあります。画面は SwiftUI、ゲーム部分は SpriteKit で作り、`SpriteView` で埋め込んでいます。
@@ -87,7 +87,7 @@ GitHub の「Use this template」からリポジトリを作成し、clone し�
 
 ### 2. プロジェクト名を変更する
 
-`TinyPigTap` を新しいアプリ名に一括変更するスクリプトを用意しています。
+テンプレートのプロジェクト名（`IOSTemplateApp`）を新しいアプリ名に一括変更するスクリプトを用意しています。
 ディレクトリ・`.xcodeproj`・スキーム・ソース内の識別子・README のバッジ URL をまとめて置換し、GitHub リポジトリの Discussions を有効にします。
 
 ```bash
@@ -205,8 +205,8 @@ App Store のプロダクトページに載せるものは、`AppStore/` の JSO
 
 **スクリーンショット**
 
-- 撮影はアプリの撮影モード（[TinyPigTap/Screenshot/ScreenshotDemo.swift](TinyPigTap/Screenshot/ScreenshotDemo.swift)）で行います。`Tools/capture_screenshots.sh` が `-screenshot-demo -screenshot-scene <名前>` と言語を起動引数で渡し、アプリはデモデータで目的の画面を開きます
-- 画面を足すときは、`ScreenshotDemo.Scene` に case を足し、`TinyPigTap.swift` の `rootView` で開く画面を返し、`AppStore/screenshots.json` の `scenes` に同じ名前を足します（1 表示サイズにつき 10 枚まで）
+- 撮影はアプリの撮影モード（[KobutaTap/Screenshot/ScreenshotDemo.swift](KobutaTap/Screenshot/ScreenshotDemo.swift)）で行います。`Tools/capture_screenshots.sh` が `-screenshot-demo -screenshot-scene <名前>` と言語を起動引数で渡し、アプリはデモデータで目的の画面を開きます
+- 画面を足すときは、`ScreenshotDemo.Scene` に case を足し、`KobutaTap.swift` の `rootView` で開く画面を返し、`AppStore/screenshots.json` の `scenes` に同じ名前を足します（1 表示サイズにつき 10 枚まで）
 - 撮影スクリプトは、連続して撮った 2 枚が同じになるまで待ってから撮ります（上限 40 秒）。`repeatForever` のようにずっと動き続けるアニメーションは、`ScreenshotDemo.isEnabled` のときは動かさず、決まった状態で止めます（タイトルのキャラクターの揺れは、揺れの真ん中で止めています）
 - App Store Connect で必須なのは iPhone 6.1 / 6.3 inch（`APP_IPHONE_61`、1206x2622 か 1179x2556）と iPhone Duo（`APP_IPHONE_DUO`）です。iPad に対応するアプリは iPad 13 inch も必須です。大型ディスプレイ（6.5 / 6.7 / 6.9 inch、`APP_IPHONE_67`）は任意ですが、6.3 inch の元になるので必ず撮ります（反映だけ外すなら `display_types` に `APP_IPHONE_61,APP_IPHONE_DUO` のように必要なものだけ書きます）
 - 撮るのはリリースのときだけです。`release/**` ブランチを選んで手動実行します（それ以外のブランチでは止まります）
@@ -277,8 +277,8 @@ API が無い・アカウントで一度だけ行うなど、ワークフロー�
 |---|---|
 | アプリの作成（名前・プライマリ言語・バンドル ID・SKU） | API で作れません。「5. App Store Connect にアプリを作成する」の手順で、Upload の Job Summary に出る値で作ります |
 | App Review に関する情報の添付ファイル（実機の画面収録） | API で反映していません。最初の審査では求められることが多いので、上の「審査メモと画面収録」の手順で撮って添付します |
-| App のプライバシー（収集するデータの申告） | API がありません。[TinyPigTap/PrivacyInfo.xcprivacy](TinyPigTap/PrivacyInfo.xcprivacy) とプライバシーポリシーに合わせて「App のプライバシー」で答え、公開します |
-| ビルドの選択と審査への提出 | リリースの判断なので人が行います。輸出コンプライアンスは [TinyPigTap/Info.plist](TinyPigTap/Info.plist) の `ITSAppUsesNonExemptEncryption`（`false`）で申告済みなので、聞かれません |
+| App のプライバシー（収集するデータの申告） | API がありません。[KobutaTap/PrivacyInfo.xcprivacy](KobutaTap/PrivacyInfo.xcprivacy) とプライバシーポリシーに合わせて「App のプライバシー」で答え、公開します |
+| ビルドの選択と審査への提出 | リリースの判断なので人が行います。輸出コンプライアンスは [KobutaTap/Info.plist](KobutaTap/Info.plist) の `ITSAppUsesNonExemptEncryption`（`false`）で申告済みなので、聞かれません |
 | デジタルサービス法（EU）の取引業者の情報 | アプリごとではなくアカウントで一度だけ行います（「ビジネス」）。登録済みなら不要です |
 
 流す順は、`Metadata/App Store` を dry-run で実行して Job Summary の差分を確かめ → `dry_run` を外して実行 → 最後に出る「審査に出す前に App Store Connect で入力が要るもの」を App Store Connect で埋める、です。
@@ -288,10 +288,10 @@ API が無い・アカウントで一度だけ行うなど、ワークフロー�
 ```
 .
 ├── Configs/                 # xcconfig（署名情報・バージョン・Deployment Target）
-├── TinyPigTap/          # アプリ本体（SwiftUI）
-├── TinyPigTapTests/     # Unit テスト（Swift Testing）
-├── TinyPigTapUITests/   # UI テスト（XCTest）
-├── TinyPigTap.xcodeproj # 共有スキーム TinyPigTap を含む
+├── KobutaTap/               # アプリ本体（SwiftUI）
+├── KobutaTapTests/          # Unit テスト（Swift Testing）
+├── KobutaTapUITests/        # UI テスト（XCTest）
+├── KobutaTap.xcodeproj      # 共有スキーム KobutaTap を含む
 ├── AppStore/                # App Store の掲載情報（言語・撮る画面・説明文・クリエイティブアセット）
 ├── Tools/                   # スクリーンショットの撮影と App Store Connect への反映
 ├── docs/                    # ExportOptions.plist のサンプル
@@ -314,7 +314,7 @@ API が無い・アカウントで一度だけ行うなど、ワークフロー�
 - プロジェクトはフォルダ同期グループ（Xcode 16 以降の形式）で管理しているため、ファイルの追加・削除で pbxproj は変わりません
 - SwiftLint は Build Tool Plugin として全ターゲットに適用され、CI では `swiftlint lint --strict` としても実行されます。ルールは [.swiftlint.yml](.swiftlint.yml) で管理します
 - CI のワークフローは `*.xcodeproj` の名前と同名の共有スキームが存在することを前提にしています
-- [TinyPigTap/PrivacyInfo.xcprivacy](TinyPigTap/PrivacyInfo.xcprivacy) はプライバシーマニフェストです。UserDefaults（`@AppStorage`）の利用だけを申告しています。データの収集・トラッキング・ほかの理由の申告が必要な API を足したら、ここと App Store Connect の「App のプライバシー」を更新してください
+- [KobutaTap/PrivacyInfo.xcprivacy](KobutaTap/PrivacyInfo.xcprivacy) はプライバシーマニフェストです。UserDefaults（`@AppStorage`）の利用だけを申告しています。データの収集・トラッキング・ほかの理由の申告が必要な API を足したら、ここと App Store Connect の「App のプライバシー」を更新してください
 
 ## License
 
