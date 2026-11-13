@@ -11,6 +11,8 @@
 
 広告から戻るときは、一時停止して 3・2・1 とカウントダウンしてから再開します。
 
+ランキング（Game Center）は、タイトルの右上と、ちゃれんじの結果画面から開きます。Game Center へのサインインは起動時には求めず、初めてランキングを開いたときに求めます。一度開いたことがあれば、次の起動からは裏でサインインを済ませ、ちゃれんじの点数を送ります。リーダーボードは `AppStore/game_center.json` で App Store Connect に作ります（下の「Game Center のリーダーボード」）。
+
 リポジトリは template-app-ios から作成しました。「テンプレートの使い方」以降は、テンプレート由来の手順（署名・CI・App Store の掲載情報）の説明です。
 
 ## ゲームのソース
@@ -28,6 +30,7 @@
 | `Fonts.swift` | フォント（M PLUS Rounded 1c）の登録と、太さごとのフォント名 |
 | `Sound.swift` / `Haptics.swift` | 効果音・BGM・ジングルの再生、振動 |
 | `SettingsView.swift` / `AppSettings.swift` / `Credits.swift` | 設定（音と振動のオン・オフ）、ライセンス、素材のクレジット |
+| `GameCenter.swift` | Game Center のサインインとランキング（ちゃれんじの自己ベスト） |
 
 - 対応する言語は日本語と英語です。開発言語（既定の言語）は英語なので、それ以外の言語の端末では英語で表示します
 - 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、`Localizable.xcstrings` に英語と日本語の両方の値を入れます。文字列カタログの基準の言語は英語なので、キーが日本語でも日本語の値は自動では入りません（日本語の値が 1 つも無いと、日本語の端末でも英語で表示されます）。アプリ名は `InfoPlist.xcstrings` です
