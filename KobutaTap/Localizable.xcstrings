@@ -1568,6 +1568,54 @@
           }
         }
       }
+    },
+    "ランキング": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leaderboard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ランキング"
+          }
+        }
+      }
+    },
+    "Game Center にサインインしてください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign In to Game Center"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center にサインインしてください"
+          }
+        }
+      }
+    },
+    "ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To see the leaderboard, sign in to Game Center in the Settings app."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

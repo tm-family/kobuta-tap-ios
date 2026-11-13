@@ -60,6 +60,7 @@ struct GameView: View {
             // 終わったら BGM を止めて笛を鳴らし、結果のジングル → 結果の BGM を流す。
             // すぐに「もう一度」を押したときは、この画面が消えて待ちが取り消される
             guard state.status == .finished else { return }
+            if mode.hasLeaderboard { GameCenter.shared.submit(score: state.score) }
             SoundPlayer.shared.stopBGM()
             SoundPlayer.shared.play(.finish)
             try? await Task.sleep(for: .seconds(1))
@@ -348,6 +349,9 @@ struct ResultView: View {
                 Text(state.isNewBest ? String(localized: "自己ベスト更新！") : String(localized: "自己ベスト \(state.bestScore)点"))
                     .font(.kRounded(14, .bold))
                     .foregroundStyle(state.isNewBest ? Color(hex: 0xE8833A) : .secondary)
+                if state.mode.hasLeaderboard {
+                    rankingButton
+                }
 
                 VStack(alignment: .leading, spacing: 6) {
                     row("piglet_normal", L10n.name(.piglet), state.tappedCount[.piglet, default: 0], points: 1)
@@ -371,6 +375,24 @@ struct ResultView: View {
             .padding(28)
             .frame(maxWidth: 380)
         }
+    }
+
+    /// Game Center のランキング（チャレンジだけ）
+    private var rankingButton: some View {
+        Button {
+            SoundPlayer.shared.play(.button)
+            GameCenter.shared.showLeaderboard()
+        } label: {
+            Label(String(localized: "ランキング"), systemImage: "trophy.fill")
+                .font(.kRounded(14, .bold))
+                .foregroundStyle(Color(hex: 0x8A5E12))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 7)
+                .background(Color(hex: 0xF9E29A), in: Capsule())
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private func row(_ image: String?, _ title: String, _ count: Int, points: Int?) -> some View {
