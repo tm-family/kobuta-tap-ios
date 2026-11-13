@@ -26,7 +26,7 @@ enum SoundEffect: String, CaseIterable {
         case .appleLost: 0.5
         case .start: 0.4
         case .finish: 0.6
-        case .button: 0.6
+        case .button: 0.5
         case .wolf, .wolfBlocked, .spotted, .brick: 1
         }
     }
