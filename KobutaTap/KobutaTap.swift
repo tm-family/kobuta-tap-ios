@@ -14,6 +14,7 @@ struct KobutaTap: App {
     init() {
         AppFont.register()
         AppSettings.registerDefaults()
+        GameState.migrateBestScores()
         SoundPlayer.shared.configure()
     }
 

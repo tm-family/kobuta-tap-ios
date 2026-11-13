@@ -30,11 +30,12 @@ final class GameScene: SKScene {
     private var spawnTimer: TimeInterval = 0
     private let background: BackgroundNode
     private var clockCheckTimer: TimeInterval = 0
+    private var countdownTask: Task<Void, Never>?
 
     init(size: CGSize, mode: GameMode, state: GameState) {
         self.mode = mode
         self.state = state
-        let scenery: Scenery = mode == .challenge ? .challenge(.day) : .now()
+        let scenery: Scenery = mode == .relaxed ? .now() : .challenge(.day)
         state.phase = scenery.phase
         background = BackgroundNode(scenery: scenery)
         super.init(size: size)
@@ -66,18 +67,12 @@ final class GameScene: SKScene {
 
     // MARK: - 難易度
 
-    private var progress: Double { min(elapsed / Tuning.challengeDuration, 1) }
-
     private var fallDuration: TimeInterval {
-        guard mode == .challenge else { return Tuning.relaxedFallDuration }
-        let range = Tuning.challengeFallDuration
-        return range.upperBound - (range.upperBound - range.lowerBound) * progress
+        mode.difficulty?.fallDuration(at: elapsed) ?? Tuning.relaxedFallDuration
     }
 
     private var spawnInterval: TimeInterval {
-        guard mode == .challenge else { return Tuning.relaxedSpawnInterval }
-        let range = Tuning.challengeSpawnInterval
-        return range.upperBound - (range.upperBound - range.lowerBound) * progress
+        mode.difficulty?.spawnInterval(at: elapsed) ?? Tuning.relaxedSpawnInterval
     }
 
     // MARK: - ループ
@@ -90,7 +85,7 @@ final class GameScene: SKScene {
         elapsed += delta
         spawnTimer += delta
 
-        if mode == .challenge {
+        if mode != .relaxed {
             let phase = Phase.forElapsed(elapsed)
             if phase != state.phase {
                 state.phase = phase
@@ -129,7 +124,7 @@ final class GameScene: SKScene {
 
     private func spawn() {
         let kind = ItemKind.random(mode: mode, phase: state.phase)
-        let hard = mode == .challenge && state.phase == .night
+        let hard = mode != .relaxed && state.phase == .night
         let node = ItemNode(kind: kind, textureName: kind.textureName(.normal, hard: hard), width: baseWidth)
 
         let margin = node.size.width * 0.5
@@ -192,6 +187,8 @@ final class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard state.status == .playing else { return }
         for touch in touches {
+            // りんごの広告の確認などで止めたら、同時に触れたほかの指は無視する
+            guard state.status == .playing else { return }
             let point = touch.location(in: self)
             let hits = children
                 .compactMap { $0 as? ItemNode }
@@ -261,7 +258,7 @@ private extension GameScene {
         state.missCount += 1
         node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
         popup(node.kind == .wolf ? L10n.grr : L10n.busted, at: at, color: .systemRed)
-        if mode == .challenge {
+        if mode != .relaxed {
             loseApple()
         } else {
             state.addScore(-Tuning.relaxedWolfPenalty)
@@ -279,11 +276,23 @@ private extension GameScene {
     }
 
     func tapApple(_ node: ItemNode, at: CGPoint) {
-        SoundPlayer.shared.play(.appleGet)
         if let apples = state.apples {
-            state.apples = min(apples + 1, Tuning.maxApples)
-            popup(L10n.appleUp, at: at, color: .systemRed)
+            state.appleTapCount += 1
+            if apples >= mode.maxApples {
+                popup(L10n.applesFull, at: at, color: .systemRed)
+            } else if needsAdForApple {
+                // 広告を見て取るか選ぶあいだ、止めておく
+                node.run(.sequence([.fadeOut(withDuration: 0.2), .removeFromParent()]))
+                state.status = .appleOffer
+                isPaused = true
+                return
+            } else {
+                SoundPlayer.shared.play(.appleGet)
+                state.apples = apples + 1
+                popup(L10n.appleUp, at: at, color: .systemRed)
+            }
         } else {
+            SoundPlayer.shared.play(.appleGet)
             state.addScore(Tuning.relaxedApplePoints)
             state.appleCount += 1
             popup(L10n.points(Tuning.relaxedApplePoints), at: at, color: .systemRed)
@@ -312,7 +321,7 @@ private extension GameScene {
         switch node.kind {
         case .piglet, .golden:
             state.combo = 0
-            if mode == .challenge { loseApple() }
+            if mode != .relaxed { loseApple() }
             animalLanding(node, reaction: L10n.ouch)
         case .wolf:
             animalLanding(node, reaction: L10n.ouch)
@@ -415,22 +424,57 @@ extension GameScene {
         if apples - 1 <= 0 { outOfApples() }
     }
 
+    /// ちゃれんじで、広告を外す購入をしていない人が取る 1・4・7・10…個目のりんご。
+    /// 広告の準備ができていないとき（在庫が無いなど）は、広告なしで取れるようにする
+    private var needsAdForApple: Bool {
+        mode == .challenge && !Monetization.adsRemoved && Monetization.isRewardedAdReady
+            && Tuning.isAdApple(number: state.appleTapCount)
+    }
+
     private func outOfApples() {
-        if state.continueUsed {
-            endGame()
-        } else {
+        if mode.canContinue && !state.continueUsed {
             state.status = .askContinue
             isPaused = true
+        } else {
+            endGame()
         }
     }
 
-    /// 続ける画面で「続ける」を選んだとき（広告の再生後に呼ぶ）
+    /// 続ける画面で「続ける」を選んだとき（広告を最後まで見たあとに呼ぶ）。カウントダウンしてから再開する
     func continueGame() {
         state.continueUsed = true
         state.apples = 1
-        state.status = .playing
-        isPaused = false
-        lastUpdate = nil
+        resumeWithCountdown()
+    }
+
+    /// ちゃれんじで、広告を見てりんごを取るか選んだあと。最後まで見たら rewarded が true。
+    /// 見送ったときも、止めていたのでカウントダウンしてから再開する
+    func finishAppleOffer(rewarded: Bool) {
+        if rewarded, let apples = state.apples {
+            SoundPlayer.shared.play(.appleGet)
+            state.apples = min(apples + 1, mode.maxApples)
+        }
+        resumeWithCountdown()
+    }
+
+    /// 3, 2, 1 と数えてから再開する（止めたまま数え、0 になったら動かす）
+    private func resumeWithCountdown() {
+        state.status = .countdown
+        isPaused = true
+        countdownTask?.cancel()
+        countdownTask = Task { [weak self] in
+            for number in stride(from: Tuning.countdownFrom, through: 1, by: -1) {
+                self?.state.countdown = number
+                SoundPlayer.shared.play(.button)
+                try? await Task.sleep(for: .seconds(Tuning.countdownStep))
+                if Task.isCancelled { return }
+            }
+            guard let self, self.state.status == .countdown else { return }
+            SoundPlayer.shared.play(.start)
+            self.state.status = .playing
+            self.isPaused = false
+            self.lastUpdate = nil
+        }
     }
 
     /// のんびりの「おしまい」、時間切れ、続けない場合

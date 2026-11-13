@@ -15,6 +15,7 @@ enum L10n {
     static var spotted: String { String(localized: "見破り！") }
     static var shieldOn: String { String(localized: "レンガで守る！") }
     static var appleUp: String { String(localized: "りんご +1") }
+    static var applesFull: String { String(localized: "りんごはいっぱい") }
 
     static func points(_ value: Int) -> String {
         value >= 0 ? "+\(value)" : "−\(-value)"
@@ -35,7 +36,7 @@ enum L10n {
         case .golden: String(localized: "たまにしか出ないごほうび")
         case .disguise: String(localized: "こぶたにそっくり。つり目としっぽをよく見て")
         case .brick: String(localized: "タップすると5秒間、おおかみをタップしてもミスにならない")
-        case .apple: String(localized: "チャレンジではりんごが1つ増える")
+        case .apple: String(localized: "のんびり以外では、りんごが1つ増える")
         default: ""
         }
     }

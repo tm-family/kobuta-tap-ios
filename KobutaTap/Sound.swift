@@ -36,7 +36,7 @@ enum SoundEffect: String, CaseIterable {
 enum BGM: String, CaseIterable {
     /// タイトル・モード選択・遊び方・設定
     case title = "bgm_title"
-    /// プレイ中（チャレンジ・のんびり）
+    /// プレイ中（すべてのモード）
     case play = "bgm_play"
     /// 結果画面（ジングルの後に流す）
     case result = "bgm_result"
