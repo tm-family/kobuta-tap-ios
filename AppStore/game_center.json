@@ -1,0 +1,23 @@
+{
+  "_comment": [
+    "Game Center のリーダーボード。Tools/upload_game_center.py が App Store Connect に作る（Game Center/App Store ワークフロー）。",
+    "vendorIdentifier はアプリから点数を送るときの ID（KobutaTap/GameCenter.swift の leaderboardID と同じ）。一度作ると変えられず、消しても同じ ID は使えない。",
+    "defaultFormatter: 点数の書式（INTEGER など）。submissionType: BEST_SCORE（自己ベストを載せる）か MOST_RECENT_SCORE。scoreSortType: DESC（高い順）か ASC。",
+    "scoreRangeStart / scoreRangeEnd は任意。書くと範囲の外の点数を受け付けない（不正な点数よけ）。書くなら両方を書く。",
+    "localizations のキーは App Store Connect のロケール（languages.json の storeLocale）。name はランキングの名前、formatterSuffix / formatterSuffixSingular は点数の後ろに付ける単位（複数・単数）。",
+    "JSON から消したリーダーボードや言語は、App Store Connect からは消さない（消すときは App Store Connect の画面で行う）。"
+  ],
+  "leaderboards": [
+    {
+      "vendorIdentifier": "challenge_best",
+      "referenceName": "Challenge Best Score",
+      "defaultFormatter": "INTEGER",
+      "submissionType": "BEST_SCORE",
+      "scoreSortType": "DESC",
+      "localizations": {
+        "ja": { "name": "チャレンジ", "formatterSuffix": "点", "formatterSuffixSingular": "点" },
+        "en-US": { "name": "Challenge", "formatterSuffix": " points", "formatterSuffixSingular": " point" }
+      }
+    }
+  ]
+}
