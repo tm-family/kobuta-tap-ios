@@ -21,6 +21,12 @@ struct KobutaTapTests {
         #expect(components.allSatisfy { Int($0) != nil }, "各要素は整数で指定する: \(version)")
     }
 
+    /// 見た目はライトモードの前提なので、端末がダークモードでもライトモードで表示する
+    @Test
+    func interfaceStyleIsLight() {
+        #expect(Bundle.main.object(forInfoDictionaryKey: "UIUserInterfaceStyle") as? String == "Light")
+    }
+
     /// CURRENT_PROJECT_VERSION が正の整数として Info.plist に反映されていることを確認する
     @Test
     func buildNumberIsPositiveInteger() throws {
