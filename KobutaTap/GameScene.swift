@@ -277,7 +277,6 @@ private extension GameScene {
 
     func tapApple(_ node: ItemNode, at: CGPoint) {
         if let apples = state.apples {
-            state.appleTapCount += 1
             if apples >= mode.maxApples {
                 popup(L10n.applesFull, at: at, color: .systemRed)
             } else if needsAdForApple {
@@ -289,6 +288,7 @@ private extension GameScene {
             } else {
                 SoundPlayer.shared.play(.appleGet)
                 state.apples = apples + 1
+                state.applesGained += 1
                 popup(L10n.appleUp, at: at, color: .systemRed)
             }
         } else {
@@ -424,11 +424,12 @@ extension GameScene {
         if apples - 1 <= 0 { outOfApples() }
     }
 
-    /// ちゃれんじで、広告を外す購入をしていない人が取る 1・4・7・10…個目のりんご。
-    /// 広告の準備ができていないとき（在庫が無いなど）は、広告なしで取れるようにする
     private var needsAdForApple: Bool {
-        mode == .challenge && !Monetization.adsRemoved && Monetization.isRewardedAdReady
-            && Tuning.isAdApple(number: state.appleTapCount)
+        mode.needsAdForApple(
+            applesGained: state.applesGained,
+            adsRemoved: Monetization.adsRemoved,
+            adReady: Monetization.isRewardedAdReady
+        )
     }
 
     private func outOfApples() {
@@ -453,6 +454,7 @@ extension GameScene {
         if rewarded, let apples = state.apples {
             SoundPlayer.shared.play(.appleGet)
             state.apples = min(apples + 1, mode.maxApples)
+            state.applesGained += 1
         }
         resumeWithCountdown()
     }

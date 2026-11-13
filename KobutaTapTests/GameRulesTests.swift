@@ -147,10 +147,35 @@ struct GameStateTests {
         #expect(!GameMode.relaxed.hasLeaderboard)
     }
 
-    /// 広告を外す購入をしていない人がちゃれんじで広告を見て取るのは、1・4・7・10…個目のりんご
+    /// 広告を外す購入をしていない人がちゃれんじで広告を見て取るのは、取れた数で 1・4・7・10…個目のりんご
     @Test(arguments: [(1, true), (2, false), (3, false), (4, true), (5, false), (6, false), (7, true), (10, true), (0, false)])
     func adApples(number: Int, expected: Bool) {
         #expect(Tuning.isAdApple(number: number) == expected)
+    }
+
+    /// 見送ったりんごは数えない。1 個目を見送ると次のりんごがまた 1 個目（広告）になり、取れたら 2・3 個目はそのまま、4 個目でまた広告
+    @Test
+    func declinedAppleIsNotCounted() {
+        func needsAd(_ gained: Int) -> Bool {
+            GameMode.challenge.needsAdForApple(applesGained: gained, adsRemoved: false, adReady: true)
+        }
+        var gained = 0
+        #expect(needsAd(gained))   // 1 個目: 広告。見送る
+        #expect(needsAd(gained))   // 見送ったので、次もまた 1 個目: 広告。見て取る
+        gained += 1
+        #expect(!needsAd(gained))  // 2 個目
+        gained += 1
+        #expect(!needsAd(gained))  // 3 個目
+        gained += 1
+        #expect(needsAd(gained))   // 4 個目: 広告
+    }
+
+    /// 広告を見て取るのは、ちゃれんじで広告を外す購入をしていない人だけ。広告の準備ができていなければ、広告なしで取れる
+    @Test
+    func adApplesOnlyInChallengeWithoutPurchase() {
+        #expect(!GameMode.normal.needsAdForApple(applesGained: 0, adsRemoved: false, adReady: true))
+        #expect(!GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: true, adReady: true))
+        #expect(!GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: false, adReady: false))
     }
 
     /// モードが 5 つになる前のチャレンジ（60 秒）の自己ベストは「ふつう」に移し、ちゃれんじには引き継がない

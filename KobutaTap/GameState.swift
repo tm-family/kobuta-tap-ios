@@ -27,8 +27,9 @@ final class GameState {
     var combo = 0
     var phase: Phase = .day
     var continueUsed = false
-    /// このプレイでタップしたりんごの数（ちゃれんじで、広告を見て取るりんごを決める）
-    var appleTapCount = 0
+    /// このプレイで取れたりんごの数（ちゃれんじで、広告を見て取るりんごを決める）。
+    /// 広告を見て取ったものは数え、見送ったもの・りんごがいっぱいで増えなかったものは数えない
+    var applesGained = 0
     /// カウントダウンの数字（3, 2, 1）
     var countdown = 0
     /// いま表示中の初登場のお知らせ
