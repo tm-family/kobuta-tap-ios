@@ -27,7 +27,7 @@ final class KobutaTapUITests: XCTestCase {
         return app
     }
 
-    /// タイトル → モード選択 → プレイ → 結果 → もう一度 → 結果 → モード選択 → タイトル → 遊び方 → タイトル
+    /// タイトル → モード選択（5 つ）→ プレイ → 結果 → もう一度 → 結果 → モード選択 → タイトル → 遊び方 → タイトル
     @MainActor
     func testFlowFromTitleToResultAndBack() throws {
         let app = launch(language: "ja")
@@ -39,7 +39,10 @@ final class KobutaTapUITests: XCTestCase {
         // のんびりは「おしまい」ですぐ終われる
         let relaxed = app.buttons["mode_relaxed"]
         XCTAssertTrue(relaxed.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["mode_challenge"].exists)
+        // のんびり・かんたん・ふつう・むずかしい・ちゃれんじの 5 つ
+        for mode in ["easy", "normal", "hard", "challenge"] {
+            XCTAssertTrue(app.buttons["mode_\(mode)"].exists, mode)
+        }
         relaxed.tap()
 
         finishRelaxedRound(app)

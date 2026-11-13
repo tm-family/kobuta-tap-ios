@@ -47,6 +47,7 @@ struct GameView: View {
                 }
 
                 overlay.frame(width: geo.size.width, height: geo.size.height)
+                    .animation(.easeOut(duration: 0.25), value: state.countdown)
             }
         }
         // プレイ中は時刻や電池の表示がキャラクターと重ならないよう、ステータスバーを隠す（メニューでは出す）
@@ -75,6 +76,13 @@ struct GameView: View {
             }
         case .askContinue:
             ContinueCard(onContinue: { scene.continueGame() }, onStop: { scene.endGame() })
+        case .appleOffer:
+            AppleOfferCard(onFinish: { scene.finishAppleOffer(rewarded: $0) })
+        case .countdown:
+            OutlinedText(text: "\(state.countdown)", size: 96, color: .kPink, outline: 8)
+                .id(state.countdown)
+                .transition(.scale.combined(with: .opacity))
+                .allowsHitTesting(false)
         case .finished:
             ResultView(state: state, onRestart: onRestart, onExit: onExit)
         case .playing:
@@ -90,13 +98,21 @@ struct GameView: View {
                 Text(String(localized: "\(state.score)点")).font(.kRounded(18).monospacedDigit()).foregroundStyle(Color.ink)
                 Spacer()
                 if let apples = state.apples {
-                    HStack(spacing: 2) {
-                        ForEach(0..<max(Tuning.startingApples, apples), id: \.self) { index in
-                            Image("icon_apple")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 26, height: 26)
-                                .opacity(index < apples ? 1 : 0.25)
+                    if apples > Tuning.maxApples {
+                        // ちゃれんじは最大 9 つまで増えるので、5 つを超えたら数で出す
+                        HStack(spacing: 4) {
+                            Image("icon_apple").resizable().scaledToFit().frame(width: 26, height: 26)
+                            Text(verbatim: "× \(apples)").font(.kRounded(18).monospacedDigit()).foregroundStyle(Color.ink)
+                        }
+                    } else {
+                        HStack(spacing: 2) {
+                            ForEach(0..<max(Tuning.startingApples, apples), id: \.self) { index in
+                                Image("icon_apple")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 26, height: 26)
+                                    .opacity(index < apples ? 1 : 0.25)
+                            }
                         }
                     }
                 } else if state.status == .playing {
@@ -119,7 +135,7 @@ struct GameView: View {
             .background(.white.opacity(0.92), in: Capsule())
 
             if let remaining = state.timeRemaining {
-                TimeBar(fraction: remaining / Tuning.challengeDuration, phase: state.phase)
+                TimeBar(fraction: remaining / (mode.timeLimit ?? Tuning.timedDuration), phase: state.phase)
             }
 
             if state.shieldRemaining > 0 {
@@ -260,11 +276,52 @@ struct ContinueCard: View {
                     PillButton(
                         title: Monetization.adsRemoved ? String(localized: "続ける") : String(localized: "広告を見て続ける"),
                         fill: .kGreen,
-                        textColor: .white,
-                        action: onContinue
-                    )
+                        textColor: .white
+                    ) {
+                        // 広告を途中で閉じたら、りんごはもらえず、この画面に戻る
+                        Task {
+                            if Monetization.adsRemoved {
+                                onContinue()
+                            } else if await Monetization.showRewardedAd() {
+                                onContinue()
+                            }
+                        }
+                    }
                 }
                 PillButton(title: String(localized: "やめる"), fill: Color(hex: 0xEFEDE7), action: onStop)
+            }
+            .padding(24)
+            .background(.white, in: .rect(cornerRadius: 24))
+            .padding(28)
+            .frame(maxWidth: 380)
+        }
+    }
+}
+
+/// ちゃれんじで、広告を見てりんごを取るか選ぶ（広告を外す購入をしていない人の 1・4・7・10…個目のりんご）
+struct AppleOfferCard: View {
+    /// 広告を最後まで見たら true、見送ったか途中で閉じたら false
+    let onFinish: (Bool) -> Void
+    @State private var isShowingAd = false
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.4).ignoresSafeArea()
+            VStack(spacing: 14) {
+                Image("icon_apple").resizable().scaledToFit().frame(width: 56)
+                Text("りんごを取る？").font(.kRounded(18)).foregroundStyle(Color.ink)
+                Text("広告を見ると、りんごが1つ増えます")
+                    .font(.kRounded(13, .medium))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                PillButton(title: String(localized: "広告を見て取る"), fill: .kGreen, textColor: .white) {
+                    guard !isShowingAd else { return }
+                    isShowingAd = true
+                    Task { onFinish(await Monetization.showRewardedAd()) }
+                }
+                PillButton(title: String(localized: "見送る"), fill: Color(hex: 0xEFEDE7)) {
+                    onFinish(false)
+                }
             }
             .padding(24)
             .background(.white, in: .rect(cornerRadius: 24))
@@ -284,7 +341,7 @@ struct ResultView: View {
         ZStack {
             Color.black.opacity(0.3).ignoresSafeArea()
             VStack(spacing: 12) {
-                Text(state.mode == .challenge ? String(localized: "おしまい！") : String(localized: "おつかれさま！"))
+                Text(state.mode == .relaxed ? String(localized: "おつかれさま！") : String(localized: "おしまい！"))
                     .font(.kRounded(26))
                     .foregroundStyle(Color.ink)
                 Text(String(localized: "\(state.score)点")).font(.kRounded(42)).foregroundStyle(Color.kPink)

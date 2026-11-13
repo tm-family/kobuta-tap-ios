@@ -55,16 +55,22 @@ enum ItemKind: String, CaseIterable, Hashable {
         }
     }
 
-    /// 出現の重み（着ぐるみのおおかみの値は仮。仕様書の未決事項）
+    /// 出現の重み（合計 100）。着ぐるみのおおかみの値は仮のまま（2026-11-14 に、仮の値で進めると決めた）
+    ///
+    /// のんびり以外は、ふつうの表（時間帯ごと）のおおかみ・着ぐるみのおおかみを難易度の倍率で増減し、
+    /// 増減した分はこぶたで埋めて合計を 100 にそろえる
     func weight(mode: GameMode, phase: Phase) -> Int {
-        switch mode {
-        case .challenge: challengeWeights[phase.rawValue]
-        case .relaxed: relaxedWeight
+        guard let difficulty = mode.difficulty else { return relaxedWeight }
+        if self == .piglet {
+            let others = ItemKind.allCases.filter { $0 != .piglet }
+            return 100 - others.reduce(0) { $0 + $1.weight(mode: mode, phase: phase) }
         }
+        let base = playWeights[phase.rawValue]
+        return isWolfLike ? Int((Double(base) * difficulty.wolfFactor).rounded()) : base
     }
 
-    /// チャレンジの出現の重み（昼・夕焼け・夜の順。仕様書 3.2 の表の行）
-    private var challengeWeights: [Int] {
+    /// ふつうの出現の重み（昼・夕焼け・夜の順。仕様書 3.2 の表の行）
+    private var playWeights: [Int] {
         switch self {
         case .piglet: [71, 63, 54]
         case .golden: [5, 5, 5]

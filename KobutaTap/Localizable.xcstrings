@@ -1,22 +1,6 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "チャレンジ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Challenge"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "チャレンジ"
-          }
-        }
-      }
-    },
     "のんびり": {
       "localizations": {
         "en": {
@@ -385,22 +369,6 @@
         }
       }
     },
-    "チャレンジではりんごが1つ増える": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In Challenge, you get one more apple"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "チャレンジではりんごが1つ増える"
-          }
-        }
-      }
-    },
     "こぶた": {
       "localizations": {
         "en": {
@@ -765,22 +733,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "60秒でたくさん集めよう"
-          }
-        }
-      }
-    },
-    "りんごがなくなったら終了": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Game over when you run out of apples"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "りんごがなくなったら終了"
           }
         }
       }
@@ -1309,6 +1261,310 @@
           "stringUnit": {
             "state": "translated",
             "value": "BGM"
+          }
+        }
+      }
+    },
+    "かんたん": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easy"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "かんたん"
+          }
+        }
+      }
+    },
+    "ふつう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ふつう"
+          }
+        }
+      }
+    },
+    "むずかしい": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "むずかしい"
+          }
+        }
+      }
+    },
+    "ちゃれんじ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenge"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ちゃれんじ"
+          }
+        }
+      }
+    },
+    "りんごがなくなるまで・ランキング": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until you run out of apples · Leaderboard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごがなくなるまで・ランキング"
+          }
+        }
+      }
+    },
+    "はじめての人に": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Great for beginners"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "はじめての人に"
+          }
+        }
+      }
+    },
+    "速くて、おおかみが多い": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faster, with more wolves"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "速くて、おおかみが多い"
+          }
+        }
+      }
+    },
+    "どんどん速くなる": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keeps getting faster"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どんどん速くなる"
+          }
+        }
+      }
+    },
+    "りんごはいっぱい": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apples full"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごはいっぱい"
+          }
+        }
+      }
+    },
+    "のんびり以外では、りんごが1つ増える": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In every mode except Relax, you get one more apple"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "のんびり以外では、りんごが1つ増える"
+          }
+        }
+      }
+    },
+    "りんごを取る？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take the apple?"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごを取る？"
+          }
+        }
+      }
+    },
+    "広告を見ると、りんごが1つ増えます": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch an ad to get one more apple"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "広告を見ると、りんごが1つ増えます"
+          }
+        }
+      }
+    },
+    "広告を見て取る": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch an Ad to Take It"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "広告を見て取る"
+          }
+        }
+      }
+    },
+    "見送る": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見送る"
+          }
+        }
+      }
+    },
+    "かんたん・ふつう・むずかしい": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easy · Normal · Hard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "かんたん・ふつう・むずかしい"
+          }
+        }
+      }
+    },
+    "りんごがなくなったら終了（1回だけ続けられる）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game over when you run out of apples (you can continue once)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごがなくなったら終了（1回だけ続けられる）"
+          }
+        }
+      }
+    },
+    "時間制限なし。どんどん速くなる": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No time limit. Keeps getting faster"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間制限なし。どんどん速くなる"
+          }
+        }
+      }
+    },
+    "落ちてくるりんごで、りんごは9つまで増える": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catch falling apples to hold up to 9"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "落ちてくるりんごで、りんごは9つまで増える"
+          }
+        }
+      }
+    },
+    "りんごがなくなったら終了。ランキングで競おう": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game over when you run out of apples. Compete on the leaderboard"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "りんごがなくなったら終了。ランキングで競おう"
           }
         }
       }
