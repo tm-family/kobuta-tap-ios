@@ -12,6 +12,8 @@ DEVELOPMENT_TEAM = XU74X3434S
 
 // アプリ本体の Bundle Identifier。
 // テストターゲットは $(APP_BUNDLE_IDENTIFIER).Tests / .UITests として派生させる
+// プロジェクト名は KobutaTap に変えたが、Bundle ID は App Store Connect に登録済みで変えられないため、
+// 最初の名前（TinyPigTap）のまま使う
 APP_BUNDLE_IDENTIFIER = jp.shilokuma.TinyPigTap
 
 // バージョン（CFBundleShortVersionString / CFBundleVersion）
