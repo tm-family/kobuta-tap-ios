@@ -24,5 +24,13 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: screen)
+        .onAppear { updateBGM() }
+        .onChange(of: screen) { updateBGM() }
+    }
+
+    /// メニューの画面ではタイトルの BGM を流す（プレイ中と結果の BGM は GameView が切り替える）
+    private func updateBGM() {
+        if case .game = screen { return }
+        SoundPlayer.shared.playBGM(.title)
     }
 }

@@ -92,7 +92,10 @@ struct PillButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
             Text(title)
                 .font(.kRounded(18, .bold))
                 .foregroundStyle(textColor)
@@ -110,7 +113,10 @@ struct BackButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
             Text("‹ 戻る")
                 .font(.kRounded(15, .bold))
                 .foregroundStyle(Color.ink)
