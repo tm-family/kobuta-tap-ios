@@ -55,10 +55,15 @@ struct GameView: View {
             SoundPlayer.shared.playBGM(.play)
             SoundPlayer.shared.play(.start)
         }
-        .onChange(of: state.status) { _, status in
-            guard status == .finished else { return }
-            SoundPlayer.shared.play(state.isNewBest ? .newBest : .finish)
-            SoundPlayer.shared.playBGM(.result)
+        .task(id: state.status) {
+            // 終わったら BGM を止めて笛を鳴らし、結果のジングル → 結果の BGM を流す。
+            // すぐに「もう一度」を押したときは、この画面が消えて待ちが取り消される
+            guard state.status == .finished else { return }
+            SoundPlayer.shared.stopBGM()
+            SoundPlayer.shared.play(.finish)
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            SoundPlayer.shared.playBGM(.result, after: state.isNewBest ? .newBest : .result)
         }
     }
 
