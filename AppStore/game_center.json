@@ -15,7 +15,7 @@
       "submissionType": "BEST_SCORE",
       "scoreSortType": "DESC",
       "localizations": {
-        "ja": { "name": "チャレンジ", "formatterSuffix": "点", "formatterSuffixSingular": "点" },
+        "ja": { "name": "ちゃれんじ", "formatterSuffix": "点", "formatterSuffixSingular": "点" },
         "en-US": { "name": "Challenge", "formatterSuffix": " points", "formatterSuffixSingular": " point" }
       }
     }
