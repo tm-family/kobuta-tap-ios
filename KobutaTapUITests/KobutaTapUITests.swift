@@ -59,6 +59,26 @@ final class KobutaTapUITests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 5))
     }
 
+    /// タイトル → 設定（音と振動のスイッチ）→ ライセンス → 設定 → タイトル
+    @MainActor
+    func testSettingsAndLicenses() throws {
+        let app = launch(language: "ja")
+
+        let settings = app.buttons["設定"]
+        XCTAssertTrue(settings.waitForExistence(timeout: 10))
+        settings.tap()
+
+        XCTAssertTrue(app.switches["settings_sound"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.switches["settings_haptics"].exists)
+        app.buttons["settings_licenses"].tap()
+
+        XCTAssertTrue(app.staticTexts["\"Carefree\" Kevin MacLeod (incompetech.com)"].waitForExistence(timeout: 5))
+        app.buttons["‹ 戻る"].tap()
+        XCTAssertTrue(app.switches["settings_sound"].waitForExistence(timeout: 5))
+        app.buttons["‹ 戻る"].tap()
+        XCTAssertTrue(app.buttons["タップしてスタート"].waitForExistence(timeout: 5))
+    }
+
     /// 英語の端末では、画面の文字が英語になる
     @MainActor
     func testEnglishTitleAndModes() throws {
