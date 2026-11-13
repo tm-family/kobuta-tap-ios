@@ -35,7 +35,10 @@ struct HowToView: View {
     }
 
     private func tabButton(_ title: String, index: Int) -> some View {
-        Button { tab = index } label: {
+        Button {
+            SoundPlayer.shared.play(.button)
+            tab = index
+        } label: {
             Text(title)
                 .font(.kRounded(14, .bold))
                 .foregroundStyle(tab == index ? .white : .secondary)

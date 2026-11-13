@@ -3,6 +3,7 @@ import SwiftUI
 struct TitleView: View {
     let onStart: () -> Void
     let onHowTo: () -> Void
+    let onSettings: () -> Void
 
     var body: some View {
         ZStack {
@@ -13,7 +14,10 @@ struct TitleView: View {
                 SwayingCharacter(image: "piglet_normal", width: 170)
                 Spacer()
                 PillButton(title: String(localized: "タップしてスタート"), action: onStart)
-                Button(action: onHowTo) {
+                Button {
+                    SoundPlayer.shared.play(.button)
+                    onHowTo()
+                } label: {
                     Text("遊び方")
                         .font(.kRounded(16, .bold))
                         .foregroundStyle(Color.ink)
@@ -26,6 +30,16 @@ struct TitleView: View {
             }
             .padding(.horizontal, 44)
             .frame(maxWidth: 420)
+
+            VStack {
+                HStack {
+                    Spacer()
+                    IconButton(systemName: "gearshape.fill", label: String(localized: "設定"), action: onSettings)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
         }
     }
 }
@@ -56,7 +70,10 @@ struct ModeSelectView: View {
 
     private func card(_ mode: GameMode, color: Color, note: String, image: String) -> some View {
         let best = UserDefaults.standard.integer(forKey: "best_\(mode.rawValue)")
-        return Button { onSelect(mode) } label: {
+        return Button {
+            SoundPlayer.shared.play(.button)
+            onSelect(mode)
+        } label: {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(mode.title).font(.kRounded(26)).foregroundStyle(color)

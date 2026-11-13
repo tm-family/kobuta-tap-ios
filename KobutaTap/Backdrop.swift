@@ -92,7 +92,10 @@ struct PillButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
             Text(title)
                 .font(.kRounded(18, .bold))
                 .foregroundStyle(textColor)
@@ -110,7 +113,10 @@ struct BackButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
             Text("‹ 戻る")
                 .font(.kRounded(15, .bold))
                 .foregroundStyle(Color.ink)
@@ -122,6 +128,30 @@ struct BackButton: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+    }
+}
+
+/// 白い丸に記号を描いたボタン（タイトルの右上の設定など）。押せる大きさは 44pt 四方
+struct IconButton: View {
+    let systemName: String
+    /// 読み上げと UI テストで使う名前
+    let label: String
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            SoundPlayer.shared.play(.button)
+            action()
+        } label: {
+            Image(systemName: systemName)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(Color.ink)
+                .frame(width: 44, height: 44)
+                .background(.white, in: Circle())
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(label))
     }
 }
 

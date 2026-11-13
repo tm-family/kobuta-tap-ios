@@ -28,8 +28,6 @@ final class GameScene: SKScene {
     private var elapsed: TimeInterval = 0
     private var lastUpdate: TimeInterval?
     private var spawnTimer: TimeInterval = 0
-    private let tapHaptic = UIImpactFeedbackGenerator(style: .light)
-    private let missHaptic = UINotificationFeedbackGenerator()
     private let background: BackgroundNode
     private var clockCheckTimer: TimeInterval = 0
 
@@ -46,8 +44,7 @@ final class GameScene: SKScene {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func didMove(to view: SKView) {
-        tapHaptic.prepare()
-        missHaptic.prepare()
+        Haptics.prepare()
         backgroundColor = .black
         if background.parent == nil { addChild(background) }
         background.layout(size: size)
@@ -228,7 +225,7 @@ final class GameScene: SKScene {
 
 private extension GameScene {
     func tapPiglet(_ node: ItemNode, at: CGPoint) {
-        tapHaptic.impactOccurred()
+        SoundPlayer.shared.play(node.kind == .golden ? .tapGolden : .tapPiglet)
         let points = node.kind == .golden ? 10 : 1
         state.addScore(points)
         state.tappedCount[node.kind, default: 0] += 1
@@ -239,6 +236,7 @@ private extension GameScene {
         if state.combo.isMultiple(of: Tuning.comboStep) {
             state.addScore(Tuning.comboBonus)
             state.comboCount += 1
+            SoundPlayer.shared.play(.combo)
             popup(
                 "\(L10n.combo) \(L10n.points(Tuning.comboBonus))",
                 at: CGPoint(x: size.width / 2, y: size.height * 0.6),
@@ -251,12 +249,14 @@ private extension GameScene {
 
     func tapWolf(_ node: ItemNode, at: CGPoint) {
         if state.shieldRemaining > 0 {
-            tapHaptic.impactOccurred()
+            Haptics.wolfBlocked()
+            SoundPlayer.shared.play(.wolfBlocked)
             popup(L10n.safe, at: at, color: .brown)
             node.run(.sequence([.fadeOut(withDuration: 0.25), .removeFromParent()]))
             return
         }
-        missHaptic.notificationOccurred(.error)
+        Haptics.wolf()
+        SoundPlayer.shared.play(.wolf)
         state.combo = 0
         state.missCount += 1
         node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
@@ -271,14 +271,15 @@ private extension GameScene {
     }
 
     func tapBrick(_ node: ItemNode, at: CGPoint) {
-        tapHaptic.impactOccurred()
+        Haptics.brick()
+        SoundPlayer.shared.play(.brick)
         state.shieldRemaining = Tuning.shieldDuration
         popup(L10n.shieldOn, at: at, color: .brown)
         node.run(.sequence([.scale(to: 1.2, duration: 0.1), .fadeOut(withDuration: 0.2), .removeFromParent()]))
     }
 
     func tapApple(_ node: ItemNode, at: CGPoint) {
-        tapHaptic.impactOccurred()
+        SoundPlayer.shared.play(.appleGet)
         if let apples = state.apples {
             state.apples = min(apples + 1, Tuning.maxApples)
             popup(L10n.appleUp, at: at, color: .systemRed)
@@ -318,6 +319,7 @@ private extension GameScene {
         case .disguise:
             state.addScore(Tuning.disguiseBonus)
             state.spottedCount += 1
+            SoundPlayer.shared.play(.spotted)
             popup(
                 "\(L10n.spotted) \(L10n.points(Tuning.disguiseBonus))",
                 at: CGPoint(x: node.frame.midX, y: groundY + node.size.height * 1.1),
@@ -407,7 +409,8 @@ private extension GameScene {
 extension GameScene {
     private func loseApple() {
         guard let apples = state.apples else { return }
-        missHaptic.notificationOccurred(.warning)
+        Haptics.appleLost()
+        SoundPlayer.shared.play(.appleLost)
         state.apples = max(apples - 1, 0)
         if apples - 1 <= 0 { outOfApples() }
     }

@@ -51,6 +51,20 @@ struct GameView: View {
         }
         // プレイ中は時刻や電池の表示がキャラクターと重ならないよう、ステータスバーを隠す（メニューでは出す）
         .statusBarHidden()
+        .onAppear {
+            SoundPlayer.shared.playBGM(.play)
+            SoundPlayer.shared.play(.start)
+        }
+        .task(id: state.status) {
+            // 終わったら BGM を止めて笛を鳴らし、結果のジングル → 結果の BGM を流す。
+            // すぐに「もう一度」を押したときは、この画面が消えて待ちが取り消される
+            guard state.status == .finished else { return }
+            SoundPlayer.shared.stopBGM()
+            SoundPlayer.shared.play(.finish)
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            SoundPlayer.shared.playBGM(.result, after: state.isNewBest ? .newBest : .result)
+        }
     }
 
     @ViewBuilder private var overlay: some View {
@@ -86,7 +100,10 @@ struct GameView: View {
                         }
                     }
                 } else if state.status == .playing {
-                    Button { scene.endGame() } label: {
+                    Button {
+                        SoundPlayer.shared.play(.button)
+                        scene.endGame()
+                    } label: {
                         Text("おしまい")
                             .font(.kRounded(13, .bold))
                             .foregroundStyle(Color.ink)
@@ -201,7 +218,10 @@ struct IntroCard: View {
                         .font(.kRounded(13, .medium))
                         .foregroundStyle(Color.ink)
                         .multilineTextAlignment(.center)
-                    Button(action: onOK) {
+                    Button {
+                        SoundPlayer.shared.play(.button)
+                        onOK()
+                    } label: {
                         Text("わかった！")
                             .font(.kRounded(15, .bold))
                             .foregroundStyle(.white)

@@ -9,13 +9,24 @@ import SwiftUI
 
 @main
 struct KobutaTap: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     init() {
         AppFont.register()
+        AppSettings.registerDefaults()
+        SoundPlayer.shared.configure()
     }
 
     var body: some Scene {
         WindowGroup {
             rootView
+        }
+        .onChange(of: scenePhase) { _, phase in
+            switch phase {
+            case .active: SoundPlayer.shared.resume()
+            case .background: SoundPlayer.shared.pause()
+            default: break
+            }
         }
     }
 
