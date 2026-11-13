@@ -52,6 +52,13 @@ enum GameMode: String, CaseIterable, Identifiable {
     /// Game Center のランキングがあるか
     var hasLeaderboard: Bool { self == .challenge }
 
+    /// 次に取るりんごを、広告を見て取るか。ちゃれんじで広告を外す購入をしていない人の、取れた数で 1・4・7・10…個目のりんご。
+    /// 見送ったりんごは数えないので、1 個目を見送ると次のりんごがまた 1 個目になる。
+    /// 広告の準備ができていないとき（在庫が無いなど）は、広告なしで取れるようにする
+    func needsAdForApple(applesGained: Int, adsRemoved: Bool, adReady: Bool) -> Bool {
+        self == .challenge && !adsRemoved && adReady && Tuning.isAdApple(number: applesGained + 1)
+    }
+
     /// 速さ・出てくる間隔・おおかみの多さ。のんびりは一定なので nil
     var difficulty: Difficulty? {
         switch self {
@@ -140,7 +147,7 @@ enum Tuning {
     static let relaxedApplePoints = 3
     static let relaxedWolfPenalty = 1
 
-    /// 1 回のプレイで number 個目に取るりんごが、広告を見て取るりんごか（1・4・7・10…個目）
+    /// 1 回のプレイで取れた数で number 個目のりんごが、広告を見て取るりんごか（1・4・7・10…個目）
     static func isAdApple(number: Int) -> Bool {
         number >= 1 && (number - 1).isMultiple(of: adAppleInterval)
     }
