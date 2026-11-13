@@ -108,10 +108,16 @@ struct HowToView: View {
 
     private var rules: some View {
         VStack(alignment: .leading, spacing: 14) {
-            section(String(localized: "チャレンジ"), color: Color(hex: 0xF9C3CF), text: Color(hex: 0xB8566F), lines: [
+            section(String(localized: "かんたん・ふつう・むずかしい"), color: Color(hex: 0xFBD9B5), text: Color(hex: 0x9A5A1E), lines: [
                 String(localized: "60秒でたくさん集めよう"),
-                String(localized: "りんごがなくなったら終了"),
-                String(localized: "こぶたを見逃す・おおかみをタップ → りんご −1")
+                String(localized: "こぶたを見逃す・おおかみをタップ → りんご −1"),
+                String(localized: "りんごがなくなったら終了（1回だけ続けられる）")
+            ])
+            Divider()
+            section(String(localized: "ちゃれんじ"), color: Color(hex: 0xF9C3CF), text: Color(hex: 0xB8566F), lines: [
+                String(localized: "時間制限なし。どんどん速くなる"),
+                String(localized: "落ちてくるりんごで、りんごは9つまで増える"),
+                String(localized: "りんごがなくなったら終了。ランキングで競おう")
             ])
             Divider()
             section(String(localized: "のんびり"), color: Color(hex: 0xBFE3B4), text: Color(hex: 0x3E7A33), lines: [
