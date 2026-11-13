@@ -18,6 +18,8 @@
 | `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
 | `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の仮の値 |
 | `Fonts.swift` | フォント（M PLUS Rounded 1c）の登録と、太さごとのフォント名 |
+| `Sound.swift` / `Haptics.swift` | 効果音・BGM・ジングルの再生、振動 |
+| `SettingsView.swift` / `AppSettings.swift` / `Credits.swift` | 設定（音と振動のオン・オフ）、ライセンス、素材のクレジット |
 
 - 対応する言語は日本語と英語です。開発言語（既定の言語）は英語なので、それ以外の言語の端末では英語で表示します
 - 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、`Localizable.xcstrings` に英語と日本語の両方の値を入れます。文字列カタログの基準の言語は英語なので、キーが日本語でも日本語の値は自動では入りません（日本語の値が 1 つも無いと、日本語の端末でも英語で表示されます）。アプリ名は `InfoPlist.xcstrings` です
@@ -25,6 +27,15 @@
 - 画像は `KobutaAssets.xcassets` の SVG で、名前は「種類_状態」（例: `piglet_tapped`）です。キャラクターは 200×220 の枠で描いています
 - 調整用の数値はコードに直接書かず、`Tuning` と `ItemKind` の出現の重みにまとめます
 - 遊ぶ範囲は iPhone の比率（288:624）に固定し、iPad では中央に置いて左右を背景で埋めます
+
+### 効果音・BGM・振動
+
+- 音のファイルは `KobutaTap/Sounds/` に置き、名前は `Sound.swift` の `SoundEffect`（`se_*`）・`BGM`（`bgm_*`）・`Jingle`（`jingle_*`）の値と同じにします。拡張子は `m4a` / `caf` / `wav` / `mp3` のどれでも読みます。足りないファイルは Unit テスト（`SoundTests`）で落ちます
+- 効果音は鳴り始めの遅れが出ないよう、非圧縮の CAF（モノラル 16bit）にしています。素材の鳴り始めの無音を削り、ピークを -1dBFS にそろえてから変換し、聞こえる大きさの違いは `volume` でそろえます
+- ループの継ぎ目が目立つプレイ中の BGM は CAF（IMA4）、それ以外の BGM とジングルは AAC（m4a）です
+- 音は消音モードでは鳴らさず、ほかのアプリの音楽とも混ぜます（`AVAudioSession` の `.ambient`）。ほかのアプリが音楽を流しているあいだは BGM を流しません
+- 振動させるのは、おおかみに触れたとき・りんごを失ったとき・レンガを取ったときだけです（`Haptics.swift`）
+- 音の素材は、public リポジトリにそのまま置けて商用にも使える **CC0 か CC BY のものだけ**にします（NC・ND・SA や、素材の再配布を禁じるサイトの規約のものは使いません）。素材を足したり替えたりしたら、`Credits.swift` のクレジットも直します。CC BY の素材は、作者が指定する書式のクレジットが必須です
 
 ## Environment
 
