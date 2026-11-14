@@ -79,7 +79,11 @@ final class GameScene: SKScene {
 
     override func update(_ currentTime: TimeInterval) {
         defer { lastUpdate = currentTime }
-        guard state.status == .playing else { return }
+        // プレイ中でなければ止めておく。アプリに戻ったときに SpriteKit が動かし始めても、ここで止め直す
+        guard state.status == .playing else {
+            isPaused = true
+            return
+        }
         let delta = min(lastUpdate.map { currentTime - $0 } ?? 0, 0.1)
 
         elapsed += delta
@@ -180,6 +184,24 @@ final class GameScene: SKScene {
         state.status = .playing
         isPaused = false
         lastUpdate = nil
+    }
+
+    // MARK: - ひと休み（アプリが裏に回ったとき）
+
+    /// App Switcher・コントロールセンター・電話などでアプリが裏に回ったとき。すぐに止めて盤面を隠し、「続ける」を待つ。
+    /// 止めているあいだに盤面を見て考えられないよう、再開のカウントダウンが終わるまで隠したままにする
+    func suspend() {
+        guard state.status == .playing || state.status == .countdown else { return }
+        countdownTask?.cancel()
+        state.status = .suspended
+        state.hidesBoard = true
+        isPaused = true
+    }
+
+    /// ひと休みの画面で「続ける」を押したとき
+    func resumeFromSuspension() {
+        guard state.status == .suspended else { return }
+        resumeWithCountdown()
     }
 
     // MARK: - タップ
@@ -389,7 +411,7 @@ extension GameScene {
         resumeWithCountdown()
     }
 
-    /// 3, 2, 1 と数えてから再開する（止めたまま数え、0 になったら動かす）
+    /// 3, 2, 1 と数えてから再開する（止めたまま数え、0 になったら盤面を出して動かす）
     private func resumeWithCountdown() {
         state.status = .countdown
         isPaused = true
@@ -404,6 +426,7 @@ extension GameScene {
             guard let self, self.state.status == .countdown else { return }
             SoundPlayer.shared.play(.start)
             self.state.status = .playing
+            self.state.hidesBoard = false
             self.isPaused = false
             self.lastUpdate = nil
         }

@@ -1616,6 +1616,38 @@
           }
         }
       }
+    },
+    "ひと休み中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ひと休み中"
+          }
+        }
+      }
+    },
+    "続けると、3・2・1 のあとに動き出します": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play resumes after a 3, 2, 1 countdown."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "続けると、3・2・1 のあとに動き出します"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

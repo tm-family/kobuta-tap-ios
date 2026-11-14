@@ -13,8 +13,10 @@ final class GameState {
         case askContinue
         /// ちゃれんじで、広告を見てりんごを取るか選ぶ
         case appleOffer
-        /// 広告から戻り、カウントダウンしてから再開する
+        /// 広告から戻ったとき・ひと休みから続けるとき。カウントダウンしてから再開する
         case countdown
+        /// アプリが裏に回った（App Switcher・コントロールセンター・電話など）。盤面を隠して「続ける」を待つ
+        case suspended
         case finished
     }
 
@@ -32,6 +34,8 @@ final class GameState {
     var applesGained = 0
     /// カウントダウンの数字（3, 2, 1）
     var countdown = 0
+    /// 盤面を隠しているか。ひと休みのあいだと、そのあとのカウントダウンのあいだは隠す
+    var hidesBoard = false
     /// いま表示中の初登場のお知らせ
     var introKind: ItemKind?
     /// 結果画面の内訳（タップしたこぶた・金のこぶた、ミス、見破り）
