@@ -18,21 +18,30 @@ enum ItemKind: String, CaseIterable, Hashable {
     /// 初めて出てきたときにお知らせを出すか
     var hasIntro: Bool { self == .golden || self == .disguise || self == .brick || self == .apple }
 
-    /// アセットカタログの画像名（仕様書「種類_状態」）
-    func textureName(_ pose: Pose, hard: Bool = false) -> String {
+    /// アセットカタログの画像名（仕様書「種類_状態」）。こぶたと着ぐるみのおおかみは、傘のきせかえに合わせた絵にする
+    func textureName(_ pose: Pose, hard: Bool = false, skin: UmbrellaSkin = .leaf) -> String {
+        let base: String
         switch self {
         case .brick: return "item_brick"
         case .apple: return "item_apple"
-        case .disguise where pose == .normal && hard: return "disguise_hard"
-        default: return "\(rawValue)_\(pose.rawValue)"
+        case .disguise where pose == .normal && hard: base = "disguise_hard"
+        default: base = "\(rawValue)_\(pose.rawValue)"
         }
+        // 座った絵は傘を落としているので、きせかえの絵は無い
+        guard usesUmbrellaSkin, pose != .sit else { return base }
+        return base + skin.textureSuffix
     }
 
-    var umbrellaTexture: String {
+    /// 傘のきせかえの対象か（金のこぶたとおおかみの傘は対象外）。
+    /// 着ぐるみのおおかみも、こぶたと同じ傘をさす（違う傘だと、傘だけで見分けられてしまうため）
+    var usesUmbrellaSkin: Bool { self == .piglet || self == .disguise }
+
+    /// 着地して落とす傘の絵
+    func umbrellaTexture(skin: UmbrellaSkin = .leaf) -> String {
         switch self {
         case .golden: "umbrella_gold"
         case .wolf: "umbrella_wolf"
-        default: "umbrella_leaf"
+        default: skin.umbrellaTexture
         }
     }
 

@@ -12,7 +12,7 @@ extension GameScene {
         node.position = CGPoint(x: x, y: groundY)
 
         let dir: CGFloat = x < size.width / 2 ? -1 : 1   // 近い方の端へ逃げる
-        let umbrella = SKSpriteNode(imageNamed: kind.umbrellaTexture)
+        let umbrella = SKSpriteNode(imageNamed: kind.umbrellaTexture(skin: umbrellaSkin))
         umbrella.size = CGSize(width: node.size.width * 0.62, height: node.size.width * 0.62 * 120 / 140)
         umbrella.position = CGPoint(x: x - dir * node.size.width * 0.6, y: groundY + umbrella.size.width * 0.25)
         umbrella.zRotation = dir * 1.75
@@ -36,7 +36,7 @@ extension GameScene {
             .run { [weak umbrella] in
                 MainActor.assumeIsolated { umbrella?.removeFromParent() }
             },
-            .setTexture(SKTexture(imageNamed: kind.textureName(.run))),
+            .setTexture(SKTexture(imageNamed: kind.textureName(.run, skin: umbrellaSkin))),
             .scaleX(to: dir, y: 1, duration: 0),   // 走る絵は右向き。左へ逃げるときは反転
             .moveBy(x: dir * size.width * 0.75, y: 0, duration: 0.9),
             .removeFromParent()
