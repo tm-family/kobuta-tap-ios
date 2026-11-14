@@ -4,6 +4,7 @@ struct TitleView: View {
     let onStart: () -> Void
     let onHowTo: () -> Void
     let onSettings: () -> Void
+    let onDressUp: () -> Void
 
     var body: some View {
         ZStack {
@@ -34,6 +35,7 @@ struct TitleView: View {
             VStack {
                 HStack(spacing: 12) {
                     Spacer()
+                    IconButton(systemName: "umbrella.fill", label: String(localized: "きせかえ"), action: onDressUp)
                     IconButton(systemName: "trophy.fill", label: String(localized: "ランキング")) {
                         GameCenter.shared.showLeaderboard()
                     }

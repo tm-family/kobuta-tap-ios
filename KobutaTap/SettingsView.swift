@@ -1,12 +1,14 @@
 import SwiftUI
 
-/// 設定（音と振動のオン・オフ、広告のプライバシー設定、ライセンス）。タイトルの右上のボタンから開く
+/// 設定（音と振動のオン・オフ、購入の復元、広告のプライバシー設定、ライセンス）。タイトルの右上のボタンから開く
 struct SettingsView: View {
     let onBack: () -> Void
     let onLicenses: () -> Void
 
     @AppStorage(AppSettings.soundKey) private var soundOn = true
     @AppStorage(AppSettings.hapticsKey) private var hapticsOn = true
+    @State private var isRestoring = false
+    @State private var restoreNotice: DressUpView.Notice?
 
     var body: some View {
         ZStack {
@@ -37,6 +39,16 @@ struct SettingsView: View {
                     .accessibilityIdentifier("settings_haptics")
                 }
                 .background(.white, in: .rect(cornerRadius: 24))
+                // 機種変更や再インストールのあとに、課金「広告なし＋傘のきせかえ」を取り戻す
+                linkRow(icon: "arrow.clockwise", title: String(localized: "購入を復元")) {
+                    guard !isRestoring else { return }
+                    isRestoring = true
+                    Task {
+                        restoreNotice = DressUpView.notice(for: await Store.shared.restore())
+                        isRestoring = false
+                    }
+                }
+                .accessibilityIdentifier("settings_restore")
                 // EEA・英国などでは、広告の同意をあとから変えられるようにする（ほかの地域では出さない）
                 if Ads.shared.isPrivacyOptionsRequired {
                     linkRow(icon: "hand.raised.fill", title: String(localized: "広告のプライバシー設定")) {
@@ -57,6 +69,7 @@ struct SettingsView: View {
             SoundPlayer.shared.resume()
             SoundPlayer.shared.play(.button)
         }
+        .noticeAlert($restoreNotice)
         .onChange(of: hapticsOn) {
             // オンにしたら、どんな振動かが分かるように 1 回振動させる
             if hapticsOn { Haptics.brick() }
