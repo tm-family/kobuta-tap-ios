@@ -35,10 +35,14 @@ struct ContentView: View {
             updateBGM()
             GameCenter.shared.signInIfOpenedBefore()
         }
-        .alert(String(localized: "Game Center にサインインしてください"), isPresented: $gameCenter.showsSignInHelp) {
+        .alert(
+            gameCenter.signInHelp?.title ?? "",
+            isPresented: Binding(get: { gameCenter.signInHelp != nil }, set: { if !$0 { gameCenter.signInHelp = nil } }),
+            presenting: gameCenter.signInHelp
+        ) { _ in
             Button("OK") {}
-        } message: {
-            Text("ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。")
+        } message: { help in
+            Text(help.message)
         }
         .onChange(of: screen) { updateBGM() }
     }
