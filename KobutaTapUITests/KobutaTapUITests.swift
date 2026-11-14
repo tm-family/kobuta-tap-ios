@@ -111,6 +111,32 @@ final class KobutaTapUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Choose a Mode"].waitForExistence(timeout: 5))
     }
 
+    /// プレイ中にアプリが裏に回ったら、盤面を隠して止める。「続ける」でカウントダウンしてから再開する
+    @MainActor
+    func testSuspendHidesBoardAndResumes() throws {
+        let app = launch(language: "ja")
+
+        let start = app.buttons["タップしてスタート"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+        let relaxed = app.buttons["mode_relaxed"]
+        XCTAssertTrue(relaxed.waitForExistence(timeout: 5))
+        relaxed.tap()
+        XCTAssertTrue(app.buttons["おしまい"].waitForExistence(timeout: 5))
+
+        XCUIDevice.shared.press(.home)
+        app.activate()
+
+        XCTAssertTrue(app.staticTexts["ひと休み中"].waitForExistence(timeout: 5))
+        // 止めているあいだは、プレイ中だけ出す「おしまい」も出さない
+        XCTAssertFalse(app.buttons["おしまい"].exists)
+        app.buttons["続ける"].tap()
+        XCTAssertTrue(app.staticTexts["ひと休み中"].waitForNonExistence(timeout: 5))
+
+        // カウントダウンが終わるとプレイに戻り、いつもどおり終われる
+        finishRelaxedRound(app)
+    }
+
     /// のんびりのプレイ画面で「おしまい」を押し、結果画面が出るのを確かめる
     @MainActor
     private func finishRelaxedRound(_ app: XCUIApplication) {

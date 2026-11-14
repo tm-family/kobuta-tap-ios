@@ -8,6 +8,7 @@ struct GameView: View {
 
     @State private var state: GameState
     @State private var scene: GameScene
+    @Environment(\.scenePhase) private var scenePhase
 
     /// 画面の上端から上部の表示までの最小の距離（iPad のステータスバーの高さ）
     private static let hudMinimumTopInset: CGFloat = 24
@@ -27,6 +28,11 @@ struct GameView: View {
             let playWidth = min(geo.size.width, (geo.size.height + geo.safeAreaInsets.top + geo.safeAreaInsets.bottom) * Tuning.playAspect)
             ZStack {
                 SpriteView(scene: scene).ignoresSafeArea()
+
+                // ひと休みのあいだと、そのあとのカウントダウンのあいだは盤面を隠す（止めて考えられないように）
+                if state.hidesBoard {
+                    Backdrop()
+                }
 
                 if state.shieldRemaining > 0 {
                     RoundedRectangle(cornerRadius: 44)
@@ -56,6 +62,10 @@ struct GameView: View {
             SoundPlayer.shared.playBGM(.play)
             SoundPlayer.shared.play(.start)
         }
+        // App Switcher などでアプリが裏に回ったら、止めて盤面を隠す
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { scene.suspend() }
+        }
         .task(id: state.status) {
             // 終わったら BGM を止めて笛を鳴らし、結果のジングル → 結果の BGM を流す。
             // すぐに「もう一度」を押したときは、この画面が消えて待ちが取り消される
@@ -79,6 +89,8 @@ struct GameView: View {
             ContinueCard(onContinue: { scene.continueGame() }, onStop: { scene.endGame() })
         case .appleOffer:
             AppleOfferCard(onFinish: { scene.finishAppleOffer(rewarded: $0) })
+        case .suspended:
+            SuspendedCard { scene.resumeFromSuspension() }
         case .countdown:
             OutlinedText(text: "\(state.countdown)", size: 96, color: .kPink, outline: 8)
                 .id(state.countdown)
@@ -254,6 +266,31 @@ struct IntroCard: View {
             }
             .padding(28)
             .frame(maxWidth: 360)
+        }
+    }
+}
+
+/// ひと休みの画面（アプリが裏に回って止めたとき。盤面は隠している）
+struct SuspendedCard: View {
+    let onContinue: () -> Void
+
+    var body: some View {
+        ZStack {
+            // ほかのカードと同じく背景を暗くし、カードと背景の雲を分ける
+            Color.black.opacity(0.25).ignoresSafeArea()
+            VStack(spacing: 14) {
+                Image("piglet_normal").resizable().scaledToFit().frame(width: 72)
+                Text("ひと休み中").font(.kRounded(18)).foregroundStyle(Color.ink)
+                Text("続けると、3・2・1 のあとに動き出します")
+                    .font(.kRounded(13, .medium))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                PillButton(title: String(localized: "続ける"), fill: .kGreen, textColor: .white, action: onContinue)
+            }
+            .padding(24)
+            .background(.white, in: .rect(cornerRadius: 24))
+            .padding(28)
+            .frame(maxWidth: 380)
         }
     }
 }
