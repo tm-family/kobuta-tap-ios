@@ -25,6 +25,7 @@
 | `GameState.swift` | スコア、りんご、コンボ、レンガ、内訳、自己ベスト（SpriteKit と SwiftUI で共有する `@Observable`） |
 | `GameMode.swift` | モード、難易度ごとの速さ（`Difficulty`）、時間帯、調整用の数値（`Tuning`） |
 | `ItemKind.swift` | キャラクターの種類、画像名、大きさ、出現の重み |
+| `UmbrellaSkin.swift` | 傘のきせかえ（葉っぱは無料、ほかの 5 種類は課金）と、選んだ傘 |
 | `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景、60 秒のモードとちゃれんじの太陽と月の動き（`SkyBodies`） |
 | `GameView.swift` | プレイ画面の上部の表示、初登場のお知らせ、ひと休みの画面、続ける画面、結果 |
 | `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
@@ -39,6 +40,8 @@
 - 画面の文字は日本語をキーにして `String(localized:)` か `L10n` で書き、`Localizable.xcstrings` に英語と日本語の両方の値を入れます。文字列カタログの基準の言語は英語なので、キーが日本語でも日本語の値は自動では入りません（日本語の値が 1 つも無いと、日本語の端末でも英語で表示されます）。アプリ名は `InfoPlist.xcstrings` です
 - 文字は `Font.kRounded`（SwiftUI）と `AppFont.uiFont`（SpriteKit）を使い、M PLUS Rounded 1c にそろえます。フォントのライセンス（SIL Open Font License 1.1）の `OFL.txt` も同梱しています
 - 画像は `KobutaAssets.xcassets` の SVG で、名前は「種類_状態」（例: `piglet_tapped`）です。キャラクターは 200×220 の枠で描いています
+- 傘のきせかえ（桜・ひまわり・紅葉・雪の結晶・水玉）の絵は、こぶたと着ぐるみのおおかみの絵の葉っぱの傘だけを柄に差し替えて、`Tools/generate_umbrella_skins.py` が `UmbrellaSkins` に書き出します（名前は「種類_状態_傘」）。元の絵や柄を変えたら、スクリプトを実行して書き出した絵もコミットします。書き出し直していないと、PR の `Verify/App Store metadata` で落ちます
+- 着ぐるみのおおかみも、こぶたと同じ傘をさします（違う傘だと、傘だけで見分けられてしまうため）。金のこぶたとおおかみの傘は、きせかえの対象外です。選んだ傘を使えるのは購入したあとだけで、購入していなければ葉っぱの傘です
 - 調整用の数値はコードに直接書かず、`Tuning` と `ItemKind` の出現の重みにまとめます
 - 遊ぶ範囲は iPhone の比率（288:624）に固定し、iPad では中央に置いて左右を背景で埋めます
 
