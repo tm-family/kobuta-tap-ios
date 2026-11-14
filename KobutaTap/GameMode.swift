@@ -116,6 +116,13 @@ enum Tuning {
     static let timedDuration: TimeInterval = 60
     static let eveningStarts: TimeInterval = 20
     static let nightStarts: TimeInterval = 40
+    /// 夕方になる何秒前から太陽が沈み始めるか（日中は太陽を動かさない）と、地平線まで沈んで夕日に替わるまでの秒数
+    static let sunsetLead: TimeInterval = 4
+    static let sunsetDuration: TimeInterval = 6
+    /// 夜になる何秒前から夕日が地平線の下へ沈み始めるか（夜になるときに沈みきる）
+    static let duskLead: TimeInterval = 4
+    /// 夜になってから月が昇りきるまでの秒数
+    static let moonriseDuration: TimeInterval = 6
     static let startingApples = 3
     static let maxApples = 5
 
