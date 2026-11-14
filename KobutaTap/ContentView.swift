@@ -6,6 +6,7 @@ struct ContentView: View {
 
     @State private var screen: Screen = .title
     @State private var round = 0
+    @Bindable private var gameCenter = GameCenter.shared
 
     var body: some View {
         ZStack {
@@ -30,7 +31,15 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: screen)
-        .onAppear { updateBGM() }
+        .onAppear {
+            updateBGM()
+            GameCenter.shared.signInIfOpenedBefore()
+        }
+        .alert(String(localized: "Game Center にサインインしてください"), isPresented: $gameCenter.showsSignInHelp) {
+            Button("OK") {}
+        } message: {
+            Text("ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。")
+        }
         .onChange(of: screen) { updateBGM() }
     }
 

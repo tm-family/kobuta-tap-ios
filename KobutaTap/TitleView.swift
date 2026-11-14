@@ -32,8 +32,11 @@ struct TitleView: View {
             .frame(maxWidth: 420)
 
             VStack {
-                HStack {
+                HStack(spacing: 12) {
                     Spacer()
+                    IconButton(systemName: "trophy.fill", label: String(localized: "ランキング")) {
+                        GameCenter.shared.showLeaderboard()
+                    }
                     IconButton(systemName: "gearshape.fill", label: String(localized: "設定"), action: onSettings)
                 }
                 Spacer()
