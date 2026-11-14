@@ -45,6 +45,8 @@ struct ContentView: View {
             Text(help.message)
         }
         .onChange(of: screen) { updateBGM() }
+        // 広告の同意（EEA・英国など）→ トラッキングの許可 → 広告の読み込み
+        .task { await Ads.shared.setUp() }
     }
 
     /// メニューの画面ではタイトルの BGM を流す（プレイ中と結果の BGM は GameView が切り替える）

@@ -61,6 +61,8 @@ struct GameView: View {
         .onAppear {
             SoundPlayer.shared.playBGM(.play)
             SoundPlayer.shared.play(.start)
+            // りんごのあるモードでは広告を使うので、無い・古くなっていたら読み込み直しておく
+            if mode.startingApples != nil { Ads.shared.prepare() }
         }
         // App Switcher などでアプリが裏に回ったら、止めて盤面を隠す
         .onChange(of: scenePhase) { _, phase in
@@ -299,6 +301,10 @@ struct SuspendedCard: View {
 struct ContinueCard: View {
     let onContinue: () -> Void
     let onStop: () -> Void
+    /// 出したときに広告を用意できていれば、広告を見て続ける。
+    /// 広告を外す購入をしているときと、広告を用意できていないとき（オフラインなど）は、広告なしで続ける
+    @State private var watchesAd = !Monetization.adsRemoved && Monetization.isRewardedAdReady
+    @State private var isShowingAd = false
 
     var body: some View {
         ZStack {
@@ -310,20 +316,22 @@ struct ContinueCard: View {
                     .font(.kRounded(13, .medium))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                if Monetization.adsRemoved || Monetization.isRewardedAdReady {
-                    PillButton(
-                        title: Monetization.adsRemoved ? String(localized: "続ける") : String(localized: "広告を見て続ける"),
-                        fill: .kGreen,
-                        textColor: .white
-                    ) {
-                        // 広告を途中で閉じたら、りんごはもらえず、この画面に戻る
-                        Task {
-                            if Monetization.adsRemoved {
-                                onContinue()
-                            } else if await Monetization.showRewardedAd() {
-                                onContinue()
-                            }
-                        }
+                PillButton(
+                    title: watchesAd ? String(localized: "広告を見て続ける") : String(localized: "続ける"),
+                    fill: .kGreen,
+                    textColor: .white
+                ) {
+                    guard watchesAd else {
+                        onContinue()
+                        return
+                    }
+                    guard !isShowingAd else { return }
+                    isShowingAd = true
+                    // 広告を途中で閉じたら、りんごはもらえず、この画面に戻る
+                    Task {
+                        let result = await Monetization.showRewardedAd()
+                        isShowingAd = false
+                        if result.grantsReward { onContinue() }
                     }
                 }
                 PillButton(title: String(localized: "やめる"), fill: Color(hex: 0xEFEDE7), action: onStop)
@@ -338,7 +346,7 @@ struct ContinueCard: View {
 
 /// ちゃれんじで、広告を見てりんごを取るか選ぶ（広告を外す購入をしていない人の 1・4・7・10…個目のりんご）
 struct AppleOfferCard: View {
-    /// 広告を最後まで見たら true、見送ったか途中で閉じたら false
+    /// りんごを取るなら true（広告を最後まで見た・広告を出せなかった）。見送ったか途中で閉じたら false
     let onFinish: (Bool) -> Void
     @State private var isShowingAd = false
 
@@ -355,7 +363,7 @@ struct AppleOfferCard: View {
                 PillButton(title: String(localized: "広告を見て取る"), fill: .kGreen, textColor: .white) {
                     guard !isShowingAd else { return }
                     isShowingAd = true
-                    Task { onFinish(await Monetization.showRewardedAd()) }
+                    Task { onFinish(await Monetization.showRewardedAd().grantsReward) }
                 }
                 PillButton(title: String(localized: "見送る"), fill: Color(hex: 0xEFEDE7)) {
                     onFinish(false)
