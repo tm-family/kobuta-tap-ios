@@ -68,15 +68,83 @@ extension UIColor {
     }
 }
 
+/// 60 秒のモードとちゃれんじの、太陽と月の位置。経過時間だけで決める（止めているあいだは動かない）。
+/// 日中は太陽を動かさず、夕方になる少し前から右上の太陽が弧を描いて地平線へ沈み、夕日に替わる。
+/// 夜になる少し前に夕日が地平線の下へ沈み、夜になったら右の丘の向こうから月が昇る。
+/// 位置は絵の単位（画面の高さが 624）で、x は遊ぶ範囲の中心から、y は画面の下から
+struct SkyBodies: Equatable {
+    var sun: CGPoint
+    var sunWidth: CGFloat
+    /// 0 は昼の太陽の絵、1 は夕日の絵（あいだは 2 枚を重ねて移り変わる）
+    var sunset: CGFloat
+    /// 夕日が地平線の下に沈みきったら false
+    var showsSun: Bool
+    /// nil のときは月を出さない
+    var moon: CGPoint?
+
+    static let daySun = CGPoint(x: 92, y: 484)
+    static let daySunWidth: CGFloat = 80
+    /// 夕日は半分ほど丘に隠れる高さ
+    static let eveningSun = CGPoint(x: 0, y: 138)
+    static let eveningSunWidth: CGFloat = 128
+    /// 地平線の下（夕日の光の輪まで丘に隠れる高さ）
+    static let setSun = CGPoint(x: 0, y: 50)
+    /// 右の丘に隠れた位置から、右上まで昇る
+    static let moonStart = CGPoint(x: 120, y: 100)
+    static let moonEnd = CGPoint(x: 90, y: 514)
+    static let moonWidth: CGFloat = 52
+
+    static func at(elapsed: TimeInterval) -> SkyBodies {
+        let sunset = progress(elapsed, from: Tuning.eveningStarts - Tuning.sunsetLead, duration: Tuning.sunsetDuration)
+        let dusk = progress(elapsed, from: Tuning.nightStarts - Tuning.duskLead, duration: Tuning.duskLead)
+        // 横は先に、縦はあとから大きく動かし、弧を描いて沈む
+        let sunsetY = lerp(daySun.y, eveningSun.y, easeIn(sunset))
+        let sun = CGPoint(
+            x: lerp(daySun.x, eveningSun.x, easeOut(sunset)),
+            y: lerp(sunsetY, setSun.y, easeIn(dusk))
+        )
+        var moon: CGPoint?
+        if elapsed >= Tuning.nightStarts {
+            let rise = progress(elapsed, from: Tuning.nightStarts, duration: Tuning.moonriseDuration)
+            moon = CGPoint(x: lerp(moonStart.x, moonEnd.x, rise), y: lerp(moonStart.y, moonEnd.y, easeOut(rise)))
+        }
+        return SkyBodies(
+            sun: sun,
+            sunWidth: lerp(daySunWidth, eveningSunWidth, smooth(sunset)),
+            sunset: smooth(sunset),
+            showsSun: dusk < 1,
+            moon: moon
+        )
+    }
+
+    private static func progress(_ elapsed: TimeInterval, from start: TimeInterval, duration: TimeInterval) -> CGFloat {
+        CGFloat(min(max((elapsed - start) / duration, 0), 1))
+    }
+
+    private static func lerp(_ from: CGFloat, _ to: CGFloat, _ amount: CGFloat) -> CGFloat {
+        from + (to - from) * amount
+    }
+
+    private static func easeIn(_ value: CGFloat) -> CGFloat { value * value }
+    private static func easeOut(_ value: CGFloat) -> CGFloat { 1 - (1 - value) * (1 - value) }
+    private static func smooth(_ value: CGFloat) -> CGFloat { value * value * (3 - 2 * value) }
+}
+
 /// 空・地面・季節の飾り・舞うものを重ねた背景。
 /// 絵は 624 の高さを基準に描いてあり、遊ぶ範囲（中央）の外側にも広がっているので、iPadでは左右まで見える。
 @MainActor
 final class BackgroundNode: SKNode {
     private(set) var scenery: Scenery
     private var current: SKNode?
+    /// 太陽と月を経過時間で動かすか（60 秒のモードとちゃれんじ）。のんびりは空の絵の一部として描き、動かさない
+    private let movesSkyBodies: Bool
+    private var skyBodyNodes: SkyBodyNodes?
+    private var lastSize: CGSize = .zero
+    private var lastElapsed: TimeInterval = 0
 
     init(scenery: Scenery) {
         self.scenery = scenery
+        movesSkyBodies = scenery.season == nil
         super.init()
         zPosition = -100
     }
@@ -89,6 +157,55 @@ final class BackgroundNode: SKNode {
         let layer = makeLayer(scenery, size: size)
         addChild(layer)
         current = layer
+        lastSize = size
+        if movesSkyBodies {
+            makeSkyBodies()
+            updateSkyBodies(elapsed: lastElapsed)
+        }
+    }
+
+    /// 毎フレーム、経過時間に合わせて太陽と月を動かす（60 秒のモードとちゃれんじ）
+    func updateSkyBodies(elapsed: TimeInterval) {
+        lastElapsed = elapsed
+        guard let nodes = skyBodyNodes, lastSize.height > 0 else { return }
+        let unit = lastSize.height / 624
+        let centerX = lastSize.width / 2
+        let bodies = SkyBodies.at(elapsed: elapsed)
+        let sunPosition = CGPoint(x: centerX + bodies.sun.x * unit, y: bodies.sun.y * unit)
+        let sunSize = CGSize(width: bodies.sunWidth * unit, height: bodies.sunWidth * unit)
+        for (node, alpha) in [(nodes.daySun, 1 - bodies.sunset), (nodes.eveningSun, bodies.sunset)] {
+            node.position = sunPosition
+            node.size = sunSize
+            node.alpha = alpha
+            node.isHidden = !bodies.showsSun
+        }
+        if let moon = bodies.moon {
+            nodes.moon.isHidden = false
+            nodes.moon.position = CGPoint(x: centerX + moon.x * unit, y: moon.y * unit)
+        } else {
+            nodes.moon.isHidden = true
+        }
+    }
+
+    /// 動かす太陽と月。空（0・1）より手前、雲（2・3）と地面（10・11）より奥に置き、夕日と昇る月は丘に隠れる
+    private func makeSkyBodies() {
+        skyBodyNodes?.all.forEach { $0.removeFromParent() }
+        let unit = lastSize.height / 624
+        let nodes = SkyBodyNodes()
+        nodes.moon.size = CGSize(width: SkyBodies.moonWidth * unit, height: SkyBodies.moonWidth * unit)
+        for node in nodes.all {
+            node.zPosition = 1.6
+            addChild(node)
+        }
+        skyBodyNodes = nodes
+    }
+
+    /// 動かす太陽（昼の絵と夕日の絵を重ねて移り変わる）と月
+    private struct SkyBodyNodes {
+        let daySun = SKSpriteNode(imageNamed: "sky_sun_day")
+        let eveningSun = SKSpriteNode(imageNamed: "sky_sun_evening")
+        let moon = SKSpriteNode(imageNamed: "sky_moon")
+        var all: [SKSpriteNode] { [daySun, eveningSun, moon] }
     }
 
     /// 数秒かけて切り替える
@@ -146,9 +263,13 @@ final class BackgroundNode: SKNode {
         let unit = canvas.unit
         let centerX = canvas.centerX
         let height = canvas.size.height
+        // 60 秒のモードとちゃれんじでは、太陽と月は updateSkyBodies で動かすので、ここでは描かない
+        let drawsSkyBodies = !movesSkyBodies
         switch scenery.phase {
         case .day:
-            canvas.sprite("sky_sun_day", x: centerX + 92 * unit, y: height - 140 * unit, width: 80 * unit, zPosition: 1)
+            if drawsSkyBodies {
+                canvas.sprite("sky_sun_day", x: centerX + 92 * unit, y: height - 140 * unit, width: 80 * unit, zPosition: 1)
+            }
             canvas.sprite("sky_cloud", x: centerX - 90 * unit, y: height - 180 * unit, width: 100 * unit, zPosition: 2)
             canvas.sprite("sky_cloud", x: centerX + 80 * unit, y: height - 300 * unit, width: 84 * unit, zPosition: 2)
             canvas.sprite("sky_cloud", x: centerX - 230 * unit, y: height - 320 * unit, width: 90 * unit, zPosition: 2)
@@ -157,17 +278,22 @@ final class BackgroundNode: SKNode {
                 canvas.sprite("sky_cumulus", x: centerX + 80 * unit, y: 230 * unit, width: 160 * unit, zPosition: 2)
             }
         case .evening:
-            canvas.sprite("sky_sun_evening", x: centerX, y: 138 * unit, width: 128 * unit, zPosition: 1)
+            if drawsSkyBodies {
+                canvas.sprite("sky_sun_evening", x: centerX, y: 138 * unit, width: 128 * unit, zPosition: 1)
+            }
             canvas.sprite("sky_cloud_evening", x: centerX - 80 * unit, y: height - 210 * unit, width: 100 * unit, zPosition: 2)
             canvas.sprite("sky_cloud_evening", x: centerX + 200 * unit, y: height - 290 * unit, width: 90 * unit, zPosition: 2)
         case .night:
-            canvas.sprite("sky_moon", x: centerX + 90 * unit, y: height - 110 * unit, width: 52 * unit, zPosition: 1)
+            if drawsSkyBodies {
+                canvas.sprite("sky_moon", x: centerX + 90 * unit, y: height - 110 * unit, width: 52 * unit, zPosition: 1)
+            }
             for _ in 0..<24 {
                 let star = SKShapeNode(circleOfRadius: .random(in: 1.0...2.2) * unit)
                 star.fillColor = .white
                 star.strokeColor = .clear
                 star.position = CGPoint(x: .random(in: 0...canvas.size.width), y: .random(in: (height * 0.4)...height))
-                star.zPosition = 1
+                // 星は月より奥（昇る月が星の手前を通る）
+                star.zPosition = 0.5
                 canvas.root.addChild(star)
             }
         }

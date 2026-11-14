@@ -90,6 +90,7 @@ final class GameScene: SKScene {
         spawnTimer += delta
 
         if mode != .relaxed {
+            background.updateSkyBodies(elapsed: elapsed)
             let phase = Phase.forElapsed(elapsed)
             if phase != state.phase {
                 state.phase = phase
