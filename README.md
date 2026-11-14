@@ -314,6 +314,16 @@ App Store のプロダクトページに載せるものは、`AppStore/` の JSO
 - API キーに Game Center を編集できる役割（Admin か App Manager）が無いと 403 で止まります
 - 書き方と言語の漏れは、PR の `Verify/App Store metadata` で検査します。流す順は、dry-run で何をするかを確かめ → `dry_run` を外して実行、です
 
+**アプリ内課金**
+
+- [AppStore/in_app_purchases.json](AppStore/in_app_purchases.json) に書き、`In-App Purchases/App Store` で反映します（`Tools/upload_in_app_purchases.py`）。課金・言語ごとの表示名と説明・価格・配信地域を作り、あるものは違う項目だけ書き換えます
+- `productId` はアプリが StoreKit で読む ID です。一度作ると変えられず、消しても同じ ID は使えません。そのため、JSON から消した課金や言語は App Store Connect から消しません
+- 価格は基準の国（`baseTerritory`）の値段を書きます。ほかの国は Apple が自動で換算します。価格帯に無い値段だと、近い値段を出して止まります
+- ファミリー共有（`familySharable`）は、一度オンにするとオフに戻せません
+- 課金を作るには、App Store Connect の「ビジネス」で「有料 App」の契約が有効になっていて、API キーに Admin か App Manager の役割が要ります。足りないと 403 で止まります
+- 表示名は 30 文字、説明は 45 文字までです。書き方・文字数・言語の漏れは、PR の `Verify/App Store metadata` で検査します。流す順は、dry-run で何をするかを確かめ → `dry_run` を外して実行、です
+- 審査用のスクリーンショットと審査メモ、審査への提出は、このワークフローでは行いません。最初の課金は、アプリのバージョンと一緒に審査に出します
+
 **審査に出す前に App Store Connect で手入力するもの**
 
 API が無い・アカウントで一度だけ行うなど、ワークフローで反映できないものです。
