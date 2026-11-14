@@ -14,12 +14,13 @@ final class KobutaTapUITests: XCTestCase {
     }
 
     /// 端末の言語に関係なく、指定した言語で起動する。
-    /// 初登場のお知らせはプレイを一時停止して画面をふさぐため、表示済みとして起動する（引数のドメインなので端末には保存されない）
+    /// 初登場のお知らせはプレイを一時停止して画面をふさぐため、表示済みとして起動する（引数のドメインなので端末には保存されない）。
+    /// トラッキングの許可・広告の同意のダイアログも画面をふさぐため、広告を止めて起動する
     @MainActor
     private func launch(language: String) -> XCUIApplication {
         let app = XCUIApplication()
         let locale = ["ja": "ja_JP", "en": "en_US", "de": "de_DE"][language] ?? "en_US"
-        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale]
+        app.launchArguments += ["-AppleLanguages", "(\(language))", "-AppleLocale", locale, "-disable-ads"]
         for kind in ["golden", "disguise", "brick", "apple"] {
             app.launchArguments += ["-intro_\(kind)", "YES"]
         }
