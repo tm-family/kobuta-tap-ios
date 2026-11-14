@@ -258,6 +258,9 @@ App Store のプロダクトページに載せるものは、`AppStore/` の JSO
 - 撮影はアプリの撮影モード（[KobutaTap/Screenshot/ScreenshotDemo.swift](KobutaTap/Screenshot/ScreenshotDemo.swift)）で行います。`Tools/capture_screenshots.sh` が `-screenshot-demo -screenshot-scene <名前>` と言語を起動引数で渡し、アプリはデモデータで目的の画面を開きます
 - 画面を足すときは、`ScreenshotDemo.Scene` に case を足し、`KobutaTap.swift` の `rootView` で開く画面を返し、`AppStore/screenshots.json` の `scenes` に同じ名前を足します（1 表示サイズにつき 10 枚まで）
 - 撮影スクリプトは、連続して撮った 2 枚が同じになるまで待ってから撮ります（上限 40 秒）。`repeatForever` のようにずっと動き続けるアニメーションは、`ScreenshotDemo.isEnabled` のときは動かさず、決まった状態で止めます（タイトルのキャラクターの揺れは、揺れの真ん中で止めています）
+- 並べる順は、昼のプレイ・夜のプレイ・タイトル・モード選択・のんびり（春）・きせかえ・結果（ちゃれんじの自己ベスト更新）・遊び方です
+- ゲームの画面は、`ScreenshotDemo.Board`（並べるもの・浮かせる文字・点数・りんご・景色・結果の内訳）を `GameScene` に並べ、止めたまま撮ります。位置は遊ぶ範囲の幅と画面の高さに対する割合なので、iPad でも同じ並びになります。自己ベストなど端末の記録には書き込みません
+- 撮影モードでは課金の商品を読みません（ストアの国で値段の表示が変わり、撮るたびにそろわないため）。きせかえ画面は「購入する」のまま撮ります
 - App Store Connect で必須なのは iPhone 6.1 / 6.3 inch（`APP_IPHONE_61`、1206x2622 か 1179x2556）と iPhone Duo（`APP_IPHONE_DUO`）です。iPad に対応するアプリは iPad 13 inch も必須です。大型ディスプレイ（6.5 / 6.7 / 6.9 inch、`APP_IPHONE_67`）は任意ですが、6.3 inch の元になるので必ず撮ります（反映だけ外すなら `display_types` に `APP_IPHONE_61,APP_IPHONE_DUO` のように必要なものだけ書きます）
 - 撮るのはリリースのときだけです。`release/**` ブランチを選んで手動実行します（それ以外のブランチでは止まります）
 - macOS ランナーの枠を開発のビルドと取り合わないよう、撮影は 1 本ずつ流します。6.3 inch（`deriveFrom`）は撮らずに 6.9 inch を ubuntu で縮めて作り、App Store Connect への反映も ubuntu で行います

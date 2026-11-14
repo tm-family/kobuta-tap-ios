@@ -51,10 +51,11 @@ final class Store {
     }
 
     /// 起動時に 1 回呼ぶ。ほかの端末での購入・返金・保護者の承認を受け取れるよう、Transaction.updates を見張る。
-    /// 単体テストの実行中は動かさない（テストの購入で、アプリの購入済みの記録が書き換わらないように）
+    /// 単体テストの実行中は動かさない（テストの購入で、アプリの購入済みの記録が書き換わらないように）。撮影モードでも動かさない
     func start() {
         guard updatesTask == nil,
-              ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
+              ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil,
+              !ScreenshotDemo.isEnabled else { return }
         updatesTask = Task { [weak self] in
             for await update in Transaction.updates {
                 await self?.handle(update)
@@ -68,7 +69,8 @@ final class Store {
 
     /// 商品を読み込む（値段の表示用）
     func loadProduct() async {
-        guard product == nil else { return }
+        // 撮影モードでは読まない（ストアの国で値段の表示が変わり、撮るたびに画面がそろわないため）
+        guard product == nil, !ScreenshotDemo.isEnabled else { return }
         product = try? await Product.products(for: [Self.premiumProductID]).first
     }
 
