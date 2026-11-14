@@ -1,0 +1,43 @@
+{
+  "identifier" : "4C9E2B7A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "100",
+      "familyShareable" : false,
+      "internalID" : "6755000001",
+      "localizations" : [
+        {
+          "description" : "広告を見ずに続けられ、りんごも取れます。5 種類の傘のきせかえが使えます。",
+          "displayName" : "広告なし＋傘のきせかえ",
+          "locale" : "ja"
+        },
+        {
+          "description" : "Skip ads and unlock 5 umbrella designs.",
+          "displayName" : "No Ads + Umbrella Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "jp.shilokuma.TinyPigTap.premium",
+      "referenceName" : "Premium (No Ads + Umbrella Pack)",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "ja",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

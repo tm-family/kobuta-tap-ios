@@ -76,11 +76,30 @@ final class KobutaTapUITests: XCTestCase {
 
         XCTAssertTrue(app.switches["settings_sound"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.switches["settings_haptics"].exists)
+        XCTAssertTrue(app.buttons["settings_restore"].exists)
         app.buttons["settings_licenses"].tap()
 
         XCTAssertTrue(app.staticTexts["\"Carefree\" Kevin MacLeod (incompetech.com)"].waitForExistence(timeout: 5))
         app.buttons["‹ 戻る"].tap()
         XCTAssertTrue(app.switches["settings_sound"].waitForExistence(timeout: 5))
+        app.buttons["‹ 戻る"].tap()
+        XCTAssertTrue(app.buttons["タップしてスタート"].waitForExistence(timeout: 5))
+    }
+
+    /// タイトル → きせかえ（購入前は購入・復元のボタンと鍵つきの傘）→ タイトル
+    @MainActor
+    func testDressUp() throws {
+        let app = launch(language: "ja")
+
+        let dressUp = app.buttons["きせかえ"]
+        XCTAssertTrue(dressUp.waitForExistence(timeout: 10))
+        dressUp.tap()
+
+        XCTAssertTrue(app.buttons["dressup_purchase"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["dressup_restore"].exists)
+        for skin in ["leaf", "sakura", "sunflower", "momiji", "snow", "polkadot"] {
+            XCTAssertTrue(app.buttons["skin_\(skin)"].exists, skin)
+        }
         app.buttons["‹ 戻る"].tap()
         XCTAssertTrue(app.buttons["タップしてスタート"].waitForExistence(timeout: 5))
     }
