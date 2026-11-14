@@ -25,7 +25,7 @@
 | `GameState.swift` | スコア、りんご、コンボ、レンガ、内訳、自己ベスト（SpriteKit と SwiftUI で共有する `@Observable`） |
 | `GameMode.swift` | モード、難易度ごとの速さ（`Difficulty`）、時間帯、調整用の数値（`Tuning`） |
 | `ItemKind.swift` | キャラクターの種類、画像名、大きさ、出現の重み |
-| `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景 |
+| `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景、60 秒のモードとちゃれんじの太陽と月の動き（`SkyBodies`） |
 | `GameView.swift` | プレイ画面の上部の表示、初登場のお知らせ、ひと休みの画面、続ける画面、結果 |
 | `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
 | `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の仮の値 |
