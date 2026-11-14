@@ -24,6 +24,8 @@ final class ItemNode: SKSpriteNode {
 final class GameScene: SKScene {
     private let mode: GameMode
     private let state: GameState
+    /// このプレイでこぶたと着ぐるみのおおかみがさす傘（プレイの途中では変えない）
+    let umbrellaSkin: UmbrellaSkin
 
     private var elapsed: TimeInterval = 0
     private var lastUpdate: TimeInterval?
@@ -32,9 +34,15 @@ final class GameScene: SKScene {
     private var clockCheckTimer: TimeInterval = 0
     private var countdownTask: Task<Void, Never>?
 
-    init(size: CGSize, mode: GameMode, state: GameState) {
+    init(
+        size: CGSize,
+        mode: GameMode,
+        state: GameState,
+        umbrellaSkin: UmbrellaSkin = .current(purchased: Monetization.adsRemoved)
+    ) {
         self.mode = mode
         self.state = state
+        self.umbrellaSkin = umbrellaSkin
         let scenery: Scenery = mode == .relaxed ? .now() : .challenge(.day)
         state.phase = scenery.phase
         background = BackgroundNode(scenery: scenery)
@@ -130,7 +138,7 @@ final class GameScene: SKScene {
     private func spawn() {
         let kind = ItemKind.random(mode: mode, phase: state.phase)
         let hard = mode != .relaxed && state.phase == .night
-        let node = ItemNode(kind: kind, textureName: kind.textureName(.normal, hard: hard), width: baseWidth)
+        let node = ItemNode(kind: kind, textureName: kind.textureName(.normal, hard: hard, skin: umbrellaSkin), width: baseWidth)
 
         let margin = node.size.width * 0.5
         let rect = playRect
@@ -250,7 +258,7 @@ private extension GameScene {
         state.addScore(points)
         state.tappedCount[node.kind, default: 0] += 1
         state.combo += 1
-        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
+        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped, skin: umbrellaSkin))
         popup(L10n.points(points), at: at, color: .systemPink)
         popup(L10n.oink, at: CGPoint(x: at.x, y: at.y + 26), size: 16)
         if state.combo.isMultiple(of: Tuning.comboStep) {
@@ -279,7 +287,7 @@ private extension GameScene {
         SoundPlayer.shared.play(.wolf)
         state.combo = 0
         state.missCount += 1
-        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped))
+        node.texture = SKTexture(imageNamed: node.kind.textureName(.tapped, skin: umbrellaSkin))
         popup(node.kind == .wolf ? L10n.grr : L10n.busted, at: at, color: .systemRed)
         if mode != .relaxed {
             loseApple()

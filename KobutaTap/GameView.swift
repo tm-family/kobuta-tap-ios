@@ -237,7 +237,8 @@ struct IntroCard: View {
                 ZStack {
                     Circle().fill(.white.opacity(0.85)).frame(width: 190, height: 190)
                     // 横長のレンガも丸の中に収まるよう、幅と高さの両方を 150 までにする
-                    Image(kind.textureName(.normal)).resizable().scaledToFit().frame(maxWidth: 150, maxHeight: 150)
+                    Image(kind.textureName(.normal, skin: .current(purchased: Monetization.adsRemoved)))
+                        .resizable().scaledToFit().frame(maxWidth: 150, maxHeight: 150)
                 }
                 .padding(.bottom, 20)
                 VStack(spacing: 12) {
