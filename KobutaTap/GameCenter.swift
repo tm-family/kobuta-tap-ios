@@ -191,14 +191,7 @@ final class GameCenter {
 
     /// いちばん手前の画面の上に出す
     private static func presentOnTop(_ viewController: UIViewController) {
-        var top = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
-            .first?
-            .rootViewController
-        while let presented = top?.presentedViewController {
-            top = presented
-        }
-        top?.present(viewController, animated: true)
+        UIApplication.shared.topViewController?.present(viewController, animated: true)
     }
 }
 
