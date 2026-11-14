@@ -16,6 +16,7 @@ struct KobutaTap: App {
         AppSettings.registerDefaults()
         GameState.migrateBestScores()
         SoundPlayer.shared.configure()
+        Store.shared.start()
     }
 
     var body: some Scene {
