@@ -283,7 +283,7 @@ App Store のプロダクトページに載せるものは、`AppStore/` の JSO
 | 年齢制限 | `ageRating` | 質問ごとの回答。テンプレートはすべて「なし」（4+）なので、広告（`advertising`）・ほかの人の投稿（`userGeneratedContent`）などをアプリに合わせて見直します。質問が漏れていると PR の検査で落ちます |
 | App Review に関する情報 | `review`（`demoAccountRequired`・`notesFile` か `notes`） | メモは `notesFile` に書いたファイル（既定は [AppStore/review_notes.txt](AppStore/review_notes.txt)）の英文を書き込みます。連絡先とデモアカウントは JSON に書かず、下の Secrets から渡します。値はログに出しません |
 | 価格 | `pricing` | **App Store Connect で未設定のときだけ**無料にします。設定済みなら触りません |
-| 配信状況 | `availability` | **App Store Connect で未設定のときだけ**、すべての国と地域（`"ALL"`）か指定した国と地域で配信します。設定済みなら触りません |
+| 配信状況 | `availability` | **App Store Connect で未設定のときだけ**、すべての国と地域（`"ALL"`）か指定した国と地域で配信します。`"ALL"` のときは `excludedTerritories` に配信しない国と地域を書けます（こぶたタップは中国本土 `CHN` を除く）。設定済みなら触らず、JSON と違えば最後に違いを出します |
 
 - 価格と配信状況は、最初のリリースの前に一度だけ決める項目です。JSON を書き換えても配信中のアプリの価格や配信先が変わらないよう、設定済みなら書き込みません。変えるときは App Store Connect の「価格および配信状況」で行います
 - App Review に関する情報の連絡先は、次の Secrets から渡します。Organization の Secrets に登録しておくと、テンプレートから作ったリポジトリすべてで使われます。登録していなければ連絡先は書き込まず、Job Summary の「審査に出す前に App Store Connect で入力が要るもの」に出ます
