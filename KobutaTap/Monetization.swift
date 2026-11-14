@@ -4,9 +4,6 @@ import Foundation
 enum Monetization {
     /// 広告を外す課金を購入済みか（StoreKitで置き換える）
     static var adsRemoved: Bool { UserDefaults.standard.bool(forKey: "adsRemoved") }
-    /// リワード広告をすぐに出せるか
-    static var isRewardedAdReady: Bool { Ads.shared.isReady }
-
     /// リワード広告を出し、閉じるまで待つ
     static func showRewardedAd() async -> RewardedAdResult {
         await Ads.shared.show()
