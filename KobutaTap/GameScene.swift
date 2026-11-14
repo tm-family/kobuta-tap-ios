@@ -380,8 +380,7 @@ extension GameScene {
     private var needsAdForApple: Bool {
         mode.needsAdForApple(
             applesGained: state.applesGained,
-            adsRemoved: Monetization.adsRemoved,
-            adReady: Monetization.isRewardedAdReady
+            adsRemoved: Monetization.adsRemoved
         )
     }
 

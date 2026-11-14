@@ -54,9 +54,9 @@ enum GameMode: String, CaseIterable, Identifiable {
 
     /// 次に取るりんごを、広告を見て取るか。ちゃれんじで広告を外す購入をしていない人の、取れた数で 1・4・7・10…個目のりんご。
     /// 見送ったりんごは数えないので、1 個目を見送ると次のりんごがまた 1 個目になる。
-    /// 広告の準備ができていないとき（在庫が無いなど）は、広告なしで取れるようにする
-    func needsAdForApple(applesGained: Int, adsRemoved: Bool, adReady: Bool) -> Bool {
-        self == .challenge && !adsRemoved && adReady && Tuning.isAdApple(number: applesGained + 1)
+    /// 広告を読み込めていないとき（オフラインなど）も、広告なしでは取れない（広告を出せなければ、ダイアログで案内する）
+    func needsAdForApple(applesGained: Int, adsRemoved: Bool) -> Bool {
+        self == .challenge && !adsRemoved && Tuning.isAdApple(number: applesGained + 1)
     }
 
     /// 速さ・出てくる間隔・おおかみの多さ。のんびりは一定なので nil
