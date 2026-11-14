@@ -1,15 +1,37 @@
 import Foundation
+import GoogleMobileAds
 @testable import KobutaTap
 import StoreKit
 import Testing
 
 struct AdsTests {
-    /// 途中で閉じたときだけ、りんご・続きを渡さない。広告を出せなかったときは広告なしで渡す
+    /// りんご・続きを渡すのは、広告を最後まで見たときだけ。途中で閉じたときも、広告を出せなかったときも渡さない
     @Test
-    func rewardIsGrantedUnlessClosedEarly() {
+    func rewardIsGrantedOnlyWhenWatched() {
         #expect(RewardedAdResult.rewarded.grantsReward)
-        #expect(RewardedAdResult.unavailable.grantsReward)
         #expect(!RewardedAdResult.closedEarly.grantsReward)
+        #expect(!RewardedAdResult.unavailable(.network).grantsReward)
+        #expect(!RewardedAdResult.unavailable(.other).grantsReward)
+    }
+
+    /// 通信のエラー（AdMob の通信エラー・時間切れ、URL のエラー、下の理由に入った URL のエラー）は「ネットワークを見直してみてね」
+    @Test
+    func networkErrorsAskToCheckTheNetwork() {
+        #expect(AdUnavailableReason.from(GoogleMobileAds.RequestError(.networkError)) == .network)
+        #expect(AdUnavailableReason.from(GoogleMobileAds.RequestError(.timeout)) == .network)
+        #expect(AdUnavailableReason.from(URLError(.notConnectedToInternet)) == .network)
+        let wrapped = NSError(domain: "test", code: 1, userInfo: [NSUnderlyingErrorKey: URLError(.timedOut)])
+        #expect(AdUnavailableReason.from(wrapped) == .network)
+    }
+
+    /// 在庫が無い・そのほかのエラー・エラーが無いときは「少し待ってから、もう一度ためしてね」
+    @Test
+    func otherErrorsAskToTryAgainLater() {
+        #expect(AdUnavailableReason.from(GoogleMobileAds.RequestError(.noFill)) == .other)
+        #expect(AdUnavailableReason.from(GoogleMobileAds.RequestError(.internalError)) == .other)
+        #expect(AdUnavailableReason.from(nil) == .other)
+        #expect(AdUnavailableReason.network.message != AdUnavailableReason.other.message)
+        #expect(!AdUnavailableReason.network.title.isEmpty)
     }
 
     /// 本番の広告は App Store から入れたアプリだけ。開発中と TestFlight（sandbox）はテスト用の広告
