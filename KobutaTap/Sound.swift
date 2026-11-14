@@ -83,6 +83,8 @@ final class SoundPlayer {
     private var jinglePlayer: AVAudioPlayer?
     /// 画面に合わせて流す BGM。音がオフのあいだも覚えておき、オンに戻したら流す
     private var bgm: BGM?
+    /// 広告を出しているあいだは true。アプリに戻ったときなどにも BGM を流さない
+    private var isSuspended = false
 
     private init() {}
 
@@ -92,7 +94,7 @@ final class SoundPlayer {
 
     /// 起動時に 1 回呼ぶ。効果音を読み込んでおき、最初に鳴らすときの遅れをなくす
     func configure() {
-        try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        Self.setUpSession()
         for effect in SoundEffect.allCases {
             guard let url = Self.url(for: effect.rawValue) else { continue }
             effects[effect] = (0..<Self.voices).compactMap { _ in
@@ -142,8 +144,22 @@ final class SoundPlayer {
         bgmPlayer?.pause()
     }
 
+    /// 広告を出すとき。閉じるまで BGM を止めておく
+    func suspend() {
+        isSuspended = true
+        pause()
+    }
+
+    /// 広告を閉じたとき。広告 SDK が音の扱い（AVAudioSession）を変えることがあるので、元に戻してから BGM を流す
+    func endSuspension() {
+        isSuspended = false
+        Self.setUpSession()
+        resume()
+    }
+
     /// 設定で音を切り替えたとき・アプリに戻ったとき・ほかのアプリの音楽が止まったとき
     func resume() {
+        guard !isSuspended else { return }
         let silenced = AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint
         guard AppSettings.isSoundOn, !silenced else {
             pause()
@@ -155,6 +171,11 @@ final class SoundPlayer {
         } else if bgm != nil {
             startBGM(after: nil)
         }
+    }
+
+    /// 消音モードでは鳴らさず、ほかのアプリの音楽とも混ぜる
+    private static func setUpSession() {
+        try? AVAudioSession.sharedInstance().setCategory(.ambient)
     }
 
     private func startBGM(after jingle: Jingle?) {
