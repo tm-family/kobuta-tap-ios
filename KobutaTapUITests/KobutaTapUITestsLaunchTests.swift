@@ -19,6 +19,8 @@ final class KobutaTapUITestsLaunchTests: XCTestCase {
     @MainActor
     func testLaunch() throws {
         let app = XCUIApplication()
+        // トラッキングの許可のダイアログで画面がふさがらないよう、広告を止めて起動する
+        app.launchArguments += ["-disable-ads"]
         app.launch()
 
         // 起動直後のスクリーンショットをテスト結果に添付する

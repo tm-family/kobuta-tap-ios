@@ -157,7 +157,7 @@ struct GameStateTests {
     @Test
     func declinedAppleIsNotCounted() {
         func needsAd(_ gained: Int) -> Bool {
-            GameMode.challenge.needsAdForApple(applesGained: gained, adsRemoved: false, adReady: true)
+            GameMode.challenge.needsAdForApple(applesGained: gained, adsRemoved: false)
         }
         var gained = 0
         #expect(needsAd(gained))   // 1 個目: 広告。見送る
@@ -170,12 +170,12 @@ struct GameStateTests {
         #expect(needsAd(gained))   // 4 個目: 広告
     }
 
-    /// 広告を見て取るのは、ちゃれんじで広告を外す購入をしていない人だけ。広告の準備ができていなければ、広告なしで取れる
+    /// 広告を見て取るのは、ちゃれんじで広告を外す購入をしていない人だけ。広告を読み込めていないかどうかは関係しない
     @Test
     func adApplesOnlyInChallengeWithoutPurchase() {
-        #expect(!GameMode.normal.needsAdForApple(applesGained: 0, adsRemoved: false, adReady: true))
-        #expect(!GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: true, adReady: true))
-        #expect(!GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: false, adReady: false))
+        #expect(GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: false))
+        #expect(!GameMode.normal.needsAdForApple(applesGained: 0, adsRemoved: false))
+        #expect(!GameMode.challenge.needsAdForApple(applesGained: 0, adsRemoved: true))
     }
 
     /// モードが 5 つになる前のチャレンジ（60 秒）の自己ベストは「ふつう」に移し、ちゃれんじには引き継がない

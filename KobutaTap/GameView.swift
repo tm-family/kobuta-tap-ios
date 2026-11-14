@@ -61,6 +61,8 @@ struct GameView: View {
         .onAppear {
             SoundPlayer.shared.playBGM(.play)
             SoundPlayer.shared.play(.start)
+            // りんごのあるモードでは広告を使うので、無い・古くなっていたら読み込み直しておく
+            if mode.startingApples != nil { Ads.shared.prepare() }
         }
         // App Switcher などでアプリが裏に回ったら、止めて盤面を隠す
         .onChange(of: scenePhase) { _, phase in
@@ -310,20 +312,12 @@ struct ContinueCard: View {
                     .font(.kRounded(13, .medium))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                if Monetization.adsRemoved || Monetization.isRewardedAdReady {
-                    PillButton(
-                        title: Monetization.adsRemoved ? String(localized: "続ける") : String(localized: "広告を見て続ける"),
-                        fill: .kGreen,
-                        textColor: .white
-                    ) {
-                        // 広告を途中で閉じたら、りんごはもらえず、この画面に戻る
-                        Task {
-                            if Monetization.adsRemoved {
-                                onContinue()
-                            } else if await Monetization.showRewardedAd() {
-                                onContinue()
-                            }
-                        }
+                if Monetization.adsRemoved {
+                    PillButton(title: String(localized: "続ける"), fill: .kGreen, textColor: .white, action: onContinue)
+                } else {
+                    // 広告を途中で閉じたら、りんごはもらえず、この画面に戻る
+                    WatchAdButton(title: String(localized: "広告を見て続ける")) { rewarded in
+                        if rewarded { onContinue() }
                     }
                 }
                 PillButton(title: String(localized: "やめる"), fill: Color(hex: 0xEFEDE7), action: onStop)
@@ -338,9 +332,8 @@ struct ContinueCard: View {
 
 /// ちゃれんじで、広告を見てりんごを取るか選ぶ（広告を外す購入をしていない人の 1・4・7・10…個目のりんご）
 struct AppleOfferCard: View {
-    /// 広告を最後まで見たら true、見送ったか途中で閉じたら false
+    /// 広告を最後まで見てりんごを取るなら true。見送ったか、広告を途中で閉じたら false
     let onFinish: (Bool) -> Void
-    @State private var isShowingAd = false
 
     var body: some View {
         ZStack {
@@ -352,11 +345,7 @@ struct AppleOfferCard: View {
                     .font(.kRounded(13, .medium))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                PillButton(title: String(localized: "広告を見て取る"), fill: .kGreen, textColor: .white) {
-                    guard !isShowingAd else { return }
-                    isShowingAd = true
-                    Task { onFinish(await Monetization.showRewardedAd()) }
-                }
+                WatchAdButton(title: String(localized: "広告を見て取る"), onFinish: onFinish)
                 PillButton(title: String(localized: "見送る"), fill: Color(hex: 0xEFEDE7)) {
                     onFinish(false)
                 }
@@ -365,6 +354,41 @@ struct AppleOfferCard: View {
             .background(.white, in: .rect(cornerRadius: 24))
             .padding(28)
             .frame(maxWidth: 380)
+        }
+    }
+}
+
+/// 広告を見るボタン。押すと広告を出す（無ければその場で読み込んで待つ）。
+/// 広告を出せなければ、理由に合わせたダイアログ（「ネットワークを見直してみてね」など）を出し、この画面に戻る
+struct WatchAdButton: View {
+    let title: String
+    /// 広告を最後まで見たら true、途中で閉じたら false。出せなかったときは呼ばない
+    let onFinish: (Bool) -> Void
+    @State private var isLoading = false
+    @State private var unavailable: AdUnavailableReason?
+
+    var body: some View {
+        PillButton(title: isLoading ? String(localized: "広告を読み込み中…") : title, fill: .kGreen, textColor: .white) {
+            guard !isLoading else { return }
+            isLoading = true
+            Task {
+                let result = await Monetization.showRewardedAd()
+                isLoading = false
+                switch result {
+                case .rewarded: onFinish(true)
+                case .closedEarly: onFinish(false)
+                case .unavailable(let reason): unavailable = reason
+                }
+            }
+        }
+        .alert(
+            unavailable?.title ?? "",
+            isPresented: Binding(get: { unavailable != nil }, set: { if !$0 { unavailable = nil } }),
+            presenting: unavailable
+        ) { _ in
+            Button("OK") {}
+        } message: { reason in
+            Text(reason.message)
         }
     }
 }

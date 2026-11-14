@@ -16,6 +16,22 @@
           }
         }
       }
+    },
+    "NSUserTrackingUsageDescription": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あなたの興味に合った広告を表示するために使います。許可しなくても、ゲームはすべて遊べます。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This lets us show ads that match your interests. You can play the whole game even if you don't allow it."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
