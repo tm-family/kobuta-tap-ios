@@ -26,6 +26,7 @@
 | `GameMode.swift` | モード、難易度ごとの速さ（`Difficulty`）、時間帯、調整用の数値（`Tuning`） |
 | `ItemKind.swift` | キャラクターの種類、画像名、大きさ、出現の重み |
 | `UmbrellaSkin.swift` | 傘のきせかえ（葉っぱは無料、ほかの 5 種類は課金）と、選んだ傘 |
+| `Store.swift` / `DressUpView.swift` | 課金「広告なし＋傘のきせかえ」（StoreKit 2）、きせかえ画面（購入・復元・傘を選ぶ） |
 | `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景、60 秒のモードとちゃれんじの太陽と月の動き（`SkyBodies`） |
 | `GameView.swift` | プレイ画面の上部の表示、初登場のお知らせ、ひと休みの画面、続ける画面、結果 |
 | `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
@@ -53,6 +54,15 @@
 - 音は消音モードでは鳴らさず、ほかのアプリの音楽とも混ぜます（`AVAudioSession` の `.ambient`）。ほかのアプリが音楽を流しているあいだは BGM を流しません
 - 振動させるのは、おおかみに触れたとき・りんごを失ったとき・レンガを取ったときだけです（`Haptics.swift`）
 - 音の素材は、public リポジトリにそのまま置けて商用にも使える **CC0 か CC BY のものだけ**にします（NC・ND・SA や、素材の再配布を禁じるサイトの規約のものは使いません）。素材を足したり替えたりしたら、`Credits.swift` のクレジットも直します。CC BY の素材は、作者が指定する書式のクレジットが必須です
+
+### 課金（StoreKit）
+
+- 課金は「広告なし＋傘のきせかえ」（`jp.shilokuma.TinyPigTap.premium`、100 円の買い切り）の 1 つです。購入すると、広告を見ずに続ける・りんごを取れ、傘を 5 種類から選べます。App Store Connect への登録は下の「アプリ内課金」
+- タイトルの右上の傘のボタンから「きせかえ」画面を開きます。購入前は課金の内容・購入・「購入を復元」と鍵つきの傘、購入後は傘を選べます。設定画面にも「購入を復元」があります。遊んでいる最中には購入の案内を出しません
+- 購入済みかは、購入の権利（`Transaction.currentEntitlements`）で決めます。起動直後や通信できないときのために前回の結果も覚えておき、`Transaction.updates` でほかの端末での購入・返金・保護者の承認を受け取ります
+- Debug ビルドでは、起動引数 `-debug_premium YES` で購入済みの見た目を確かめられます（Release では効きません）
+- `KobutaTapTests/Products.storekit` は StoreKit の設定ファイルです。Xcode で購入を試すときは、スキームの Run → Options → StoreKit Configuration に指定します（共有のスキームには入れていません）
+- 単体テストでは商品が読めることまでを確かめます。購入・返金は、コマンドラインのテスト実行では StoreKit のテスト環境が設定を書き込めず（`SKInternalErrorDomain` 3）購入の確認待ちで止まるため、TestFlight（Sandbox）で確かめます
 
 ### 広告（AdMob）
 
