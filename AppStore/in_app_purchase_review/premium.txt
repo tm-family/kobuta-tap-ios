@@ -1,0 +1,21 @@
+"No Ads + Umbrella Pack" is a non-consumable In-App Purchase with two benefits.
+
+1. No ads
+The app shows only rewarded ads, and only when the player chooses to watch one:
+- Easy, Normal and Hard: when the player runs out of apples, "Watch an Ad to Continue" lets them continue once.
+- Challenge: the 1st, 4th, 7th, ... apple in each play is taken with "Watch an Ad to Take It".
+After the purchase, these buttons become "Continue" and the apples are taken without an ad.
+
+2. Umbrellas
+Five umbrella designs for the piglets: Cherry Blossom, Sunflower, Maple Leaves, Snowflake and Polka Dot. The Leaf umbrella is free.
+
+HOW TO PURCHASE
+No login or account is required.
+1. On the title screen, tap the umbrella button at the top right ("Umbrellas").
+2. On the "Umbrellas" screen, tap "Buy for <price>" and confirm the purchase.
+3. After the purchase, tap an umbrella to use it. The piglets carry it in the game.
+
+HOW TO RESTORE
+Tap "Restore Purchases" on the "Umbrellas" screen, or open Settings (the gear button on the title screen) and tap "Restore Purchases".
+
+The screenshot shows the English UI. On Japanese devices, the same screen is labeled "きせかえ" [Umbrellas].

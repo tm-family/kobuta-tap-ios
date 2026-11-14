@@ -7,7 +7,9 @@
     "price: baseTerritory（基準の国）での値段。ほかの国は Apple が自動で換算する。customerPrice はその国の通貨で、価格帯にある値だけ使える。",
     "excludedTerritories: 売らない国（App Store Connect の territory の ID）。ほかの国はすべて売り、新しく増えた国でも売る。",
     "localizations のキーは App Store Connect のロケール（languages.json の storeLocale）。name は 30 文字まで、description は 45 文字まで。",
-    "審査用のスクリーンショットと審査メモ（reviewNote）は、購入画面ができてから足す。JSON から消した課金や言語は、App Store Connect からは消さない。"
+    "review: 審査用のスクリーンショット（screenshot）と審査メモ（notesFile。英語）。AppStore/ からの相対パスで書く。",
+    "スクリーンショットは購入画面を写した、アルファの無い縦向きの PNG（640x920 以上）。中身が変わったときだけ載せ直す。",
+    "JSON から消した課金や言語は、App Store Connect からは消さない。"
   ],
   "inAppPurchases": [
     {
@@ -17,6 +19,10 @@
       "familySharable": false,
       "price": { "baseTerritory": "JPN", "customerPrice": 100 },
       "excludedTerritories": ["CHN"],
+      "review": {
+        "screenshot": "in_app_purchase_review/premium.png",
+        "notesFile": "in_app_purchase_review/premium.txt"
+      },
       "localizations": {
         "ja": {
           "name": "広告なし＋傘のきせかえ",
