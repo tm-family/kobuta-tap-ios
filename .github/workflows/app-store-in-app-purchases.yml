@@ -2,10 +2,10 @@ name: In-App Purchases/App Store
 
 # アプリ内課金を App Store Connect に作り、AppStore/in_app_purchases.json とそろえる。手動実行のみ。
 #
-#   Tools/upload_in_app_purchases.py … 課金・言語ごとの表示名と説明・価格・配信地域を作る・書き換える
+#   Tools/upload_in_app_purchases.py … 課金・言語ごとの表示名と説明・価格・配信地域・審査用のスクリーンショットと審査メモを作る・書き換える
 #
 # JSON から消した課金・言語は消さない（商品 ID は消しても使い直せないため、消すのは人が画面で行う）。
-# 審査用のスクリーンショット・審査メモと、審査への提出（最初の課金はアプリのバージョンと一緒に出す）は、ここでは行わない。
+# 審査への提出（最初の課金はアプリのバージョンと一緒に出す）は、ここでは行わない。
 # API キーに課金を編集できる役割（Admin か App Manager）が無いか、「有料 App」の契約が有効でないと 403 で止まる。
 # dry_run にすると、読み取りの API だけ使い、何をするかを出す。
 

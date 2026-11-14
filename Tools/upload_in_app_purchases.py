@@ -11,12 +11,14 @@
 - 言語ごとの表示名と説明を作る・書き換える
 - 価格を、基準の国の値段（価格帯）にそろえる。ほかの国は Apple が自動で換算する
 - 配信地域を、excludedTerritories を除くすべての国にそろえる（新しく増えた国でも売る）
+- 審査用のスクリーンショットと審査メモ（review）を載せる。スクリーンショットは、載っているものと中身（MD5）が
+  違うときだけ差し替え、Apple 側の取り込みが終わるまで待つ
 
 やらないこと:
 
 - JSON から消した課金・言語を消す（商品 ID は消しても使い直せないので、消すのは人が画面で行う）
 - ファミリー共有を true から false に戻す（App Store Connect でも戻せない）
-- 審査用のスクリーンショットと審査メモ、審査への提出（最初の課金は、アプリのバージョンと一緒に審査に出す）
+- 審査への提出（最初の課金は、アプリのバージョンと一緒に審査に出す）
 
 課金は v2 の API（`/v2/inAppPurchases`）で扱う。
 API キーには課金を編集できる役割（Admin か App Manager）が要る。足りないと 403 で止まる。
@@ -35,12 +37,15 @@ import argparse
 import json
 import os
 import re
+import struct
 import sys
 from pathlib import Path
 
 from app_store_config import ROOT, bundle_id, languages
 
 CONFIG_PATH = ROOT / "AppStore" / "in_app_purchases.json"
+#: review の screenshot・notesFile は、このフォルダーからの相対パスで書く（app_info.json の notesFile と同じ）
+APP_STORE_DIR = ROOT / "AppStore"
 
 TYPES = {"NON_CONSUMABLE", "CONSUMABLE", "NON_RENEWING_SUBSCRIPTION"}
 PRODUCT_ID_PATTERN = re.compile(r"^[A-Za-z0-9._]{1,100}$")
@@ -49,6 +54,67 @@ REFERENCE_NAME_LIMIT = 64
 #: 言語ごとの表示名と説明の文字数の上限（App Store Connect の上限）
 NAME_LIMIT = 30
 DESCRIPTION_LIMIT = 45
+#: 審査メモの文字数の上限
+REVIEW_NOTE_LIMIT = 4000
+#: 審査用のスクリーンショットの最小の寸法（iPhone・縦向き）
+REVIEW_SCREENSHOT_MIN_SIZE = (640, 920)
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+#: PNG の色の種類のうち、アルファを持つもの（グレー＋アルファ・RGBA）
+PNG_ALPHA_COLOR_TYPES = {4, 6}
+
+
+def png_info(path: Path) -> tuple[int, int, bool] | None:
+    """PNG の幅・高さ・アルファの有無。PNG でなければ None。"""
+    with path.open("rb") as file:
+        header = file.read(26)
+    if len(header) < 26 or not header.startswith(PNG_SIGNATURE) or header[12:16] != b"IHDR":
+        return None
+    width, height = struct.unpack(">II", header[16:24])
+    return width, height, header[25] in PNG_ALPHA_COLOR_TYPES
+
+
+def review_paths(purchase: dict) -> tuple[Path | None, Path | None]:
+    """審査用のスクリーンショットと審査メモのファイル。書いていなければ None。"""
+    review = purchase.get("review") or {}
+    screenshot, notes = review.get("screenshot"), review.get("notesFile")
+    return (APP_STORE_DIR / screenshot if screenshot else None, APP_STORE_DIR / notes if notes else None)
+
+
+def review_note(purchase: dict) -> str | None:
+    """審査メモ（前後の空白を除く）。notesFile を書いていなければ None。"""
+    _, notes = review_paths(purchase)
+    return notes.read_text().strip() if notes else None
+
+
+def review_problems(where: str, purchase: dict) -> list[str]:
+    review = purchase.get("review")
+    if review is None:
+        return []
+    if not isinstance(review, dict) or not review.get("screenshot") or not review.get("notesFile"):
+        return [f"{where}: review には screenshot と notesFile を書いてください"]
+    problems: list[str] = []
+    screenshot, notes = review_paths(purchase)
+    if not screenshot.is_file():
+        problems.append(f"{where}: 審査用のスクリーンショット {screenshot.relative_to(ROOT)} がありません")
+    else:
+        info = png_info(screenshot)
+        min_width, min_height = REVIEW_SCREENSHOT_MIN_SIZE
+        if info is None:
+            problems.append(f"{where}: 審査用のスクリーンショットは PNG にしてください")
+        elif info[2]:
+            problems.append(f"{where}: 審査用のスクリーンショットのアルファを消してください（Tools/remove_alpha.swift）")
+        elif info[0] > info[1] or info[0] < min_width or info[1] < min_height:
+            problems.append(
+                f"{where}: 審査用のスクリーンショットは縦向きの {min_width}x{min_height} 以上にしてください"
+                f"（{info[0]}x{info[1]}）"
+            )
+    if not notes.is_file():
+        problems.append(f"{where}: 審査メモ {notes.relative_to(ROOT)} がありません")
+    else:
+        note = review_note(purchase)
+        if not note or len(note) > REVIEW_NOTE_LIMIT:
+            problems.append(f"{where}: 審査メモは 1〜{REVIEW_NOTE_LIMIT} 文字にしてください（{len(note)} 文字）")
+    return problems
 
 
 def load(path: Path) -> tuple[list[dict], list[str]]:
@@ -103,6 +169,7 @@ def load(path: Path) -> tuple[list[dict], list[str]]:
                 problems.append(
                     f"{where}: {locale} の description は 1〜{DESCRIPTION_LIMIT} 文字にしてください（{len(description)} 文字）"
                 )
+        problems.extend(review_problems(where, purchase))
     return purchases, problems
 
 
@@ -135,14 +202,18 @@ class InAppPurchases:
         return {purchase["attributes"]["productId"]: purchase for purchase in purchases}
 
     def create(self, app_id: str, purchase: dict) -> str:
+        attributes = {
+            "name": purchase["referenceName"],
+            "productId": purchase["productId"],
+            "inAppPurchaseType": purchase["type"],
+            "familySharable": purchase["familySharable"],
+        }
+        note = review_note(purchase)
+        if note is not None:
+            attributes["reviewNote"] = note
         created = self.client.post("/v2/inAppPurchases", {"data": {
             "type": "inAppPurchases",
-            "attributes": {
-                "name": purchase["referenceName"],
-                "productId": purchase["productId"],
-                "inAppPurchaseType": purchase["type"],
-                "familySharable": purchase["familySharable"],
-            },
+            "attributes": attributes,
             "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
         }})
         return created["data"]["id"]
@@ -233,6 +304,24 @@ class InAppPurchases:
             }],
         })
 
+    # MARK: 審査用のスクリーンショット
+
+    def review_screenshot(self, purchase_id: str) -> dict | None:
+        """いま載っている審査用のスクリーンショット。まだ無ければ None。"""
+        return self.client.get_or_none(f"/v2/inAppPurchases/{purchase_id}/appStoreReviewScreenshot")
+
+    def replace_review_screenshot(self, purchase_id: str, current: dict | None, path: Path) -> None:
+        """載っているものを消してから載せ直し、Apple 側の取り込みが終わるまで待つ（課金ごとに 1 枚だけ）。"""
+        resource_type = "inAppPurchaseAppStoreReviewScreenshots"
+        if current is not None:
+            self.client.delete(f"/v1/{resource_type}/{current['id']}")
+        screenshot_id = self.client.upload_asset(
+            resource_type,
+            {"inAppPurchaseV2": {"data": {"type": "inAppPurchases", "id": purchase_id}}},
+            path,
+        )
+        self.client.wait_for_delivery([screenshot_id], resource_type)
+
     # MARK: 配信地域
 
     def all_territories(self) -> set[str]:
@@ -267,8 +356,10 @@ def sync_purchase(store: InAppPurchases, app_id: str, purchase: dict, current: d
 
     # 商品
     if current is None:
+        note = review_note(purchase)
         print(f"+ 課金 {product_id} を作る: type={purchase['type']}, name={purchase['referenceName']!r}, "
-              f"familySharable={purchase['familySharable']}")
+              f"familySharable={purchase['familySharable']}"
+              + ("" if note is None else f", reviewNote={len(note)} 文字"))
         purchase_id = None if store.dry_run else store.create(app_id, purchase)
     else:
         purchase_id = current["id"]
@@ -283,8 +374,16 @@ def sync_purchase(store: InAppPurchases, app_id: str, purchase: dict, current: d
             changes["familySharable"] = True
         elif not purchase["familySharable"] and attributes.get("familySharable"):
             print(f"! {product_id}: ファミリー共有は一度オンにするとオフに戻せません（App Store Connect はオンのまま）")
+        note = review_note(purchase)
+        if note is not None and (attributes.get("reviewNote") or "").strip() != note:
+            changes["reviewNote"] = note
         if changes:
-            print(f"~ 課金 {product_id}: {describe(changes, attributes)}")
+            # 審査メモは長いので、文字数だけ出す
+            shown = {field: value for field, value in changes.items() if field != "reviewNote"}
+            summary = [describe(shown, attributes)] if shown else []
+            if "reviewNote" in changes:
+                summary.append(f"reviewNote: {len(attributes.get('reviewNote') or '')} 文字 → {len(note)} 文字")
+            print(f"~ 課金 {product_id}: {', '.join(summary)}")
             if not store.dry_run:
                 store.update(purchase_id, changes)
         print(f"  {product_id} の状態: {attributes.get('state')}")
@@ -318,6 +417,11 @@ def sync_purchase(store: InAppPurchases, app_id: str, purchase: dict, current: d
             if not store.dry_run:
                 store.set_price(purchase_id, territory, point["id"])
 
+    # 審査用のスクリーンショット
+    screenshot, _ = review_paths(purchase)
+    if screenshot is not None:
+        sync_review_screenshot(store, product_id, purchase_id, screenshot)
+
     # 配信地域
     excluded = set(purchase.get("excludedTerritories", []))
     unknown = excluded - all_territories
@@ -330,6 +434,25 @@ def sync_purchase(store: InAppPurchases, app_id: str, purchase: dict, current: d
         print(f"~ {product_id} の配信地域: {before} → {len(wanted)} か国（除く: {', '.join(sorted(excluded)) or 'なし'}）")
         if not store.dry_run and purchase_id is not None:
             store.set_territories(purchase_id, wanted)
+
+
+def sync_review_screenshot(store: InAppPurchases, product_id: str, purchase_id: str | None, path: Path) -> None:
+    """載っているスクリーンショットと中身が違う（または取り込みに失敗している）ときだけ載せ直す。"""
+    from app_store_connect import file_checksum
+
+    checksum = file_checksum(path.read_bytes())
+    current = None if purchase_id is None else store.review_screenshot(purchase_id)
+    if current is not None:
+        attributes = current["attributes"]
+        delivery = (attributes.get("assetDeliveryState") or {}).get("state")
+        if attributes.get("sourceFileChecksum") == checksum and delivery != "FAILED":
+            return
+        before = f"{attributes.get('fileName')}（{delivery}）"
+    else:
+        before = "なし"
+    print(f"~ {product_id} の審査用のスクリーンショット: {before} → {path.relative_to(ROOT)}")
+    if not store.dry_run and purchase_id is not None:
+        store.replace_review_screenshot(purchase_id, current, path)
 
 
 def main() -> int:
@@ -356,6 +479,10 @@ def main() -> int:
             names = " / ".join(f"{locale}: {values['name']}" for locale, values in purchase["localizations"].items())
             price = purchase["price"]
             print(f"  {purchase['productId']}（{purchase['type']}・{price['baseTerritory']} {price['customerPrice']:g}）{names}")
+            screenshot, _ = review_paths(purchase)
+            if screenshot is not None:
+                width, height, _ = png_info(screenshot)
+                print(f"    審査用: {screenshot.relative_to(ROOT)}（{width}x{height}）・審査メモ {len(review_note(purchase))} 文字")
         print(f"問題なし: 課金 {len(purchases)} 件")
         return 0
 
