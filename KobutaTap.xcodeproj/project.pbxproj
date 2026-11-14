@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4FA0000000000000000000F3 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 4FA0000000000000000000F2 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4FC9E1FA2BF1049C00F630AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -69,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FA0000000000000000000F3 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +145,9 @@
 				4FA0000000000000000000B1 /* KobutaTap */,
 			);
 			name = KobutaTap;
+			packageProductDependencies = (
+				4FA0000000000000000000F2 /* GoogleMobileAds */,
+			);
 			productName = KobutaTap;
 			productReference = 4FC9E1E92BF1049B00F630AB /* KobutaTap.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +231,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4F27869D2BF373B800E9F5EF /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				4FA0000000000000000000F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4FC9E1EA2BF1049B00F630AB /* Products */;
@@ -609,6 +618,14 @@
 				minimumVersion = 0.65.1;
 			};
 		};
+		4FA0000000000000000000F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.12.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -626,6 +643,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F27869D2BF373B800E9F5EF /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		4FA0000000000000000000F2 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FA0000000000000000000F1 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
