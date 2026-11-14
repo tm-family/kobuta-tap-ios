@@ -3,7 +3,8 @@
 <plist version="1.0">
 <dict>
 	<!-- App Store に提出するアプリのプライバシーマニフェスト。機能を足したら、この内容が実態と合っているか見直す -->
-	<!-- トラッキング（ATT の対象）をしないなら false のまま。広告 SDK などでトラッキングするなら true にし、ドメインを列挙する -->
+	<!-- アプリ自身のコードはトラッキングしないので false。広告（Google Mobile Ads・UMP）のトラッキングとドメインは、
+	     SDK に同梱のプライバシーマニフェストが申告しており、App Store に出すときに合わせて集計される -->
 	<key>NSPrivacyTracking</key>
 	<false/>
 	<key>NSPrivacyTrackingDomains</key>
