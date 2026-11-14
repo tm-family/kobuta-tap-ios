@@ -310,24 +310,34 @@ class AppStoreConnect:
         return response["data"]["id"]
 
     def upload(self, set_id: str, path: Path) -> str:
-        """1 枚ぶんの予約 → 本体の転送 → 確定、までをやる。"""
+        """スクリーンショット 1 枚ぶんの予約 → 本体の転送 → 確定、までをやる。"""
+        return self.upload_asset(
+            "appScreenshots",
+            {"appScreenshotSet": {"data": {"type": "appScreenshotSets", "id": set_id}}},
+            path,
+        )
+
+    def upload_asset(self, resource_type: str, relationships: dict, path: Path) -> str:
+        """画像 1 つぶんの予約 → 本体の転送 → 確定、までをやる。
+
+        App Store のスクリーンショット（appScreenshots）と、課金の審査用スクリーンショット
+        （inAppPurchaseAppStoreReviewScreenshots）などは、リソースの種類と親の関係が違うだけで手順は同じ。
+        """
         data = path.read_bytes()
         if self.dry_run:
             return "dry-run"
 
         reserved = self.post(
-            "/v1/appScreenshots",
+            f"/v1/{resource_type}",
             {
                 "data": {
-                    "type": "appScreenshots",
+                    "type": resource_type,
                     "attributes": {"fileSize": len(data), "fileName": path.name},
-                    "relationships": {
-                        "appScreenshotSet": {"data": {"type": "appScreenshotSets", "id": set_id}}
-                    },
+                    "relationships": relationships,
                 }
             },
         )
-        screenshot_id = reserved["data"]["id"]
+        asset_id = reserved["data"]["id"]
 
         # 本体は Apple が指定する URL へ、指示どおりに分割して送る
         for operation in reserved["data"]["attributes"]["uploadOperations"]:
@@ -344,19 +354,19 @@ class AppStoreConnect:
                 raise ApiError(f"{path.name} の転送が {error.code} で失敗しました\n{detail}") from None
 
         self.patch(
-            f"/v1/appScreenshots/{screenshot_id}",
+            f"/v1/{resource_type}/{asset_id}",
             {
                 "data": {
-                    "type": "appScreenshots",
-                    "id": screenshot_id,
+                    "type": resource_type,
+                    "id": asset_id,
                     "attributes": {
                         "uploaded": True,
-                        "sourceFileChecksum": hashlib.md5(data).hexdigest(),
+                        "sourceFileChecksum": file_checksum(data),
                     },
                 }
             },
         )
-        return screenshot_id
+        return asset_id
 
     def reorder(self, set_id: str, screenshot_ids: list[str]) -> None:
         """App Store に並ぶ順を、ファイル名の順（01_… 02_…）に揃える。"""
@@ -367,23 +377,23 @@ class AppStoreConnect:
             {"data": [{"type": "appScreenshots", "id": i} for i in screenshot_ids]},
         )
 
-    def wait_for_delivery(self, screenshot_ids: list[str]) -> None:
+    def wait_for_delivery(self, asset_ids: list[str], resource_type: str = "appScreenshots") -> None:
         """Apple 側の取り込みが終わるまで待つ。失敗していればここで気づける。"""
         if self.dry_run:
             return
         deadline = time.time() + DELIVERY_TIMEOUT
-        pending = list(screenshot_ids)
+        pending = list(asset_ids)
         while pending and time.time() < deadline:
             still_pending = []
-            for screenshot_id in pending:
-                attributes = self.get(f"/v1/appScreenshots/{screenshot_id}")["data"]["attributes"]
+            for asset_id in pending:
+                attributes = self.get(f"/v1/{resource_type}/{asset_id}")["data"]["attributes"]
                 state = attributes.get("assetDeliveryState") or {}
                 if state.get("errors"):
                     raise SystemExit(
                         f"{attributes.get('fileName')} の取り込みに失敗しました: {state['errors']}"
                     )
                 if state.get("state") != "COMPLETE":
-                    still_pending.append(screenshot_id)
+                    still_pending.append(asset_id)
             pending = still_pending
             if pending:
                 time.sleep(5)
@@ -392,6 +402,11 @@ class AppStoreConnect:
                 f"{len(pending)} 枚の取り込みが {DELIVERY_TIMEOUT} 秒で終わりませんでした。"
                 "App Store Connect の画面で状態を確認してください。"
             )
+
+
+def file_checksum(data: bytes) -> str:
+    """App Store Connect に送る画像の sourceFileChecksum（MD5）。載っている画像と同じかどうかの比較にも使う。"""
+    return hashlib.md5(data).hexdigest()
 
 
 def make_token(key_id: str, issuer_id: str, private_key: str) -> str:
