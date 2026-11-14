@@ -28,7 +28,8 @@
 | `Scenery.swift` | 時間帯と季節の判定、重ねて描く背景、60 秒のモードとちゃれんじの太陽と月の動き（`SkyBodies`） |
 | `GameView.swift` | プレイ画面の上部の表示、初登場のお知らせ、ひと休みの画面、続ける画面、結果 |
 | `TitleView.swift` / `HowToView.swift` / `Backdrop.swift` | タイトル、モード選択、遊び方、共通部品（ロゴ、ボタン） |
-| `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の仮の値 |
+| `L10n.swift` / `Monetization.swift` | 画面に出す文字、課金と広告の窓口（課金はまだ仮の値） |
+| `Ads.swift` / `UIApplication+Top.swift` | AdMob のリワード広告、広告の同意（UMP）、トラッキングの許可（ATT）、いちばん手前の画面 |
 | `Fonts.swift` | フォント（M PLUS Rounded 1c）の登録と、太さごとのフォント名 |
 | `Sound.swift` / `Haptics.swift` | 効果音・BGM・ジングルの再生、振動 |
 | `SettingsView.swift` / `AppSettings.swift` / `Credits.swift` | 設定（音と振動のオン・オフ）、ライセンス、素材のクレジット |
@@ -49,6 +50,17 @@
 - 音は消音モードでは鳴らさず、ほかのアプリの音楽とも混ぜます（`AVAudioSession` の `.ambient`）。ほかのアプリが音楽を流しているあいだは BGM を流しません
 - 振動させるのは、おおかみに触れたとき・りんごを失ったとき・レンガを取ったときだけです（`Haptics.swift`）
 - 音の素材は、public リポジトリにそのまま置けて商用にも使える **CC0 か CC BY のものだけ**にします（NC・ND・SA や、素材の再配布を禁じるサイトの規約のものは使いません）。素材を足したり替えたりしたら、`Credits.swift` のクレジットも直します。CC BY の素材は、作者が指定する書式のクレジットが必須です
+
+### 広告（AdMob）
+
+- 起動したら、広告の同意（UMP）→ トラッキングの許可（ATT）→ リワード広告の読み込み、の順に進めます（`Ads.setUp()`）。同意の画面は EEA・英国など、AdMob の「プライバシーとメッセージ」で設定した地域の人にだけ出ます。EEA・英国などでは、設定画面に「広告のプライバシー設定」を出し、同意をあとから変えられるようにします
+- トラッキングの許可の説明は `Info.plist`（英語）と `InfoPlist.xcstrings`（日本語）の `NSUserTrackingUsageDescription` です
+- 本番の広告は App Store から入れたアプリだけで出します。Debug ビルドと TestFlight（`AppTransaction` の環境が `production` 以外）は Google のテスト用のユニットを使い、本番の広告をタップしないようにします
+- 広告を最後まで見たら、続ける・りんごを取る。途中で閉じたら、続ける画面に戻る・りんごは取らない。広告を用意できないとき（オフラインなど）は、広告なしで続ける・りんごを取れます（`RewardedAdResult.grantsReward`）
+- 広告のあいだは BGM を止め、閉じたら音の扱い（`AVAudioSession`）を元に戻してから流します
+- UI テストと撮影モードは、ダイアログで画面がふさがらないよう、`-disable-ads` で広告を止めて起動します（Unit テストも止まります）
+- Debug ビルドで同意の画面を確かめるときは、起動引数に `-ump_debug_geography 1` を足すと EEA として扱います（`3` は規制のある米国の州、`4` は規制のない地域）
+- AdMob の ID は `Info.plist` の `GADApplicationIdentifier`（アプリ ID）と `Ads.UnitID`（ユニット ID）です。`SKAdNetworkItems` は [Google の一覧](https://developers.google.com/admob/ios/3p-skadnetworks)を写したもので、一覧が変わったら写し直します
 
 ## Environment
 
