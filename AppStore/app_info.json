@@ -11,10 +11,14 @@
     "  ログインしないと使えない機能があるなら demoAccountRequired を true にし、メモに試し方を書く。実機の画面収録は API で反映しないので、App Store Connect の添付ファイルに付ける。",
     "  連絡先（氏名・電話番号・メールアドレス）とデモアカウントは個人情報・秘密なので、ここには書かず Secrets（APP_REVIEW_CONTACT_* / APP_REVIEW_DEMO_ACCOUNT_*）で渡す。",
     "pricing / availability は、App Store Connect で未設定のとき（最初のリリースの前）だけ書き込む。設定済みなら触らないので、価格や配信先を変えるときは App Store Connect の画面で行う。",
-    "  pricing.price は FREE だけ書ける（有料のアプリは App Store Connect で設定し、pricing を消す）。availability.territories は ALL（すべての国と地域）か、[\"JPN\"] のような 3 文字のコードの配列。"
+    "  pricing.price は FREE だけ書ける（有料のアプリは App Store Connect で設定し、pricing を消す）。availability.territories は ALL（すべての国と地域）か、[\"JPN\"] のような 3 文字のコードの配列。",
+    "  territories が ALL のときは、excludedTerritories に配信しない国と地域を書ける。こぶたタップは中国本土（CHN）に配信しない（2026-11-14 に決定）。",
+    "  配信状況が設定済みで JSON と違うときは書き換えず、最後に「App Store Connect で入力が要るもの」として違いを出す。",
+    "こぶたタップは、音（BGM は CC BY 4.0、効果音・ジングルは CC0）とフォント（SIL Open Font License 1.1）に第三者の素材を使うので USES_THIRD_PARTY_CONTENT。クレジットは設定の「ライセンス」に出す。"
   ],
-  "primaryCategory": "TODO: UTILITIES",
-  "contentRightsDeclaration": "DOES_NOT_USE_THIRD_PARTY_CONTENT",
+  "primaryCategory": "GAMES",
+  "primarySubcategories": ["GAMES_CASUAL"],
+  "contentRightsDeclaration": "USES_THIRD_PARTY_CONTENT",
   "ageRating": {
     "alcoholTobaccoOrDrugUseOrReferences": "NONE",
     "contests": "NONE",
@@ -29,7 +33,7 @@
     "violenceCartoonOrFantasy": "NONE",
     "violenceRealistic": "NONE",
     "violenceRealisticProlongedGraphicOrSadistic": "NONE",
-    "advertising": false,
+    "advertising": true,
     "ageAssurance": false,
     "gambling": false,
     "healthOrWellnessTopics": false,
@@ -50,6 +54,7 @@
   },
   "availability": {
     "territories": "ALL",
+    "excludedTerritories": ["CHN"],
     "availableInNewTerritories": true
   }
 }

@@ -283,6 +283,12 @@ def load_availability(raw, problems: list[str]) -> dict | None:
         and all(isinstance(code, str) and TERRITORY_PATTERN.fullmatch(code) for code in territories)
     ):
         problems.append("availability.territories は \"ALL\" か、国と地域の 3 文字のコードの配列で書く（例: [\"JPN\"]）")
+    excluded = availability.get("excludedTerritories", [])
+    if not (isinstance(excluded, list)
+            and all(isinstance(code, str) and TERRITORY_PATTERN.fullmatch(code) for code in excluded)):
+        problems.append("availability.excludedTerritories は、国と地域の 3 文字のコードの配列で書く（例: [\"CHN\"]）")
+    elif excluded and territories != "ALL":
+        problems.append("availability.excludedTerritories は territories が \"ALL\" のときだけ書ける")
     if not isinstance(availability.get("availableInNewTerritories"), bool):
         problems.append("availability.availableInNewTerritories は true か false で書く")
     return availability
@@ -495,7 +501,8 @@ def plan_pricing(client, app: dict, pricing: dict) -> Step:
     label = "価格"
     schedule = client.get_or_none(f"/v1/apps/{app['id']}/appPriceSchedule")
     if schedule is not None:
-        manual_prices = client.get(f"/v1/appPriceSchedules/{schedule['id']}/manualPrices", {"limit": 1}).get("data")
+        # 価格を一度も設定していないアプリでも価格のスケジュールは返り、その manualPrices は 404 になる
+        manual_prices = client.get_or_none(f"/v1/appPriceSchedules/{schedule['id']}/manualPrices", {"limit": 1})
         if manual_prices:
             return label, ["    設定済みなので触りません（変えるときは App Store Connect の「価格および配信状況」で）"], None
 
@@ -534,21 +541,46 @@ def _is_zero(price) -> bool:
         return False
 
 
+def selected_territories(availability: dict, territories: list[str]) -> list[str]:
+    """配信する国と地域。territories が ALL なら、excludedTerritories を除くすべて。"""
+    if availability["territories"] != "ALL":
+        return availability["territories"]
+    excluded = set(availability.get("excludedTerritories", []))
+    return [code for code in territories if code not in excluded]
+
+
 def plan_availability(client, app: dict, availability: dict, reminders: list[str]) -> Step:
     label = "配信状況"
-    current = client.get_or_none(f"/v1/apps/{app['id']}/appAvailabilityV2")
-    if current is not None:
-        entries = client.get_all(f"/v2/appAvailabilities/{current['id']}/territoryAvailabilities")
-        count = sum(1 for entry in entries if (entry.get("attributes") or {}).get("available"))
-        if count == 0:
-            reminders.append("価格および配信状況の、配信する国と地域（1 つも選ばれていません）")
-        return label, [f"    設定済みなので触りません（{count} の国と地域で配信。変えるときは App Store Connect で）"], None
-
     territories = [entry["id"] for entry in client.get_all("/v1/territories")]
-    selected = territories if availability["territories"] == "ALL" else availability["territories"]
-    unknown = sorted(set(selected) - set(territories))
+    written = set(availability.get("excludedTerritories", []))
+    if availability["territories"] != "ALL":
+        written |= set(availability["territories"])
+    unknown = sorted(written - set(territories))
     if unknown:
         raise SystemExit(f"App Store Connect に無い国と地域のコード: {', '.join(unknown)}")
+    selected = selected_territories(availability, territories)
+
+    current = client.get_or_none(f"/v1/apps/{app['id']}/appAvailabilityV2")
+    if current is not None:
+        entries = client.get_all(
+            f"/v2/appAvailabilities/{current['id']}/territoryAvailabilities", {"include": "territory"}
+        )
+        available = {
+            ((entry.get("relationships") or {}).get("territory", {}).get("data") or {}).get("id")
+            for entry in entries if (entry.get("attributes") or {}).get("available")
+        }
+        if not available:
+            reminders.append("価格および配信状況の、配信する国と地域（1 つも選ばれていません）")
+        elif None not in available:  # 国と地域の ID が返らないときは、数だけ出す
+            missing, extra = sorted(set(selected) - available), sorted(available - set(selected))
+            details = []
+            if extra:
+                details.append(f"外す: {', '.join(extra)}")
+            if missing:
+                details.append(f"足す: {', '.join(missing)}")
+            if details:
+                reminders.append(f"価格および配信状況の国と地域が JSON と違います（{'・'.join(details)}）")
+        return label, [f"    設定済みなので触りません（{len(available)} の国と地域で配信。変えるときは App Store Connect で）"], None
     new_territories = "はい" if availability["availableInNewTerritories"] else "いいえ"
     lines = [f"    （未設定） → {len(selected)} の国と地域で配信（新しい国と地域にも自動で配信: {new_territories}）"]
 
