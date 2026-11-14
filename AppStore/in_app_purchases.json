@@ -1,0 +1,32 @@
+{
+  "_comment": [
+    "アプリ内課金。Tools/upload_in_app_purchases.py が App Store Connect に作る（In-App Purchases/App Store ワークフロー）。",
+    "productId はアプリが StoreKit で読む ID。一度作ると変えられず、消しても同じ ID は使えない。",
+    "type: NON_CONSUMABLE（買い切り）・CONSUMABLE（消耗型）・NON_RENEWING_SUBSCRIPTION のどれか。referenceName は App Store Connect の中だけで使う名前（64 文字まで）。",
+    "familySharable: ファミリー共有。一度 true にすると false に戻せない（ツールは false → true にだけ書き換える）。",
+    "price: baseTerritory（基準の国）での値段。ほかの国は Apple が自動で換算する。customerPrice はその国の通貨で、価格帯にある値だけ使える。",
+    "excludedTerritories: 売らない国（App Store Connect の territory の ID）。ほかの国はすべて売り、新しく増えた国でも売る。",
+    "localizations のキーは App Store Connect のロケール（languages.json の storeLocale）。name は 30 文字まで、description は 45 文字まで。",
+    "審査用のスクリーンショットと審査メモ（reviewNote）は、購入画面ができてから足す。JSON から消した課金や言語は、App Store Connect からは消さない。"
+  ],
+  "inAppPurchases": [
+    {
+      "productId": "jp.shilokuma.TinyPigTap.premium",
+      "referenceName": "Premium (No Ads + Umbrella Pack)",
+      "type": "NON_CONSUMABLE",
+      "familySharable": false,
+      "price": { "baseTerritory": "JPN", "customerPrice": 100 },
+      "excludedTerritories": ["CHN"],
+      "localizations": {
+        "ja": {
+          "name": "広告なし＋傘のきせかえ",
+          "description": "広告を見ずに続けられ、りんごも取れます。5 種類の傘のきせかえが使えます。"
+        },
+        "en-US": {
+          "name": "No Ads + Umbrella Pack",
+          "description": "Skip ads and unlock 5 umbrella designs."
+        }
+      }
+    }
+  ]
+}
