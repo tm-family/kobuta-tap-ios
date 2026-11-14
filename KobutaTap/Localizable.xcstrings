@@ -1696,6 +1696,22 @@
           }
         }
       }
+    },
+    "広告のプライバシー設定": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad Privacy Settings"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "広告のプライバシー設定"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

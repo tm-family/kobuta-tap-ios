@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 設定（音と振動のオン・オフ、ライセンス）。タイトルの右上のボタンから開く
+/// 設定（音と振動のオン・オフ、広告のプライバシー設定、ライセンス）。タイトルの右上のボタンから開く
 struct SettingsView: View {
     let onBack: () -> Void
     let onLicenses: () -> Void
@@ -37,6 +37,13 @@ struct SettingsView: View {
                     .accessibilityIdentifier("settings_haptics")
                 }
                 .background(.white, in: .rect(cornerRadius: 24))
+                // EEA・英国などでは、広告の同意をあとから変えられるようにする（ほかの地域では出さない）
+                if Ads.shared.isPrivacyOptionsRequired {
+                    linkRow(icon: "hand.raised.fill", title: String(localized: "広告のプライバシー設定")) {
+                        Task { await Ads.shared.presentPrivacyOptions() }
+                    }
+                    .accessibilityIdentifier("settings_ad_privacy")
+                }
                 linkRow(icon: "doc.text.fill", title: String(localized: "ライセンス"), action: onLicenses)
                     .accessibilityIdentifier("settings_licenses")
                 Spacer()
