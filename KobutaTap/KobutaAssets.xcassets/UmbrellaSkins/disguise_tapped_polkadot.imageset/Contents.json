@@ -1,0 +1,15 @@
+{
+  "images": [
+    {
+      "filename": "disguise_tapped_polkadot.svg",
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
+  }
+}

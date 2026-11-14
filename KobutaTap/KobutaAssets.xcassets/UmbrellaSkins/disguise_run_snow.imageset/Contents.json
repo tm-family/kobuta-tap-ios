@@ -1,0 +1,15 @@
+{
+  "images": [
+    {
+      "filename": "disguise_run_snow.svg",
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
+  }
+}
