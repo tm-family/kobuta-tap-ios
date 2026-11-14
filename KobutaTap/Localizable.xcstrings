@@ -1601,22 +1601,6 @@
         }
       }
     },
-    "ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To see the leaderboard, sign in to Game Center in the Settings app."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ランキングを見るには、「設定」アプリの「Game Center」でサインインしてください。"
-          }
-        }
-      }
-    },
     "ひと休み中": {
       "localizations": {
         "en": {
@@ -1645,6 +1629,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "続けると、3・2・1 のあとに動き出します"
+          }
+        }
+      }
+    },
+    "Game Center につながりませんでした": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't Connect to Game Center"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center につながりませんでした"
+          }
+        }
+      }
+    },
+    "通信できるところで、もう一度ランキングを押してください。\n（%@）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your connection and tap Ranking again.\n(%@)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通信できるところで、もう一度ランキングを押してください。\n（%@）"
+          }
+        }
+      }
+    },
+    "Game Center から応答がありませんでした": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center didn't respond."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Center から応答がありませんでした"
+          }
+        }
+      }
+    },
+    "「設定」アプリを開き、「Game Center」で Apple アカウントにサインインしてください。サインインしたら、このアプリに戻ってもう一度ランキングを押すと開きます。\n\nGame Center のサインインの画面を何度か閉じると、アプリからはサインインの画面を出せなくなります。すでにサインインしているのにこの案内が出るときは、「設定」アプリの「Game Center」で一度サインアウトし、サインインし直してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the Settings app and sign in to Game Center with your Apple Account. Then come back to this app and tap Ranking again.\n\nIf you close the Game Center sign-in screen a few times, apps can no longer show it. If you're already signed in and still see this message, sign out of Game Center in the Settings app and sign in again."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「設定」アプリを開き、「Game Center」で Apple アカウントにサインインしてください。サインインしたら、このアプリに戻ってもう一度ランキングを押すと開きます。\n\nGame Center のサインインの画面を何度か閉じると、アプリからはサインインの画面を出せなくなります。すでにサインインしているのにこの案内が出るときは、「設定」アプリの「Game Center」で一度サインアウトし、サインインし直してください。"
           }
         }
       }
