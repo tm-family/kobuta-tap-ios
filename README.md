@@ -103,9 +103,6 @@
           </a>
         </td>
         <td style="border:2px double #000080;text-align:center;">
-          <a href="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/archive.yml?query=branch%3Amain">
-            <img src="https://github.com/tm-family/kobuta-tap-ios/actions/workflows/archive.yml/badge.svg?branch=main" alt="Archive">
-          </a>
         </td>
         <td style="border:2px double #000080;text-align:center;">
         </td>
@@ -202,7 +199,7 @@ Upload ワークフローは、アップロードの前に TestFlight の内部�
 
 | ブランチ | Build（ビルド + テスト + SwiftLint） | Archive（IPA Export） | Upload（App Store Connect） |
 |---|:-:|:-:|:-:|
-| `main` | ✅ | ✅ | |
+| `main` | ✅ | | |
 | `develop` | ✅ | | ✅ |
 | `release/**` | ✅ | | ✅ |
 | その他の作業ブランチ | ✅（Unit テストのみ） | | |
@@ -210,7 +207,9 @@ Upload ワークフローは、アップロードの前に TestFlight の内部�
 | Fork からの Pull Request | ✅ | | |
 
 - Upload は Archive → IPA Export を含むため、`develop` / `release/**` では Archive を別途実行しません
-- Archive / Upload は Actions タブから手動でも実行できます（Run workflow）。作業ブランチを TestFlight で確認したいときは、Upload を手動実行してそのブランチを選びます
+- Archive は署名せずに作り（`CODE_SIGNING_ALLOWED=NO`）、Export で App Store 用に署名します。署名しない Archive にはアプリの entitlements（Game Center など）の権限が入らないので、Archive の後に権限を付けて仮の署名をしてから Export し、Export した IPA に権限が残っているかを確かめます（[.github/scripts/app-entitlements.py](.github/scripts/app-entitlements.py)）。権限が残っていなければ、TestFlight に上げる前に止まります
+- `main` への push では Build だけを実行します。Archive は手動実行のみです（Actions タブの Run workflow）
+- Upload も Actions タブから手動で実行できます（Run workflow）。作業ブランチを TestFlight で確認したいときは、Upload を手動実行してそのブランチを選びます
 - リポジトリ変数（Settings → Secrets and variables → Actions → Variables）に `ENABLE_DELIVERY=false` を設定すると Upload をスキップします（Archive は App Store Connect にアプリが無くても通るため止めません）。テンプレートリポジトリ自身はこの設定でアップロードを止めています。テンプレートから作成したリポジトリには引き継がれないため、何もしなければ従来どおり実行されます
 - Build はドキュメントだけの変更でも実行します。ルールセットで `build / build` を必須にしているため、飛ばすとチェックが出ず、PR をマージできなくなります
 - 作業ブランチへの push では、時間のかかる UI テスト（`<プロジェクト名>UITests`）を省いて Unit テストだけ実行します。UI テストは Pull Request の作成時と `main` / `develop` / `release/**` への push で実行します。Fork からの Pull Request は push で実行されないため、更新（synchronize）を含むすべてのイベントで UI テストまで実行します
@@ -380,7 +379,7 @@ API が無い・アカウントで一度だけ行うなど、ワークフロー�
         ├── _build.yml       # 共通処理: ビルド + テスト + SwiftLint（workflow_call）
         ├── _archive.yml     # 共通処理: Archive → Export（→ Upload）（workflow_call）
         ├── build.yml        # 全ブランチの push / Fork からの PR
-        ├── archive.yml      # main の push
+        ├── archive.yml      # 手動実行のみ
         ├── upload.yml       # develop / release/** の push
         ├── app-store-*.yml  # App Store の掲載情報の反映（手動実行）
         └── verify-app-store-metadata.yml  # 掲載情報の検査（PR）

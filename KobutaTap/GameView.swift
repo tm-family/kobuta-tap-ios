@@ -325,7 +325,10 @@ struct ContinueCard: View {
             VStack(spacing: 14) {
                 Image("icon_apple").resizable().scaledToFit().frame(width: 56).opacity(0.35)
                 Text("りんごがなくなった！").font(.kRounded(18)).foregroundStyle(Color.ink)
-                Text("りんごを1つもらって、続きから遊べます")
+                // 購入済みなら、広告なしでりんごがもらえる理由を書く（ボタンが「続ける」だけだと、なぜ広告が無いのか戸惑うため）
+                Text(Monetization.adsRemoved
+                     ? String(localized: "購入済みなので、広告なしで\nりんごを1つもらって、続きから遊べます")
+                     : String(localized: "りんごを1つもらって、続きから遊べます"))
                     .font(.kRounded(13, .medium))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
