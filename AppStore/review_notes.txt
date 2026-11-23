@@ -1,14 +1,14 @@
 Kobuta Tap - Notes for App Review
 
 1. SCREEN RECORDING
-A screen recording from a physical iPhone running the latest iOS is attached to the App Review Information. It starts by launching the app and shows the typical flow: the tracking permission prompt, the title screen, "How to Play", a play in Easy mode including "Watch an Ad to Continue", a play in Challenge mode, the Game Center leaderboard, the "Umbrellas" screen with the In-App Purchase, and Settings.
+A screen recording from a physical iPhone running the latest iOS is attached. It starts by launching the app and shows the typical flow: the tracking permission prompt, the title screen, "How to Play", a play in Easy mode including "Watch an Ad to Continue", a play in Challenge mode, the Game Center leaderboard, the "Umbrellas" screen with the In-App Purchase, and Settings.
 The app has no account registration, login, or user-generated content. It has one non-consumable In-App Purchase, "No Ads + Umbrella Pack", which is shown in the recording.
 
 2. PURPOSE AND TARGET AUDIENCE
-Kobuta Tap ("kobuta" means "piglet" in Japanese) is a casual tapping game for players of all ages who want a short, light game. Piglets float down with leaf umbrellas. The player taps them to collect them, and must not tap the wolves, including wolves disguised as piglets. Easy, Normal and Hard last 60 seconds, Challenge gets faster until the player runs out of apples and has a Game Center leaderboard, and Relax has no time limit.
+Kobuta Tap ("kobuta" means "piglet" in Japanese) is a casual tapping game for all ages. Piglets float down with leaf umbrellas. The player taps them to collect them, and must not tap the wolves, including wolves disguised as piglets. Easy, Normal and Hard last 60 seconds, Challenge gets faster until the player runs out of apples and has a Game Center leaderboard, and Relax has no time limit.
 
 3. HOW TO ACCESS THE MAIN FEATURES
-No login, account, credentials, or sample files are required. The UI follows the device language (Japanese or English). The labels below are from the English UI.
+No login, credentials, or sample files are required. The UI follows the device language (Japanese or English). The labels below are from the English UI.
 1. Launch the app and answer the tracking permission prompt (in the EEA and the UK, the ad consent form appears first).
 2. On the title screen, tap "Tap to Start", choose a mode (Relax, Easy, Normal, Hard or Challenge) and play: tap the piglets, and don't tap the wolves.
 3. "How to Play" on the title screen explains the characters and the modes.
@@ -16,7 +16,7 @@ No login, account, credentials, or sample files are required. The UI follows the
 5. In-App Purchase: tap the umbrella button at the top right of the title screen, then "Buy for <price>" on the "Umbrellas" screen. "Restore Purchases" is on the same screen and in Settings.
 6. Settings (the gear button): sound and vibration, "Restore Purchases", "Licenses", and "Ad Privacy Settings" (shown only where ad consent is required).
 
-Ads: the app shows only rewarded ads, and only when the player chooses to watch one. In Easy, Normal and Hard, "Watch an Ad to Continue" appears once when the player runs out of apples. In Challenge, the 1st, 4th, 7th, ... apple in each play is taken with "Watch an Ad to Take It". There are no banner or interstitial ads. After the In-App Purchase, both work without ads.
+Ads: the app shows only rewarded ads, and only when the player chooses to watch one. In Easy, Normal and Hard, "Watch an Ad to Continue" appears once when the player runs out of apples. In Challenge, the 1st, 4th, 7th, ... apple in each play is taken with "Watch an Ad to Take It". There are no banner or interstitial ads. After the In-App Purchase, both work without ads. In TestFlight and during App Review, the app shows Google test ads (labeled "Test Ad"); live ads appear only in copies installed from the App Store.
 
 4. EXTERNAL SERVICES
 - Google AdMob (Google Mobile Ads SDK): rewarded ads, as described above.
