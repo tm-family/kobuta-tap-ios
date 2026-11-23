@@ -6,14 +6,25 @@
     "subtitle はアプリ名の下に出るひとこと（30 字以内）。省略できる（省略すると App Store Connect 側の値を残す）。サブタイトルも検索の対象なので、keywords と同じ語を重ねなくてよい。",
     "promotionalText は省略できる（省略すると App Store Connect 側の値をそのまま残す）。",
     "whatsNew は「このバージョンの最新情報」。{\"version\": \"1.1.0\", \"text\": \"…\"} の形で書き、version が反映先のバージョンと一致するときだけ書き込む。",
-    "最初のバージョン（1.0.0）には最新情報の欄が無いので、2 つ目のバージョンから足す。",
-    "TODO: テンプレートの仮の文言。アプリを作ったら書き換える（Metadata/App Store は既定で dry-run）。"
+    "最初のバージョン（1.0.0）には最新情報の欄が無いので、2 つ目のバージョンから足す。"
   ],
   "name": "Kobuta Tap",
-  "subtitle": "TODO: Short phrase under name",
-  "promotionalText": "TODO: One line about why people will love this app (up to 170 characters).",
-  "description": "TODO: App description. What the app does, its key features, and how to get started.\n\n■ Key features\n• Feature 1\n• Feature 2\n• Feature 3",
+  "subtitle": "Tap piglets, spot the wolves",
+  "promotionalText": "Piglets float down with leaf umbrellas. Tap to collect them, but watch out for wolves dressed as piglets! Play 60-second rounds, a Challenge, or relax with no time limit.",
+  "description": "Piglets float down from the sky with leaf umbrellas. Tap them to collect them!\nBut don't tap the wolves. Some wolves are even dressed up as piglets, so look closely and see through their disguise.\n(\"Kobuta\" means \"piglet\" in Japanese.)\n\nHOW TO PLAY\n- Tap the piglets to collect them\n- Don't tap the wolves\n- Missing a piglet or tapping a wolf costs you an apple\n- Let a wolf in disguise pass without tapping it for a \"Spotted\" bonus\n\n5 MODES\n- Easy / Normal / Hard: collect as many as you can in 60 seconds\n- Challenge: no time limit, and it keeps getting faster until you run out of apples. Compete on the Game Center leaderboard\n- Relax: no time limit. Play at your own pace with scenery that follows the time of day and the season\n\nCHARACTERS AND ITEMS\n- Piglet: tap to collect\n- Golden piglet: a rare treat\n- Wolf: don't tap!\n- Wolf in disguise: look closely and see through it\n- Brick: tap it, and for 5 seconds tapping a wolf is not a miss\n- Apple: gives you one more apple\n\nBONUSES\n- Spotted: let a wolf in disguise pass without tapping it\n- Combo: tap 5 piglets in a row\n\nFROM DAY TO NIGHT\nIn every mode except Relax, the sky turns from day to sunset to night as you play. Wolves in disguise show up at sunset and there are even more at night, so look carefully before you tap.\n\nUMBRELLAS\nThe In-App Purchase \"No Ads + Umbrella Pack\" (a one-time purchase) lets you continue and take apples without watching ads, and unlocks 5 umbrella designs for the piglets: Cherry Blossom, Sunflower, Maple Leaves, Snowflake and Polka Dot.\n\nALSO\n- Play on iPhone and iPad\n- Turn sound and vibration on or off in Settings",
   "keywords": [
-    "TODO: keyword"
+    "pig",
+    "piglet",
+    "wolf",
+    "umbrella",
+    "reflex",
+    "cute",
+    "animal",
+    "arcade",
+    "tapping",
+    "high score",
+    "leaderboard",
+    "focus",
+    "kawaii"
   ]
 }

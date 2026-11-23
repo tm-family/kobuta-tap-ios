@@ -1,21 +1,36 @@
-TODO: アプリの名前 - Notes for App Review
-TODO: 最初の審査で Apple が求める 6 項目（Guideline 2.1 - Information Needed）への回答。英語で書き、TODO: の行をすべて書き換える（上限 4000 字）。書き方の例は shilokuma-inc/numer0n-lens-ios の AppStore/review_notes.txt
+Kobuta Tap - Notes for App Review
 
 1. SCREEN RECORDING
-A screen recording from a physical iPhone running the latest iOS is attached to the App Review Information. It starts by launching the app and shows the typical flow: TODO: 映す画面を順に書く（例: tutorial, creating an item, editing it, settings）.
-TODO: アカウントの登録・ログイン・アカウントの削除、ユーザーの投稿（通報とブロック）、課金があれば、動画にも映してここに書く。無ければ次の 1 文にする: The app has no account registration, login, user-generated content, paid content, or In-App Purchases.
+A screen recording from a physical iPhone running the latest iOS is attached to the App Review Information. It starts by launching the app and shows the typical flow: the tracking permission prompt, the title screen, "How to Play", a play in Easy mode including "Watch an Ad to Continue", a play in Challenge mode, the Game Center leaderboard, the "Umbrellas" screen with the In-App Purchase, and Settings.
+The app has no account registration, login, or user-generated content. It has one non-consumable In-App Purchase, "No Ads + Umbrella Pack", which is shown in the recording.
 
 2. PURPOSE AND TARGET AUDIENCE
-TODO: 何をするアプリか・誰のためのアプリか・どんな困りごとを解決し、どんな価値があるか。
+Kobuta Tap ("kobuta" means "piglet" in Japanese) is a casual tapping game for players of all ages who want a short, light game. Piglets float down with leaf umbrellas. The player taps them to collect them, and must not tap the wolves, including wolves disguised as piglets. Easy, Normal and Hard last 60 seconds, Challenge gets faster until the player runs out of apples and has a Game Center leaderboard, and Relax has no time limit.
 
 3. HOW TO ACCESS THE MAIN FEATURES
-TODO: 主な機能までの手順を番号付きで書く。ログインやサンプルファイルが要らなければ、まず No login, account, credentials, or sample files are required. と書く。UI が英語でなければ、ボタンの文言を原文のまま引用し、[角括弧] で英訳を添える。ログインが要るなら app_info.json の review.demoAccountRequired を true にし、デモアカウントは Secrets で渡す（ここには書かない）。
+No login, account, credentials, or sample files are required. The UI follows the device language (Japanese or English). The labels below are from the English UI.
+1. Launch the app and answer the tracking permission prompt (in the EEA and the UK, the ad consent form appears first).
+2. On the title screen, tap "Tap to Start", choose a mode (Relax, Easy, Normal, Hard or Challenge) and play: tap the piglets, and don't tap the wolves.
+3. "How to Play" on the title screen explains the characters and the modes.
+4. Leaderboard: tap the trophy button at the top right of the title screen. Game Center sign-in is requested only at this point.
+5. In-App Purchase: tap the umbrella button at the top right of the title screen, then "Buy for <price>" on the "Umbrellas" screen. "Restore Purchases" is on the same screen and in Settings.
+6. Settings (the gear button): sound and vibration, "Restore Purchases", "Licenses", and "Ad Privacy Settings" (shown only where ad consent is required).
+
+Ads: the app shows only rewarded ads, and only when the player chooses to watch one. In Easy, Normal and Hard, "Watch an Ad to Continue" appears once when the player runs out of apples. In Challenge, the 1st, 4th, 7th, ... apple in each play is taken with "Watch an Ad to Take It". There are no banner or interstitial ads. After the In-App Purchase, both work without ads.
 
 4. EXTERNAL SERVICES
-TODO: 主な機能のために使う外部サービス（データ提供元・認証・決済・解析・広告・AI など）を挙げる。無ければ None. The app works entirely offline. のように書く。
+- Google AdMob (Google Mobile Ads SDK): rewarded ads, as described above.
+- Google User Messaging Platform: the ad consent form in regions where consent is required, such as the EEA and the UK.
+- App Tracking Transparency: at launch, the app asks for permission to use the advertising identifier for personalized ads. If the player declines, non-personalized ads are shown.
+- Apple Game Center: the Challenge leaderboard.
+- StoreKit: the In-App Purchase.
+The app has no server of its own and does not ask for personal information. Privacy policy: https://shilokuma.jp/privacy/kobuta-tap/
 
 5. REGIONAL DIFFERENCES
-TODO: 地域による機能や内容の違い。無ければ None. The app's features and content are the same in all regions. と書く。
+The ad consent form and "Ad Privacy Settings" appear only in regions where consent is required, such as the EEA and the UK. The app is not distributed in mainland China. Otherwise, the features and content are the same in all regions.
 
 6. REGULATED INDUSTRY / THIRD-PARTY MATERIAL
-TODO: 規制のある業種（金融・医療・ギャンブルなど）か、第三者の保護された素材（商標・著作物・ライセンスを受けた素材）を含むかと、使ってよいことを示す資料。どちらも無ければそう書く。同梱したフォントなどのライセンスはここに挙げる。
+The app is not in a regulated industry. The characters and artwork were made for this app. Third-party material is used under open licenses and credited in Settings > "Licenses":
+- Music: "Carefree" by Kevin MacLeod (incompetech.com), licensed under CC BY 4.0. "Children's March Theme" by Cleyton Kauffman and "Cozy Puzzle Jingle & Result" by MintoDog, both CC0.
+- Sound effects: CC0 sounds from OpenGameArt, Kenney and Freesound.
+- Font: M PLUS Rounded 1c, licensed under the SIL Open Font License 1.1.
