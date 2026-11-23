@@ -5,7 +5,8 @@ import UIKit
 extension GameScene {
     static let popupInk = UIColor(red: 0.24, green: 0.17, blue: 0.2, alpha: 1)
 
-    func popup(_ text: String, at point: CGPoint, size fontSize: CGFloat = 22, color: UIColor = GameScene.popupInk) {
+    @discardableResult
+    func popup(_ text: String, at point: CGPoint, size fontSize: CGFloat = 22, color: UIColor = GameScene.popupInk) -> SKLabelNode {
         let label = SKLabelNode()
         label.attributedText = NSAttributedString(
             string: text,
@@ -23,5 +24,6 @@ extension GameScene {
             .group([.moveBy(x: 0, y: 40, duration: 0.7), .sequence([.wait(forDuration: 0.4), .fadeOut(withDuration: 0.3)])]),
             .removeFromParent()
         ]))
+        return label
     }
 }

@@ -22,7 +22,7 @@ final class ItemNode: SKSpriteNode {
 
 @MainActor
 final class GameScene: SKScene {
-    private let mode: GameMode
+    let mode: GameMode
     private let state: GameState
     /// このプレイでこぶたと着ぐるみのおおかみがさす傘（プレイの途中では変えない）
     let umbrellaSkin: UmbrellaSkin
@@ -30,20 +30,26 @@ final class GameScene: SKScene {
     private var elapsed: TimeInterval = 0
     private var lastUpdate: TimeInterval?
     private var spawnTimer: TimeInterval = 0
-    private let background: BackgroundNode
+    let background: BackgroundNode
     private var clockCheckTimer: TimeInterval = 0
     private var countdownTask: Task<Void, Never>?
+    /// 撮影モード（ScreenshotDemo）で並べて止めておく盤面。ふだんは nil
+    let board: ScreenshotDemo.Board?
+    /// 盤面に並べたもの（画面の大きさが変わったら並べ直す）
+    var boardNodes: [SKNode] = []
 
     init(
         size: CGSize,
         mode: GameMode,
         state: GameState,
-        umbrellaSkin: UmbrellaSkin = .current(purchased: Monetization.adsRemoved)
+        umbrellaSkin: UmbrellaSkin = .current(purchased: Monetization.adsRemoved),
+        board: ScreenshotDemo.Board? = nil
     ) {
         self.mode = mode
         self.state = state
         self.umbrellaSkin = umbrellaSkin
-        let scenery: Scenery = mode == .relaxed ? .now() : .challenge(.day)
+        self.board = board
+        let scenery: Scenery = board?.scenery ?? (mode == .relaxed ? .now() : .challenge(.day))
         state.phase = scenery.phase
         background = BackgroundNode(scenery: scenery)
         super.init(size: size)
@@ -57,11 +63,13 @@ final class GameScene: SKScene {
         backgroundColor = .black
         if background.parent == nil { addChild(background) }
         background.layout(size: size)
+        layoutBoard()
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
         super.didChangeSize(oldSize)
         background.layout(size: size)
+        layoutBoard()
     }
 
     // MARK: - 遊ぶ範囲（iPhoneの比率に固定し、iPadでは中央に置く）
@@ -71,7 +79,7 @@ final class GameScene: SKScene {
         return CGRect(x: (size.width - width) / 2, y: 0, width: width, height: size.height)
     }
     var groundY: CGFloat { size.height * Tuning.groundRatio }
-    private var baseWidth: CGFloat { playRect.width * Tuning.itemWidthRatio }
+    var baseWidth: CGFloat { playRect.width * Tuning.itemWidthRatio }
 
     // MARK: - 難易度
 
@@ -87,6 +95,11 @@ final class GameScene: SKScene {
 
     override func update(_ currentTime: TimeInterval) {
         defer { lastUpdate = currentTime }
+        // 撮影モードの盤面は動かさない
+        guard board == nil else {
+            isPaused = true
+            return
+        }
         // プレイ中でなければ止めておく。アプリに戻ったときに SpriteKit が動かし始めても、ここで止め直す
         guard state.status == .playing else {
             isPaused = true

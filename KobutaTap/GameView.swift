@@ -22,6 +22,22 @@ struct GameView: View {
         _scene = State(initialValue: GameScene(size: CGSize(width: 390, height: 844), mode: mode, state: state))
     }
 
+    /// 撮影モード（ScreenshotDemo）のゲームの画面。盤面を並べて止めたまま出す
+    init(board: ScreenshotDemo.Board) {
+        mode = board.mode
+        onRestart = {}
+        onExit = {}
+        let state = board.makeState()
+        _state = State(initialValue: state)
+        _scene = State(initialValue: GameScene(
+            size: CGSize(width: 390, height: 844),
+            mode: board.mode,
+            state: state,
+            umbrellaSkin: board.skin,
+            board: board
+        ))
+    }
+
     var body: some View {
         GeometryReader { geo in
             // 上部の表示は、遊ぶ範囲の幅にそろえる（iPadでは中央）
