@@ -50,6 +50,12 @@ struct ContentView: View {
         .onChange(of: screen) { updateBGM() }
         // 広告の同意（EEA・英国など）→ トラッキングの許可 → 広告の読み込み
         .task { await Ads.shared.setUp() }
+        // 起動したときは前回の結果で購入済みかを決めるので、購入済みなら広告の準備をしない。
+        // そのあと購入していないと分かったら（返金など）、ここで準備する。しないと、広告を見て続ける・りんごを取ることができない
+        .onChange(of: Store.shared.isPurchased) { _, isPurchased in
+            guard !isPurchased else { return }
+            Task { await Ads.shared.setUp() }
+        }
     }
 
     /// メニューの画面ではタイトルの BGM を流す（プレイ中と結果の BGM は GameView が切り替える）
