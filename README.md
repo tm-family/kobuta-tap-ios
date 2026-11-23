@@ -207,6 +207,7 @@ Upload ワークフローは、アップロードの前に TestFlight の内部�
 | Fork からの Pull Request | ✅ | | |
 
 - Upload は Archive → IPA Export を含むため、`develop` / `release/**` では Archive を別途実行しません
+- Archive は署名せずに作り（`CODE_SIGNING_ALLOWED=NO`）、Export で App Store 用に署名します。署名しない Archive にはアプリの entitlements（Game Center など）の権限が入らないので、Archive の後に権限を付けて仮の署名をしてから Export し、Export した IPA に権限が残っているかを確かめます（[.github/scripts/app-entitlements.py](.github/scripts/app-entitlements.py)）。権限が残っていなければ、TestFlight に上げる前に止まります
 - `main` への push では Build だけを実行します。Archive は手動実行のみです（Actions タブの Run workflow）
 - Upload も Actions タブから手動で実行できます（Run workflow）。作業ブランチを TestFlight で確認したいときは、Upload を手動実行してそのブランチを選びます
 - リポジトリ変数（Settings → Secrets and variables → Actions → Variables）に `ENABLE_DELIVERY=false` を設定すると Upload をスキップします（Archive は App Store Connect にアプリが無くても通るため止めません）。テンプレートリポジトリ自身はこの設定でアップロードを止めています。テンプレートから作成したリポジトリには引き継がれないため、何もしなければ従来どおり実行されます
