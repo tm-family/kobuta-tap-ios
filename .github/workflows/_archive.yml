@@ -137,6 +137,14 @@ jobs:
             -authenticationKeyID "$APPLE_API_KEY_ID" \
             -authenticationKeyIssuerID "$APPLE_API_ISSUER_ID"
 
+      - name: Verify entitlements of IPA
+        # Export の署名に entitlements の権限が残っているかを確かめる。App ID に Capability が無いなどで落ちていたら、
+        # 気づかないまま TestFlight に上がらないよう、ここで止める（アップロードも同じ Archive を同じ設定で Export する）
+        run: |
+          python3 .github/scripts/app-entitlements.py verify \
+            --ipa "$(ls "$RUNNER_TEMP"/export/*.ipa)" \
+            --entitlements "$ENTITLEMENTS_PATH"
+
       - name: Upload IPA to GitHub
         uses: actions/upload-artifact@v7
         with:
