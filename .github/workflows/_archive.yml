@@ -60,6 +60,7 @@ jobs:
             echo "SCHEME=$project"
             echo "EXPORT_OPTIONS_PATH=$RUNNER_TEMP/ExportOptions.plist"
             echo "API_KEY_PATH=$RUNNER_TEMP/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+            echo "ENTITLEMENTS_PATH=$RUNNER_TEMP/entitlements.plist"
           } >> "$GITHUB_ENV"
           echo "project=$project scheme=$project"
 
@@ -97,6 +98,18 @@ jobs:
             fi
           done
           echo "署名の識別子を直したフレームワーク: ${fixed} 個"
+
+      - name: Sign app with entitlements
+        # 署名なしの Archive では、entitlements（Game Center など）の権限がアプリに書き込まれない。
+        # Export は Archive の中のアプリの署名にある権限を引き継いで署名し直すので、そのままでは権限が無いアプリが上がる（Game Center にサインインできない）。
+        # entitlements の $(変数) をビルド設定で展開し、その権限でアプリをアドホック署名しておく（本番の署名は Export がする）。
+        # フレームワークを署名し直したあと（中身の署名が確定してから）に行う
+        run: |
+          python3 .github/scripts/app-entitlements.py sign \
+            --archive "$RUNNER_TEMP/build.xcarchive" \
+            --project "$PROJECT_NAME.xcodeproj" \
+            --scheme "$SCHEME" \
+            --output "$ENTITLEMENTS_PATH"
 
       - name: Create ExportOptions.plist and API private key
         # Secrets はシェル展開ではなく env 経由で渡す
