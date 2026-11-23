@@ -945,6 +945,22 @@
         }
       }
     },
+    "購入済みなので、広告なしで\nりんごを1つもらって、続きから遊べます": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thanks to your purchase, get one apple and keep playing—no ad needed"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "購入済みなので、広告なしで\nりんごを1つもらって、続きから遊べます"
+          }
+        }
+      }
+    },
     "続ける": {
       "localizations": {
         "en": {
