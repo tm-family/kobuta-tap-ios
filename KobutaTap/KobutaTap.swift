@@ -37,6 +37,16 @@ struct KobutaTap: App {
         switch ScreenshotDemo.scene {
         case .home, nil:
             ContentView()
+        case .modes:
+            ModeSelectView(onSelect: { _ in }, onBack: {})
+        case .dressUp:
+            DressUpView(onBack: {})
+        case .howTo:
+            HowToView(onBack: {})
+        case .playDay, .playNight, .relaxed, .result:
+            if let board = ScreenshotDemo.board {
+                GameView(board: board)
+            }
         }
     }
 }
